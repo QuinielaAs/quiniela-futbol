@@ -44,8 +44,6 @@ div.className = "partido";
 
 div.innerHTML = `
 
-<img src="${p[1]}" class="logo">
-
 <div class="equipo">${p[0]}</div>
 
 <div class="botones">
@@ -62,8 +60,6 @@ onclick="toggle(this,${i},'V')">V</button>
 </div>
 
 <div class="equipo">${p[2]}</div>
-
-<img src="${p[3]}" class="logo">
 
 `;
 
@@ -181,7 +177,7 @@ window.open(url);
 
 
 /* ===========================
-GUARDAR JUGADOR
+GUARDAR JUGADOR (con precio)
 =========================== */
 
 function guardarJugador(nombre){
@@ -193,21 +189,31 @@ localStorage.getItem("jugadores")
 
 let picks = [];
 
+let combinaciones = 1;
+
 partidos.forEach((p,i)=>{
 
 let sel =
-(selecciones[i]||[])
-.join("");
+(selecciones[i]||[]);
 
-picks.push(sel);
+picks.push(
+sel.join("")
+);
+
+if(sel.length>0)
+combinaciones *= sel.length;
 
 });
+
+let total =
+combinaciones * costo;
 
 jugadores.push({
 
 nombre: nombre,
 picks: picks,
-pagado: false
+pagado: false,
+costo: total
 
 });
 
@@ -221,6 +227,7 @@ JSON.stringify(jugadores)
 
 /* ===========================
 MOSTRAR JUGADORES ADMIN
+(con picks y precio)
 =========================== */
 
 function mostrarJugadores(){
@@ -241,14 +248,37 @@ contenedor.innerHTML="";
 
 jugadores.forEach((j,i)=>{
 
+let picksTexto =
+j.picks.join(" | ");
+
 contenedor.innerHTML += `
 
 <div style="
 border:1px solid #ccc;
-padding:8px;
-margin:6px">
+padding:10px;
+margin:8px">
 
-<b>${j.nombre}</b>
+<b>Jugador:</b> ${j.nombre}
+
+<br><br>
+
+<b>Picks:</b>
+
+<br>
+
+${picksTexto}
+
+<br><br>
+
+<b>Precio:</b>
+
+<span style="
+color:green;
+font-weight:bold">
+
+$${j.costo}
+
+</span>
 
 <br><br>
 
@@ -305,14 +335,14 @@ mostrarJugadores();
 
 
 /* ===========================
-BORRAR JUGADORES NUEVA SEMANA
+BORRAR JUGADORES
 =========================== */
 
 function borrarJugadores(){
 
 let confirmar =
 confirm(
-"¿Seguro que deseas borrar todos los jugadores para nueva semana?"
+"¿Seguro que deseas borrar todos los jugadores?"
 );
 
 if(!confirmar) return;
@@ -359,9 +389,6 @@ return;
 
 }
 
-
-/* SEMANA */
-
 let semanaInput =
 document.getElementById("semana");
 
@@ -369,7 +396,6 @@ let semana =
 semanaInput
 ? semanaInput.value
 : "1";
-
 
 let y = 10;
 
@@ -488,7 +514,7 @@ doc.save(
 
 
 /* ===========================
-GUARDAR HORA CIERRE
+GUARDAR HORA
 =========================== */
 
 function guardarHora(){
@@ -528,7 +554,24 @@ alert(
 
 
 /* ===========================
-VERIFICAR HORA BLOQUEO
+REINICIAR HORA
+=========================== */
+
+function borrarHora(){
+
+localStorage.removeItem(
+"horaCierre"
+);
+
+alert(
+"Hora reiniciada correctamente"
+);
+
+}
+
+
+/* ===========================
+VERIFICAR HORA
 =========================== */
 
 function verificarHora(){
