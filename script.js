@@ -248,3 +248,19 @@ setInterval(
 verificarHora,
 5000
 );
+
+function guardarHora(){
+
+let hora =
+document.getElementById(
+"horaCierreAdmin"
+).value;
+
+localStorage.setItem(
+"horaCierre",
+hora
+);
+
+alert("Hora guardada correctamente");
+
+}
