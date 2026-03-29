@@ -276,7 +276,7 @@ localStorage.setItem(
 JSON.stringify(jugadores)
 );
 
-alert("Jugador marcado como pagado");
+mostrarJugadores();
 
 }
 
