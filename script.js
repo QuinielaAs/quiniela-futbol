@@ -472,6 +472,24 @@ Marcar Pagado
 
 }
 
+function marcarPagado(index){
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+jugadores[index].pagado = true;
+
+localStorage.setItem(
+"jugadores",
+JSON.stringify(jugadores)
+);
+
+alert("Jugador marcado como pagado");
+
+                 }
+
 function generarPDFGeneral(){
 
 const { jsPDF } = window.jspdf;
