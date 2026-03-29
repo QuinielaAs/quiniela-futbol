@@ -264,3 +264,44 @@ hora
 alert("Hora guardada correctamente");
 
 }
+
+function verificarHora(){
+
+let hora =
+localStorage.getItem(
+"horaCierre"
+);
+
+if(!hora) return;
+
+let ahora = new Date();
+
+let cierre =
+new Date(hora);
+
+if(ahora > cierre){
+
+document.body.innerHTML = `
+
+<h2 style="text-align:center">
+
+⛔ Quiniela cerrada
+
+</h2>
+
+<p style="text-align:center">
+
+La hora límite ya pasó.
+
+</p>
+
+`;
+
+}
+
+}
+
+setInterval(
+verificarHora,
+5000
+);
