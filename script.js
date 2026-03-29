@@ -3,6 +3,8 @@ let numeroWhatsApp =
 
 let costo = 25;
 
+let horaLimite = "2026-04-04T18:00:00"; // hora cierre
+
 /* EJEMPLO PARTIDOS */
 
 let partidos = [
@@ -156,3 +158,32 @@ mensaje
 window.open(url);
 
 }
+function verificarHora(){
+
+let ahora = new Date();
+
+let cierre = new Date(horaLimite);
+
+if(ahora > cierre){
+
+document.body.innerHTML = `
+
+<h2 style="text-align:center">
+
+⛔ Quiniela cerrada
+
+</h2>
+
+<p style="text-align:center">
+
+La hora límite ya pasó.
+
+</p>
+
+`;
+
+}
+
+}
+
+verificarHora();
