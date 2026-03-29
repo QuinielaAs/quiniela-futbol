@@ -3,20 +3,7 @@ let numeroWhatsApp =
 
 let costo = 25;
 
-let horaGuardada =
-localStorage.getItem("horaCierre");
-
-if(horaGuardada){
-
-document.getElementById(
-"horaCierre"
-).value = horaGuardada;
-
-}
-
-let horaLimite = "2026-04-04T18:00:00"; // hora cierre
-
-/* EJEMPLO PARTIDOS */
+/* PARTIDOS */
 
 let partidos = [
 
@@ -44,6 +31,8 @@ let lista =
 document.getElementById("lista");
 
 let selecciones = {};
+
+/* CREAR PARTIDOS */
 
 partidos.forEach((p,i)=>{
 
@@ -81,6 +70,8 @@ lista.appendChild(div);
 
 });
 
+/* SELECCIONAR */
+
 function toggle(btn,i,val){
 
 btn.classList.toggle("activo");
@@ -104,6 +95,8 @@ x=>x!=val
 calcular();
 
 }
+
+/* CALCULAR TOTAL */
 
 function calcular(){
 
@@ -130,6 +123,8 @@ document.getElementById(
 "$"+(combinaciones*costo);
 
 }
+
+/* ENVIAR WHATSAPP */
 
 function enviar(){
 
@@ -169,81 +164,8 @@ mensaje
 window.open(url);
 
 }
-function verificarHora(){
 
-let ahora = new Date();
-
-let cierre = new Date(horaLimite);
-
-if(ahora > cierre){
-
-<h2 style="text-align:center">
-
-⛔ Quiniela cerrada
-
-</h2>
-
-<p style="text-align:center">
-
-La hora límite ya pasó.
-
-</p>
-
-`;
-
-}
-
-}
-
-verificarHora();
-
-function verificarHora(){
-
-let horaInput =
-document.getElementById(
-"horaCierre"
-);
-
-if(!horaInput) return;
-
-let valor = horaInput.value;
-
-if(!valor) return;
-
-localStorage.setItem(
-"horaCierre",
-valor
-);
-
-let ahora = new Date();
-
-let cierre =
-new Date(valor);
-
-if(ahora > cierre){
-
-<h2 style="text-align:center">
-
-⛔ Quiniela cerrada
-
-</h2>
-
-<p style="text-align:center">
-
-La hora límite ya pasó.
-
-</p>
-
-`;
-
-}
-
-}
-
-setInterval(
-verificarHora,
-5000
-);
+/* VERIFICAR HORA (VERSIÓN CORRECTA) */
 
 function verificarHora(){
 
@@ -279,6 +201,8 @@ b.style.opacity = "1";
 }
 
 }
+
+/* REVISAR CADA 5 SEGUNDOS */
 
 setInterval(
 verificarHora,
