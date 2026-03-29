@@ -248,8 +248,45 @@ contenedor.innerHTML="";
 
 jugadores.forEach((j,i)=>{
 
-let picksTexto =
+/* SI NO EXISTE COSTO (jugadores viejos) */
+
+let costoJugador = j.costo;
+
+if(!costoJugador){
+
+let combinaciones = 1;
+
+if(j.picks){
+
+j.picks.forEach(p=>{
+
+if(p.length>0){
+
+combinaciones *= p.length;
+
+}
+
+});
+
+}
+
+costoJugador =
+combinaciones * costo;
+
+}
+
+
+/* TEXTO PICKS */
+
+let picksTexto = "-";
+
+if(j.picks){
+
+picksTexto =
 j.picks.join(" | ");
+
+}
+
 
 contenedor.innerHTML += `
 
@@ -276,7 +313,7 @@ ${picksTexto}
 color:green;
 font-weight:bold">
 
-$${j.costo}
+$${costoJugador}
 
 </span>
 
@@ -309,7 +346,6 @@ ${j.pagado ? 'PAGADO':'Confirmar Pago'}
 });
 
 }
-
 
 /* ===========================
 CONFIRMAR PAGO
