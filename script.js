@@ -208,3 +208,11 @@ setInterval(
 verificarHora,
 5000
 );
+
+/* EJECUTAR AL CARGAR */
+
+window.onload = function(){
+
+verificarHora();
+
+}
