@@ -1,7 +1,9 @@
-let numeroWhatsApp =
-"527821859759";
+/* CONFIGURACION GENERAL */
+
+let numeroWhatsApp = "527821859759";
 
 let costo = 25;
+
 
 /* PARTIDOS */
 
@@ -27,21 +29,22 @@ let partidos = [
 
 ];
 
-let lista =
-document.getElementById("lista");
+
+/* MOSTRAR PARTIDOS */
+
+let lista = document.getElementById("lista");
 
 let selecciones = {};
 
-/* CREAR PARTIDOS */
+if(lista){
 
 partidos.forEach((p,i)=>{
 
-let div =
-document.createElement("div");
+let div = document.createElement("div");
 
-div.className="partido";
+div.className = "partido";
 
-div.innerHTML=`
+div.innerHTML = `
 
 <img src="${p[1]}" class="logo">
 
@@ -70,7 +73,10 @@ lista.appendChild(div);
 
 });
 
-/* SELECCIONAR */
+}
+
+
+/* SELECCION L E V */
 
 function toggle(btn,i,val){
 
@@ -86,9 +92,7 @@ selecciones[i].push(val);
 }else{
 
 selecciones[i]=
-selecciones[i].filter(
-x=>x!=val
-);
+selecciones[i].filter(x=>x!=val);
 
 }
 
@@ -96,33 +100,34 @@ calcular();
 
 }
 
-/* CALCULAR TOTAL */
+
+/* CALCULAR COSTO */
 
 function calcular(){
 
-let combinaciones=1;
+let combinaciones = 1;
 
 for(let i in selecciones){
 
-let c =
-selecciones[i].length;
+let c = selecciones[i].length;
 
 if(c>0)
-combinaciones*=c;
+combinaciones *= c;
 
 }
 
-document.getElementById(
-"comb"
-).innerText =
-combinaciones;
+let comb = document.getElementById("comb");
 
-document.getElementById(
-"total"
-).innerText =
-"$"+(combinaciones*costo);
+let total = document.getElementById("total");
+
+if(comb)
+comb.innerText = combinaciones;
+
+if(total)
+total.innerText = "$"+(combinaciones*costo);
 
 }
+
 
 /* ENVIAR WHATSAPP */
 
@@ -131,13 +136,19 @@ function enviar(){
 let nombre =
 document.getElementById("nombre").value;
 
+if(!nombre){
+
+alert("Escribe tu nombre");
+
+return;
+
+}
+
 let mensaje =
-"📋 QUINIELA\n";
+"📋 QUINIELA A's\n\n";
 
 mensaje +=
-"Nombre: "
-+nombre+
-"\n\n";
+"Nombre: "+nombre+"\n\n";
 
 partidos.forEach((p,i)=>{
 
@@ -146,158 +157,28 @@ let sel =
 .join(",");
 
 mensaje +=
-p[0]+" vs "
-+p[2]
-+" = "
-+sel+"\n";
+p[0]+" vs "+p[2]
++" = "+sel+"\n";
 
 });
+
+
+guardarJugador(nombre);
 
 let url =
 "https://wa.me/"
 +numeroWhatsApp
 +"?text="
-+encodeURIComponent(
-mensaje
-);
-
-  guardarJugador(nombre);
++encodeURIComponent(mensaje);
 
 window.open(url);
 
 }
 
-/* VERIFICAR HORA (VERSIÓN CORRECTA) */
 
-function verificarHora(){
-
-let hora =
-localStorage.getItem(
-"horaCierre"
-);
-
-if(!hora) return;
-
-let ahora = new Date();
-
-let cierre =
-new Date(hora);
-
-let botones =
-document.querySelectorAll(".btn");
-
-if(ahora > cierre){
-
-botones.forEach(b=>{
-b.disabled = true;
-b.style.opacity = "0.5";
-});
-
-}else{
-
-botones.forEach(b=>{
-b.disabled = false;
-b.style.opacity = "1";
-});
-
-}
-
-}
-
-/* REVISAR CADA 5 SEGUNDOS */
-
-setInterval(
-verificarHora,
-5000
-);
-
-/* EJECUTAR AL CARGAR */
-
-window.onload = function(){
-
-verificarHora();
-
-}
-
-function guardarHora(){
-
-let horaInput =
-document.getElementById(
-"horaCierre"
-);
-
-if(!horaInput){
-
-alert("No se encontró el campo hora");
-
-return;
-
-}
-
-let valor = horaInput.value;
-
-if(!valor){
-
-alert("Selecciona una hora");
-
-return;
-
-}
-
-localStorage.setItem(
-"horaCierre",
-valor
-);
-
-alert(
-"Hora guardada correctamente"
-);
-
-  }
+/* GUARDAR JUGADOR */
 
 function guardarJugador(nombre){
-
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
-let picksFila = [];
-
-partidos.forEach((p,i)=>{
-
-let sel =
-(selecciones[i]||[])
-.join("");
-
-picksFila.push(sel);
-
-});
-
-jugadores.push({
-
-nombre: nombre,
-
-picks: picksFila
-
-});
-
-localStorage.setItem(
-"jugadores",
-JSON.stringify(jugadores)
-);
-
-}
-
-function guardarJugador(nombre){
-
-if(!nombre){
-
-alert("Escribe tu nombre");
-
-return;
-
-}
 
 let jugadores =
 JSON.parse(
@@ -331,7 +212,10 @@ localStorage.setItem(
 JSON.stringify(jugadores)
 );
 
-  }
+}
+
+
+/* MOSTRAR JUGADORES */
 
 function mostrarJugadores(){
 
@@ -340,23 +224,31 @@ document.getElementById(
 "listaJugadores"
 );
 
+if(!contenedor) return;
+
 let jugadores =
 JSON.parse(
 localStorage.getItem("jugadores")
 ) || [];
 
-contenedor.innerHTML = "";
+contenedor.innerHTML="";
 
 jugadores.forEach((j,i)=>{
 
 contenedor.innerHTML += `
 
-<div style="border:1px solid #ccc;padding:5px;margin:5px">
+<div style="
+border:1px solid #ccc;
+padding:5px;
+margin:5px">
 
 <b>${j.nombre}</b>
 
-<button onclick="marcarPagado(${i})">
+<button
+onclick="marcarPagado(${i})">
+
 Marcar Pagado
+
 </button>
 
 </div>
@@ -366,6 +258,9 @@ Marcar Pagado
 });
 
 }
+
+
+/* MARCAR PAGADO */
 
 function marcarPagado(index){
 
@@ -384,6 +279,9 @@ JSON.stringify(jugadores)
 alert("Jugador marcado como pagado");
 
 }
+
+
+/* GENERAR PDF TABLA */
 
 function generarPDFGeneral(){
 
@@ -410,12 +308,18 @@ return;
 
 }
 
-let semana =
-document.getElementById("semana").value;
+let semanaInput =
+document.getElementById("semana");
 
-/* TITULO */
+let semana =
+semanaInput
+? semanaInput.value
+: "1";
 
 let y = 10;
+
+
+/* TITULO */
 
 doc.setFontSize(16);
 
@@ -430,7 +334,7 @@ y += 8;
 doc.setFontSize(12);
 
 doc.text(
-"SEMANA " + semana,
+"SEMANA "+semana,
 10,
 y
 );
@@ -440,7 +344,7 @@ y += 8;
 doc.setFontSize(10);
 
 doc.text(
-"Fecha: " +
+"Fecha: "+
 new Date().toLocaleDateString(),
 10,
 y
@@ -448,21 +352,6 @@ y
 
 y += 10;
 
-}
-
-let y = 10;
-
-/* TITULO */
-
-doc.setFontSize(14);
-
-doc.text(
-"QUINIELA GENERAL PAGADOS",
-10,
-y
-);
-
-y += 10;
 
 /* ENCABEZADOS */
 
@@ -492,6 +381,7 @@ colX += 25;
 });
 
 y += 8;
+
 
 /* FILAS */
 
@@ -539,4 +429,91 @@ doc.save(
 "quiniela_tabla_pagados.pdf"
 );
 
-  }
+}
+
+
+/* GUARDAR HORA */
+
+function guardarHora(){
+
+let horaInput =
+document.getElementById(
+"horaCierre"
+);
+
+if(!horaInput){
+
+alert("No se encontró el campo hora");
+
+return;
+
+}
+
+let valor = horaInput.value;
+
+if(!valor){
+
+alert("Selecciona una hora");
+
+return;
+
+}
+
+localStorage.setItem(
+"horaCierre",
+valor);
+
+alert(
+"Hora guardada correctamente"
+);
+
+}
+
+
+/* BLOQUEAR POR HORA */
+
+function verificarHora(){
+
+let hora =
+localStorage.getItem(
+"horaCierre"
+);
+
+if(!hora) return;
+
+let ahora = new Date();
+
+let cierre =
+new Date(hora);
+
+let botones =
+document.querySelectorAll(".btn");
+
+if(ahora > cierre){
+
+botones.forEach(b=>{
+
+b.disabled = true;
+
+b.style.opacity = "0.5";
+
+});
+
+}else{
+
+botones.forEach(b=>{
+
+b.disabled = false;
+
+b.style.opacity = "1";
+
+});
+
+}
+
+}
+
+setInterval(
+verificarHora,
+5000
+);
