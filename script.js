@@ -289,122 +289,6 @@ JSON.stringify(jugadores)
 
 }
 
- function generarPDFGeneral(){
-
-const { jsPDF } = window.jspdf;
-
-let doc =
-new jsPDF("landscape");
-
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
-let pagados =
-jugadores.filter(
-j=>j.pagado
-);
-
-if(pagados.length==0){
-
-alert("No hay jugadores pagados");
-
-return;
-
-}
-
-let y = 10;
-
-/* TITULO */
-
-doc.setFontSize(14);
-
-doc.text(
-"QUINIELA GENERAL PAGADOS",
-10,
-y
-);
-
-y += 10;
-
-/* ENCABEZADOS */
-
-doc.setFontSize(8);
-
-doc.text("No",10,y);
-
-doc.text("Jugador",20,y);
-
-let colX = 60;
-
-partidos.forEach((p,i)=>{
-
-let nombre =
-p[0].substring(0,3)
-+"-"+
-p[2].substring(0,3);
-
-doc.text(
-nombre,
-colX,
-y
-);
-
-colX += 25;
-
-});
-
-y += 8;
-
-/* FILAS */
-
-pagados.forEach((j,index)=>{
-
-doc.text(
-(index+1).toString(),
-10,
-y
-);
-
-doc.text(
-j.nombre,
-20,
-y
-);
-
-let col = 60;
-
-j.picks.forEach(p=>{
-
-doc.text(
-p || "-",
-col,
-y
-);
-
-col += 25;
-
-});
-
-y += 8;
-
-if(y > 180){
-
-doc.addPage();
-
-y = 10;
-
-}
-
-});
-
-doc.save(
-"quiniela_tabla_pagados.pdf"
-);
-
-}
-
 function guardarJugador(nombre){
 
 if(!nombre){
@@ -499,7 +383,7 @@ JSON.stringify(jugadores)
 
 alert("Jugador marcado como pagado");
 
-                 }
+}
 
 function generarPDFGeneral(){
 
@@ -615,4 +499,4 @@ doc.save(
 "quiniela_tabla_pagados.pdf"
 );
 
-}
+  }
