@@ -161,6 +161,8 @@ let url =
 mensaje
 );
 
+  guardarJugador(nombre);
+
 window.open(url);
 
 }
