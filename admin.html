@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -14,6 +15,8 @@
 <body>
 
 <h2>Panel de Administración ⚙️</h2>
+
+<!-- HORA DE CIERRE -->
 
 <div style="margin:10px 0">
 
@@ -37,15 +40,13 @@ Reiniciar Hora
 
 </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<hr>
 
-<script src="script.js"></script>
-
-</body>
-
-</html>
+<!-- SEMANA -->
 
 <label><b>Semana:</b></label>
+
+<br><br>
 
 <input
 type="number"
@@ -59,10 +60,52 @@ min="1">
 📄 Generar PDF General
 </button>
 
+<hr>
+
+<!-- JUGADORES -->
+
 <h3>Jugadores Registrados</h3>
 
 <div id="listaJugadores"></div>
 
+<br>
+
 <button onclick="mostrarJugadores()">
 Ver Jugadores
 </button>
+
+<br><br>
+
+<!-- BORRAR SEMANA -->
+
+<button 
+onclick="borrarJugadores()"
+
+style="
+background:red;
+color:white;
+padding:8px 15px;
+border:none;
+cursor:pointer">
+
+🗑️ Borrar Jugadores (Nueva Semana)
+
+</button>
+
+<!-- LIBRERIA PDF -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- SCRIPT PRINCIPAL -->
+
+<script src="script.js"></script>
+
+<script>
+
+mostrarJugadores();
+
+</script>
+
+</body>
+
+  </html>
