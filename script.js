@@ -216,3 +216,39 @@ window.onload = function(){
 verificarHora();
 
 }
+
+function guardarHora(){
+
+let horaInput =
+document.getElementById(
+"horaCierre"
+);
+
+if(!horaInput){
+
+alert("No se encontró el campo hora");
+
+return;
+
+}
+
+let valor = horaInput.value;
+
+if(!valor){
+
+alert("Selecciona una hora");
+
+return;
+
+}
+
+localStorage.setItem(
+"horaCierre",
+valor
+);
+
+alert(
+"Hora guardada correctamente"
+);
+
+  }
