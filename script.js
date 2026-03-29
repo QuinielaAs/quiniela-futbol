@@ -244,10 +244,25 @@ margin:5px">
 
 <b>${j.nombre}</b>
 
-<button
-onclick="marcarPagado(${i})">
+<br><br>
 
-Marcar Pagado
+<button
+id="btnPago${i}"
+onclick="marcarPagado(${i})"
+style="
+background-color:
+${j.pagado ? 'blue':'green'};
+color:white;
+border:none;
+padding:5px 10px;
+cursor:pointer;
+"
+
+${j.pagado ? 'disabled':''}
+
+>
+
+${j.pagado ? 'PAGADO':'Confirmar Pago'}
 
 </button>
 
@@ -257,7 +272,7 @@ Marcar Pagado
 
 });
 
-}
+  }
 
 
 /* MARCAR PAGADO */
