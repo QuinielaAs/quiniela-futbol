@@ -1,36 +1,34 @@
-/* CONFIGURACION GENERAL */
+/* ===========================
+CONFIGURACION GENERAL
+=========================== */
 
 let numeroWhatsApp = "527821859759";
 
 let costo = 25;
 
 
-/* PARTIDOS */
+/* ===========================
+PARTIDOS
+=========================== */
 
 let partidos = [
 
 ["América","","Tigres",""],
-
 ["Chivas","","Pumas",""],
-
 ["Cruz Azul","","León",""],
-
 ["Monterrey","","Santos",""],
-
 ["Toluca","","Atlas",""],
-
 ["Pachuca","","Necaxa",""],
-
 ["Mazatlán","","Tijuana",""],
-
 ["San Luis","","Querétaro",""],
-
 ["Puebla","","Juárez",""]
 
 ];
 
 
-/* MOSTRAR PARTIDOS */
+/* ===========================
+MOSTRAR PARTIDOS
+=========================== */
 
 let lista = document.getElementById("lista");
 
@@ -76,7 +74,9 @@ lista.appendChild(div);
 }
 
 
-/* SELECCION L E V */
+/* ===========================
+SELECCION L E V
+=========================== */
 
 function toggle(btn,i,val){
 
@@ -101,7 +101,9 @@ calcular();
 }
 
 
-/* CALCULAR COSTO */
+/* ===========================
+CALCULAR COSTO
+=========================== */
 
 function calcular(){
 
@@ -129,7 +131,9 @@ total.innerText = "$"+(combinaciones*costo);
 }
 
 
-/* ENVIAR WHATSAPP */
+/* ===========================
+ENVIAR WHATSAPP
+=========================== */
 
 function enviar(){
 
@@ -176,7 +180,9 @@ window.open(url);
 }
 
 
-/* GUARDAR JUGADOR */
+/* ===========================
+GUARDAR JUGADOR
+=========================== */
 
 function guardarJugador(nombre){
 
@@ -200,9 +206,7 @@ picks.push(sel);
 jugadores.push({
 
 nombre: nombre,
-
 picks: picks,
-
 pagado: false
 
 });
@@ -215,7 +219,9 @@ JSON.stringify(jugadores)
 }
 
 
-/* MOSTRAR JUGADORES */
+/* ===========================
+MOSTRAR JUGADORES ADMIN
+=========================== */
 
 function mostrarJugadores(){
 
@@ -239,22 +245,22 @@ contenedor.innerHTML += `
 
 <div style="
 border:1px solid #ccc;
-padding:5px;
-margin:5px">
+padding:8px;
+margin:6px">
 
 <b>${j.nombre}</b>
 
 <br><br>
 
 <button
-id="btnPago${i}"
 onclick="marcarPagado(${i})"
+
 style="
 background-color:
 ${j.pagado ? 'blue':'green'};
 color:white;
 border:none;
-padding:5px 10px;
+padding:6px 12px;
 cursor:pointer;
 "
 
@@ -272,10 +278,12 @@ ${j.pagado ? 'PAGADO':'Confirmar Pago'}
 
 });
 
-  }
+}
 
 
-/* MARCAR PAGADO */
+/* ===========================
+CONFIRMAR PAGO
+=========================== */
 
 function marcarPagado(index){
 
@@ -296,7 +304,35 @@ mostrarJugadores();
 }
 
 
-/* GENERAR PDF TABLA */
+/* ===========================
+BORRAR JUGADORES NUEVA SEMANA
+=========================== */
+
+function borrarJugadores(){
+
+let confirmar =
+confirm(
+"¿Seguro que deseas borrar todos los jugadores para nueva semana?"
+);
+
+if(!confirmar) return;
+
+localStorage.removeItem(
+"jugadores"
+);
+
+mostrarJugadores();
+
+alert(
+"Jugadores borrados correctamente"
+);
+
+}
+
+
+/* ===========================
+GENERAR PDF GENERAL
+=========================== */
 
 function generarPDFGeneral(){
 
@@ -323,6 +359,9 @@ return;
 
 }
 
+
+/* SEMANA */
+
 let semanaInput =
 document.getElementById("semana");
 
@@ -330,6 +369,7 @@ let semana =
 semanaInput
 ? semanaInput.value
 : "1";
+
 
 let y = 10;
 
@@ -441,13 +481,15 @@ y = 10;
 });
 
 doc.save(
-"quiniela_tabla_pagados.pdf"
+"quiniela_pagados.pdf"
 );
 
 }
 
 
-/* GUARDAR HORA */
+/* ===========================
+GUARDAR HORA CIERRE
+=========================== */
 
 function guardarHora(){
 
@@ -458,7 +500,7 @@ document.getElementById(
 
 if(!horaInput){
 
-alert("No se encontró el campo hora");
+alert("No se encontró campo hora");
 
 return;
 
@@ -485,7 +527,9 @@ alert(
 }
 
 
-/* BLOQUEAR POR HORA */
+/* ===========================
+VERIFICAR HORA BLOQUEO
+=========================== */
 
 function verificarHora(){
 
