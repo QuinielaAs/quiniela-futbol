@@ -7,30 +7,23 @@ let costo = 25;
 
 let partidos = [
 
-["América",
-"https://upload.wikimedia.org/wikipedia/en/7/79/Club_Am%C3%A9rica_logo.svg",
-"Tigres",
-"https://upload.wikimedia.org/wikipedia/en/9/9c/UANL_Tigres_logo.svg"],
+["América","","Tigres",""],
 
-["Chivas",
-"https://upload.wikimedia.org/wikipedia/en/4/4a/Chivas_logo.svg",
-"Pumas",
-"https://upload.wikimedia.org/wikipedia/en/f/f7/Club_Universidad_Nacional_logo.svg"],
+["Chivas","","Pumas",""],
 
-["Cruz Azul",
-"https://upload.wikimedia.org/wikipedia/en/7/79/Cruz_Azul_logo.svg",
-"León",
-"https://upload.wikimedia.org/wikipedia/en/5/59/Club_Le%C3%B3n_logo.svg"],
+["Cruz Azul","","León",""],
 
-["Monterrey",
-"https://upload.wikimedia.org/wikipedia/en/7/7e/Monterrey_logo.svg",
-"Santos",
-"https://upload.wikimedia.org/wikipedia/en/0/07/Santos_Laguna_logo.svg"],
+["Monterrey","","Santos",""],
 
-["Toluca",
-"https://upload.wikimedia.org/wikipedia/en/7/72/Toluca_FC_logo.svg",
-"Atlas",
-"https://upload.wikimedia.org/wikipedia/en/8/86/Atlas_FC_logo.svg"]
+["Toluca","","Atlas",""],
+
+["Pachuca","","Necaxa",""],
+
+["Mazatlán","","Tijuana",""],
+
+["San Luis","","Querétaro",""],
+
+["Puebla","","Juárez",""]
 
 ];
 
