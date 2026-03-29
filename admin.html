@@ -1,15 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Panel Admin Quiniela</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
 <h2>Panel de Administración ⚙️</h2>
 
 <div style="margin:10px 0">
 
 <label><b>Hora límite de cierre:</b></label>
 
+<br><br>
+
 <input
 type="datetime-local"
 id="horaCierre">
+
+<br><br>
 
 <button onclick="guardarHora()">
 Guardar Hora
 </button>
 
+<button onclick="borrarHora()">
+Reiniciar Hora
+</button>
+
 </div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
