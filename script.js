@@ -289,7 +289,7 @@ JSON.stringify(jugadores)
 
 }
 
-function generarPDFGeneral(){
+ function generarPDFGeneral(){
 
 const { jsPDF } = window.jspdf;
 
@@ -301,7 +301,18 @@ JSON.parse(
 localStorage.getItem("jugadores")
 ) || [];
 
-let x = 10;
+let pagados =
+jugadores.filter(
+j=>j.pagado
+);
+
+if(pagados.length==0){
+
+alert("No hay jugadores pagados");
+
+return;
+
+}
 
 let y = 10;
 
@@ -310,7 +321,7 @@ let y = 10;
 doc.setFontSize(14);
 
 doc.text(
-"QUINIELA GENERAL",
+"QUINIELA GENERAL PAGADOS",
 10,
 y
 );
@@ -348,7 +359,7 @@ y += 8;
 
 /* FILAS */
 
-jugadores.forEach((j,index)=>{
+pagados.forEach((j,index)=>{
 
 doc.text(
 (index+1).toString(),
@@ -389,10 +400,10 @@ y = 10;
 });
 
 doc.save(
-"quiniela_general.pdf"
+"quiniela_tabla_pagados.pdf"
 );
 
-  }
+}
 
 function guardarJugador(nombre){
 
@@ -517,45 +528,91 @@ return;
 
 let y = 10;
 
+/* TITULO */
+
+doc.setFontSize(14);
+
 doc.text(
-"QUINIELA PAGADA",
+"QUINIELA GENERAL PAGADOS",
 10,
 y
 );
 
 y += 10;
 
-pagados.forEach((j,index)=>{
+/* ENCABEZADOS */
+
+doc.setFontSize(8);
+
+doc.text("No",10,y);
+
+doc.text("Jugador",20,y);
+
+let colX = 60;
+
+partidos.forEach((p,i)=>{
+
+let nombre =
+p[0].substring(0,3)
++"-"+
+p[2].substring(0,3);
 
 doc.text(
-(index+1)
-+". "+j.nombre,
-10,
+nombre,
+colX,
 y
 );
 
-y += 8;
-
-j.picks.forEach((p,i)=>{
-
-doc.text(
-"Partido "
-+(i+1)
-+": "+p,
-10,
-y
-);
-
-y += 6;
+colX += 25;
 
 });
 
-y += 5;
+y += 8;
+
+/* FILAS */
+
+pagados.forEach((j,index)=>{
+
+doc.text(
+(index+1).toString(),
+10,
+y
+);
+
+doc.text(
+j.nombre,
+20,
+y
+);
+
+let col = 60;
+
+j.picks.forEach(p=>{
+
+doc.text(
+p || "-",
+col,
+y
+);
+
+col += 25;
+
+});
+
+y += 8;
+
+if(y > 180){
+
+doc.addPage();
+
+y = 10;
+
+}
 
 });
 
 doc.save(
-"jugadores_pagados.pdf"
+"quiniela_tabla_pagados.pdf"
 );
 
 }
