@@ -393,3 +393,47 @@ doc.save(
 );
 
   }
+
+function guardarJugador(nombre){
+
+if(!nombre){
+
+alert("Escribe tu nombre");
+
+return;
+
+}
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+let picks = [];
+
+partidos.forEach((p,i)=>{
+
+let sel =
+(selecciones[i]||[])
+.join("");
+
+picks.push(sel);
+
+});
+
+jugadores.push({
+
+nombre: nombre,
+
+picks: picks,
+
+pagado: false
+
+});
+
+localStorage.setItem(
+"jugadores",
+JSON.stringify(jugadores)
+);
+
+  }
