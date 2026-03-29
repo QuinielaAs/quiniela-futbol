@@ -471,3 +471,73 @@ Marcar Pagado
 });
 
 }
+
+function generarPDFGeneral(){
+
+const { jsPDF } = window.jspdf;
+
+let doc =
+new jsPDF("landscape");
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+let pagados =
+jugadores.filter(
+j=>j.pagado
+);
+
+if(pagados.length==0){
+
+alert("No hay jugadores pagados");
+
+return;
+
+}
+
+let y = 10;
+
+doc.text(
+"QUINIELA PAGADA",
+10,
+y
+);
+
+y += 10;
+
+pagados.forEach((j,index)=>{
+
+doc.text(
+(index+1)
++". "+j.nombre,
+10,
+y
+);
+
+y += 8;
+
+j.picks.forEach((p,i)=>{
+
+doc.text(
+"Partido "
++(i+1)
++": "+p,
+10,
+y
+);
+
+y += 6;
+
+});
+
+y += 5;
+
+});
+
+doc.save(
+"jugadores_pagados.pdf"
+);
+
+}
