@@ -410,6 +410,46 @@ return;
 
 }
 
+let semana =
+document.getElementById("semana").value;
+
+/* TITULO */
+
+let y = 10;
+
+doc.setFontSize(16);
+
+doc.text(
+"QUINIELA A's",
+10,
+y
+);
+
+y += 8;
+
+doc.setFontSize(12);
+
+doc.text(
+"SEMANA " + semana,
+10,
+y
+);
+
+y += 8;
+
+doc.setFontSize(10);
+
+doc.text(
+"Fecha: " +
+new Date().toLocaleDateString(),
+10,
+y
+);
+
+y += 10;
+
+}
+
 let y = 10;
 
 /* TITULO */
