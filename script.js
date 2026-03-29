@@ -252,3 +252,37 @@ alert(
 );
 
   }
+
+function guardarJugador(nombre){
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+let picksFila = [];
+
+partidos.forEach((p,i)=>{
+
+let sel =
+(selecciones[i]||[])
+.join("");
+
+picksFila.push(sel);
+
+});
+
+jugadores.push({
+
+nombre: nombre,
+
+picks: picksFila
+
+});
+
+localStorage.setItem(
+"jugadores",
+JSON.stringify(jugadores)
+);
+
+}
