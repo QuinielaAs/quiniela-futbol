@@ -177,8 +177,6 @@ let cierre = new Date(horaLimite);
 
 if(ahora > cierre){
 
-document.body.innerHTML = `
-
 <h2 style="text-align:center">
 
 ⛔ Quiniela cerrada
@@ -224,8 +222,6 @@ new Date(valor);
 
 if(ahora > cierre){
 
-document.body.innerHTML = `
-
 <h2 style="text-align:center">
 
 ⛔ Quiniela cerrada
@@ -249,22 +245,6 @@ verificarHora,
 5000
 );
 
-function guardarHora(){
-
-let hora =
-document.getElementById(
-"horaCierreAdmin"
-).value;
-
-localStorage.setItem(
-"horaCierre",
-hora
-);
-
-alert("Hora guardada correctamente");
-
-}
-
 function verificarHora(){
 
 let hora =
@@ -279,23 +259,22 @@ let ahora = new Date();
 let cierre =
 new Date(hora);
 
+let botones =
+document.querySelectorAll(".btn");
+
 if(ahora > cierre){
 
-document.body.innerHTML = `
+botones.forEach(b=>{
+b.disabled = true;
+b.style.opacity = "0.5";
+});
 
-<h2 style="text-align:center">
+}else{
 
-⛔ Quiniela cerrada
-
-</h2>
-
-<p style="text-align:center">
-
-La hora límite ya pasó.
-
-</p>
-
-`;
+botones.forEach(b=>{
+b.disabled = false;
+b.style.opacity = "1";
+});
 
 }
 
