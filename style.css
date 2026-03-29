@@ -1,78 +1,154 @@
-body{
-font-family:Arial;
-background:#f2f2f2;
-padding:10px;
+/* ===== ESTILO GENERAL ===== */
+
+body {
+
+font-family: Arial, sans-serif;
+
+margin: 0;
+
+padding: 0;
+
+background-color: #f4f4f4;
+
+text-align: center;
+
 }
 
-.contenedor{
-background:white;
-padding:12px;
-border-radius:12px;
-max-width:520px;
-margin:auto;
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+
+#lista {
+
+max-width: 700px;
+
+margin: auto;
+
+padding: 10px;
+
 }
 
-.partido{
-display:grid;
-grid-template-columns:
-40px 1fr 150px 1fr 40px;
-align-items:center;
-padding:8px 0;
-border-bottom:1px solid #ddd;
+
+/* ===== CADA PARTIDO ===== */
+
+.partido {
+
+display: flex;
+
+justify-content: space-between;
+
+align-items: center;
+
+background: white;
+
+border-radius: 8px;
+
+padding: 10px;
+
+margin: 8px 0;
+
+box-shadow: 0 0 5px rgba(0,0,0,0.1);
+
 }
 
-.logo{
-width:32px;
-height:32px;
+
+/* ===== NOMBRES EQUIPOS ===== */
+
+.equipo {
+
+width: 30%;
+
+text-align: center;
+
+font-weight: bold;
+
 }
 
-.equipo{
-text-align:center;
-font-weight:bold;
+
+/* ===== BOTONES L E V ===== */
+
+.botones {
+
+display: flex;
+
+gap: 5px;
+
 }
 
-.botones{
-display:flex;
-justify-content:center;
-gap:5px;
+
+/* ===== BOTONES ===== */
+
+.btn {
+
+padding: 6px 10px;
+
+border: none;
+
+border-radius: 5px;
+
+background-color: #ddd;
+
+cursor: pointer;
+
+font-weight: bold;
+
 }
 
-.btn{
-width:40px;
-height:40px;
-border-radius:8px;
-border:1px solid #ccc;
-background:white;
-font-weight:bold;
-color:black;
-font-size:16px;
+
+/* ===== BOTON ACTIVO ===== */
+
+.btn.activo {
+
+background-color: green;
+
+color: white;
+
 }
 
-.activo{
-background:#1aa34a;
-color:white;
-border:none;
+
+/* ===== INPUTS ===== */
+
+input {
+
+padding: 6px;
+
+border-radius: 5px;
+
+border: 1px solid #ccc;
+
 }
 
-.footer{
-background:#eee;
-padding:10px;
-border-radius:10px;
-margin-top:10px;
+
+/* ===== BOTONES GENERALES ===== */
+
+button {
+
+padding: 8px 14px;
+
+border-radius: 6px;
+
+border: none;
+
+cursor: pointer;
+
 }
 
-.info{
-display:flex;
-justify-content:space-between;
-font-weight:bold;
+
+/* ===== RESPONSIVO CELULAR ===== */
+
+@media(max-width:600px){
+
+.partido {
+
+flex-direction: row;
+
+font-size: 14px;
+
 }
 
-button{
-width:100%;
-padding:12px;
-background:#25D366;
-color:white;
-border:none;
-border-radius:10px;
-margin-top:10px;
+.equipo {
+
+width: 28%;
+
+}
+
 }
