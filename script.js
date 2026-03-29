@@ -437,3 +437,37 @@ JSON.stringify(jugadores)
 );
 
   }
+
+function mostrarJugadores(){
+
+let contenedor =
+document.getElementById(
+"listaJugadores"
+);
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+contenedor.innerHTML = "";
+
+jugadores.forEach((j,i)=>{
+
+contenedor.innerHTML += `
+
+<div style="border:1px solid #ccc;padding:5px;margin:5px">
+
+<b>${j.nombre}</b>
+
+<button onclick="marcarPagado(${i})">
+Marcar Pagado
+</button>
+
+</div>
+
+`;
+
+});
+
+}
