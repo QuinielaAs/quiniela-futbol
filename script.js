@@ -33,7 +33,6 @@ if(lista){
 partidos.forEach((p,i)=>{
 
 let div = document.createElement("div");
-
 div.className = "partido";
 
 div.innerHTML = `
@@ -117,7 +116,6 @@ mensaje += p[0]+" vs "+p[2]+" = "+sel+"\n";
 guardarJugador(nombre);
 
 let url = "https://wa.me/"+numeroWhatsApp+"?text="+encodeURIComponent(mensaje);
-
 window.open(url);
 }
 
@@ -185,13 +183,18 @@ cont.innerHTML += `
 });
 }
 
+/* 🔥 FIX IMPORTANTE */
 function setResultado(i,val){
 resultadosTemp[i] = val;
-mostrarResultados();
 }
 
+/* 🔥 FIX IMPORTANTE */
 function guardarResultados(){
+
 localStorage.setItem("resultados", JSON.stringify(resultadosTemp));
+
+mostrarResultados();
+
 alert("Resultados guardados");
 }
 
@@ -213,7 +216,7 @@ return aciertos;
 }
 
 /* ===========================
-ADMIN - MOSTRAR JUGADORES
+ADMIN - JUGADORES
 =========================== */
 
 function mostrarJugadores(){
@@ -320,11 +323,81 @@ XLSX.writeFile(wb, "quiniela.xlsx");
 }
 
 /* ===========================
+PDF (FIX COMPLETO)
+=========================== */
+
+function generarPDFGeneral(){
+
+const { jsPDF } = window.jspdf;
+
+let doc = new jsPDF("landscape");
+
+let jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
+let pagados = jugadores.filter(j=>j.pagado);
+
+if(pagados.length==0){
+alert("No hay jugadores pagados");
+return;
+}
+
+let semana = document.getElementById("semana")?.value || "1";
+
+let y = 10;
+
+doc.setFontSize(16);
+doc.text("QUINIELA",10,y);
+y+=8;
+
+doc.setFontSize(12);
+doc.text("SEMANA "+semana,10,y);
+y+=10;
+
+doc.setFontSize(8);
+
+doc.text("No",10,y);
+doc.text("Jugador",20,y);
+
+let colX = 60;
+
+partidos.forEach(p=>{
+let nombre = p[0].substring(0,3)+"-"+p[2].substring(0,3);
+doc.text(nombre,colX,y);
+colX+=25;
+});
+
+y+=8;
+
+pagados.forEach((j,i)=>{
+
+doc.text((i+1).toString(),10,y);
+doc.text(j.nombre,20,y);
+
+let col = 60;
+
+j.picks.forEach(p=>{
+doc.text(p || "-",col,y);
+col+=25;
+});
+
+y+=8;
+
+if(y > 180){
+doc.addPage();
+y = 10;
+}
+
+});
+
+doc.save("quiniela.pdf");
+}
+
+/* ===========================
 HORA LIMITE
 =========================== */
 
 function guardarHora(){
-let h = document.getElementById("horaCierre").value;
+let h = document.getElementById("horaCierre")?.value;
+if(!h) return alert("Selecciona hora");
 localStorage.setItem("horaCierre",h);
 alert("Guardado");
 }
