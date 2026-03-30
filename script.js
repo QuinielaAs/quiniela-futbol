@@ -672,3 +672,17 @@ setInterval(
 verificarHora,
 5000
 );
+
+function editarEquipo(i,tipo,valor){
+
+let partidos =
+JSON.parse(localStorage.getItem("partidos"));
+
+partidos[i][tipo] = valor;
+
+localStorage.setItem(
+"partidos",
+JSON.stringify(partidos)
+);
+
+}
