@@ -14,15 +14,15 @@ function cargar(){
 let partidos =
 JSON.parse(localStorage.getItem("partidos")) || [
 
-{l:"Equipo 1",v:"Equipo 2"},
-{l:"Equipo 3",v:"Equipo 4"},
-{l:"Equipo 5",v:"Equipo 6"},
-{l:"Equipo 7",v:"Equipo 8"},
-{l:"Equipo 9",v:"Equipo 10"},
-{l:"Equipo 11",v:"Equipo 12"},
-{l:"Equipo 13",v:"Equipo 14"},
-{l:"Equipo 15",v:"Equipo 16"},
-{l:"Equipo 17",v:"Equipo 18"}
+{l:"America",v:"Toluca"},
+{l:"Cruz Azul",v:"Guadalajara"},
+{l:"Queretaro",v:"Santos"},
+{l:"Tijuana",v:"Mazatlán"},
+{l:"Liverpool",v:"Arsenal"},
+{l:"Ac Milan",v:"Inter Milan"},
+{l:"Wolves",v:"Leverkusen"},
+{l:"Chelsea",v:"Roma"},
+{l:"Tigres",v:"San Luis"}
 
 ];
 
