@@ -686,3 +686,10 @@ JSON.stringify(partidos)
 );
 
 }
+
+window.onload=function(){
+
+cargar();
+cargarAdmin();
+
+}
