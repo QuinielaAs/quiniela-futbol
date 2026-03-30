@@ -76,19 +76,27 @@ SELECCION L E V
 
 function toggle(btn,i,val){
 
-btn.classList.toggle("activo");
-
 if(!selecciones[i])
 selecciones[i]=[];
 
+/* SI YA ESTÁ ACTIVO → QUITAR */
+
 if(btn.classList.contains("activo")){
 
-selecciones[i].push(val);
+btn.classList.remove("activo");
 
-}else{
-
-selecciones[i]=
+selecciones[i] =
 selecciones[i].filter(x=>x!=val);
+
+}
+
+/* SI NO ESTÁ → AGREGAR */
+
+else{
+
+btn.classList.add("activo");
+
+selecciones[i].push(val);
 
 }
 
