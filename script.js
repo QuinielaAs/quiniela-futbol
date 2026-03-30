@@ -6,69 +6,78 @@ let numeroWhatsApp = "527821859759";
 
 let costo = 25;
 
-
 /* ===========================
-PARTIDOS
+CARGAR PARTIDOS EN ADMIN (9)
 =========================== */
 
-let partidos = [
+function cargarAdmin(){
 
-["América","","Tigres",""],
-["Chivas","","Pumas",""],
-["Cruz Azul","","León",""],
-["Monterrey","","Santos",""],
-["Toluca","","Atlas",""],
-["Pachuca","","Necaxa",""],
-["Mazatlán","","Tijuana",""],
-["San Luis","","Querétaro",""],
-["Puebla","","Juárez",""]
+let partidos =
+JSON.parse(localStorage.getItem("partidos")) || [
+
+{l:"Equipo 1",v:"Equipo 2"},
+{l:"Equipo 3",v:"Equipo 4"},
+{l:"Equipo 5",v:"Equipo 6"},
+{l:"Equipo 7",v:"Equipo 8"},
+{l:"Equipo 9",v:"Equipo 10"},
+{l:"Equipo 11",v:"Equipo 12"},
+{l:"Equipo 13",v:"Equipo 14"},
+{l:"Equipo 15",v:"Equipo 16"},
+{l:"Equipo 17",v:"Equipo 18"}
 
 ];
 
+let div =
+document.getElementById("adminLista");
 
-/* ===========================
-MOSTRAR PARTIDOS
-=========================== */
+if(!div) return;
 
-let lista = document.getElementById("lista");
-
-let selecciones = {};
-
-if(lista){
+div.innerHTML="";
 
 partidos.forEach((p,i)=>{
 
-let div = document.createElement("div");
+div.innerHTML += `
 
-div.className = "partido";
+<div class="admin-partido">
 
-div.innerHTML = `
+<div class="logo-box">
 
-<div class="equipo">${p[0]}</div>
-
-<div class="botones">
-
-<button class="btn"
-onclick="toggle(this,${i},'L')">L</button>
-
-<button class="btn"
-onclick="toggle(this,${i},'E')">E</button>
-
-<button class="btn"
-onclick="toggle(this,${i},'V')">V</button>
+Logo
 
 </div>
 
-<div class="equipo">${p[2]}</div>
+<input
+class="admin-input"
+value="${p.l}"
+oninput="editarEquipo(${i},'l',this.value)">
+
+<span>vs</span>
+
+<input
+class="admin-input"
+value="${p.v}"
+oninput="editarEquipo(${i},'v',this.value)">
+
+<div class="logo-box">
+
+Logo
+
+</div>
+
+</div>
 
 `;
 
-lista.appendChild(div);
-
 });
 
-}
+/* guardar si no existían */
 
+localStorage.setItem(
+"partidos",
+JSON.stringify(partidos)
+);
+
+}
 
 /* ===========================
 SELECCION L E V
