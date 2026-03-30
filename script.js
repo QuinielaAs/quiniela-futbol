@@ -1,9 +1,8 @@
 /* ===========================
-CONFIGURACION GENERAL
+CONFIG
 =========================== */
 
 let numeroWhatsApp = "527821859759";
-
 let costo = 25;
 
 /* ===========================
@@ -23,7 +22,136 @@ let partidos = [
 ];
 
 /* ===========================
-RESULTADOS ADMIN
+CLIENTE - MOSTRAR PARTIDOS
+=========================== */
+
+let lista = document.getElementById("lista");
+let selecciones = {};
+
+if(lista){
+
+partidos.forEach((p,i)=>{
+
+let div = document.createElement("div");
+
+div.className = "partido";
+
+div.innerHTML = `
+<div class="equipo">${p[0]}</div>
+
+<div class="botones">
+<button class="btn" onclick="toggle(this,${i},'L')">L</button>
+<button class="btn" onclick="toggle(this,${i},'E')">E</button>
+<button class="btn" onclick="toggle(this,${i},'V')">V</button>
+</div>
+
+<div class="equipo">${p[2]}</div>
+`;
+
+lista.appendChild(div);
+
+});
+
+}
+
+/* ===========================
+SELECCION
+=========================== */
+
+function toggle(btn,i,val){
+
+btn.classList.toggle("activo");
+
+if(!selecciones[i]) selecciones[i]=[];
+
+if(btn.classList.contains("activo")){
+selecciones[i].push(val);
+}else{
+selecciones[i]=selecciones[i].filter(x=>x!=val);
+}
+
+calcular();
+}
+
+/* ===========================
+CALCULAR COSTO
+=========================== */
+
+function calcular(){
+
+let combinaciones = 1;
+
+for(let i in selecciones){
+let c = selecciones[i].length;
+if(c>0) combinaciones *= c;
+}
+
+let comb = document.getElementById("comb");
+let total = document.getElementById("total");
+
+if(comb) comb.innerText = combinaciones;
+if(total) total.innerText = "$"+(combinaciones*costo);
+}
+
+/* ===========================
+ENVIAR + GUARDAR
+=========================== */
+
+function enviar(){
+
+let nombre = document.getElementById("nombre").value;
+
+if(!nombre){
+alert("Escribe tu nombre");
+return;
+}
+
+let mensaje = "📋 QUINIELA\n\n";
+mensaje += "Nombre: "+nombre+"\n\n";
+
+partidos.forEach((p,i)=>{
+let sel = (selecciones[i]||[]).join(",");
+mensaje += p[0]+" vs "+p[2]+" = "+sel+"\n";
+});
+
+guardarJugador(nombre);
+
+let url = "https://wa.me/"+numeroWhatsApp+"?text="+encodeURIComponent(mensaje);
+
+window.open(url);
+}
+
+function guardarJugador(nombre){
+
+let jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
+
+let picks = [];
+let combinaciones = 1;
+
+partidos.forEach((p,i)=>{
+
+let sel = (selecciones[i]||[]);
+
+picks.push(sel.join(""));
+
+if(sel.length>0) combinaciones *= sel.length;
+
+});
+
+let total = combinaciones * costo;
+
+jugadores.push({
+nombre: nombre,
+picks: picks,
+pagado: false,
+costo: total
+});
+
+localStorage.setItem("jugadores", JSON.stringify(jugadores));
+}
+
+/* ===========================
+ADMIN - RESULTADOS
 =========================== */
 
 let resultadosTemp = [];
@@ -33,9 +161,7 @@ function mostrarResultados(){
 let cont = document.getElementById("resultados");
 if(!cont) return;
 
-let guardados =
-JSON.parse(localStorage.getItem("resultados")) || [];
-
+let guardados = JSON.parse(localStorage.getItem("resultados")) || [];
 resultadosTemp = [...guardados];
 
 cont.innerHTML = "";
@@ -70,7 +196,7 @@ alert("Resultados guardados");
 }
 
 /* ===========================
-ACERTOS
+ACIERTOS
 =========================== */
 
 function calcularAciertos(picks, resultados){
@@ -87,7 +213,7 @@ return aciertos;
 }
 
 /* ===========================
-MOSTRAR JUGADORES + ACIERTOS
+ADMIN - MOSTRAR JUGADORES
 =========================== */
 
 function mostrarJugadores(){
@@ -95,11 +221,8 @@ function mostrarJugadores(){
 let cont = document.getElementById("listaJugadores");
 if(!cont) return;
 
-let jugadores =
-JSON.parse(localStorage.getItem("jugadores")) || [];
-
-let resultados =
-JSON.parse(localStorage.getItem("resultados")) || [];
+let jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
+let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
 
 cont.innerHTML="";
 
@@ -115,8 +238,7 @@ cont.innerHTML += `
 Picks:<br>
 ${j.picks.join(" | ")}<br><br>
 
-Aciertos:
-<b>${aciertos}</b><br><br>
+Aciertos: <b>${aciertos}</b><br><br>
 
 <button onclick="marcarPagado(${i})"
 style="background:${j.pagado?'blue':'green'};color:white;border:none;padding:6px 12px">
@@ -136,8 +258,7 @@ PAGOS
 
 function marcarPagado(i){
 
-let jugadores =
-JSON.parse(localStorage.getItem("jugadores")) || [];
+let jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
 
 jugadores[i].pagado = true;
 
@@ -160,16 +281,13 @@ mostrarJugadores();
 }
 
 /* ===========================
-EXCEL 🔥
+EXCEL
 =========================== */
 
 function exportarExcel(){
 
-let jugadores =
-JSON.parse(localStorage.getItem("jugadores")) || [];
-
-let resultados =
-JSON.parse(localStorage.getItem("resultados")) || [];
+let jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
+let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
 
 if(resultados.length == 0){
 alert("Primero guarda resultados");
@@ -178,12 +296,9 @@ return;
 
 let data = jugadores.map(j=>{
 
-let aciertos =
-calcularAciertos(j.picks, resultados);
+let aciertos = calcularAciertos(j.picks, resultados);
 
-let fila = {
-Nombre: j.nombre
-};
+let fila = { Nombre: j.nombre };
 
 j.picks.forEach((p,i)=>{
 fila["P"+(i+1)] = p;
@@ -194,10 +309,8 @@ fila["Aciertos"] = aciertos;
 return fila;
 });
 
-/* ORDENAR */
 data.sort((a,b)=>b.Aciertos - a.Aciertos);
 
-/* CREAR ARCHIVO */
 let ws = XLSX.utils.json_to_sheet(data);
 let wb = XLSX.utils.book_new();
 
@@ -207,50 +320,7 @@ XLSX.writeFile(wb, "quiniela.xlsx");
 }
 
 /* ===========================
-PDF (YA TENIAS)
-=========================== */
-
-function generarPDFGeneral(){
-
-const { jsPDF } = window.jspdf;
-
-let doc = new jsPDF("landscape");
-
-let jugadores =
-JSON.parse(localStorage.getItem("jugadores")) || [];
-
-let pagados = jugadores.filter(j=>j.pagado);
-
-if(pagados.length==0){
-alert("No hay pagados");
-return;
-}
-
-let y = 10;
-
-doc.text("QUINIELA",10,y);
-y+=10;
-
-pagados.forEach((j,i)=>{
-
-doc.text((i+1)+" "+j.nombre,10,y);
-
-let col = 60;
-
-j.picks.forEach(p=>{
-doc.text(p,col,y);
-col+=20;
-});
-
-y+=8;
-
-});
-
-doc.save("quiniela.pdf");
-}
-
-/* ===========================
-HORA
+HORA LIMITE
 =========================== */
 
 function guardarHora(){
@@ -263,3 +333,28 @@ function borrarHora(){
 localStorage.removeItem("horaCierre");
 alert("Reiniciado");
 }
+
+function verificarHora(){
+
+let hora = localStorage.getItem("horaCierre");
+if(!hora) return;
+
+let ahora = new Date();
+let cierre = new Date(hora);
+
+let botones = document.querySelectorAll(".btn");
+
+if(ahora > cierre){
+botones.forEach(b=>{
+b.disabled = true;
+b.style.opacity = "0.5";
+});
+}else{
+botones.forEach(b=>{
+b.disabled = false;
+b.style.opacity = "1";
+});
+}
+}
+
+setInterval(verificarHora,5000);
