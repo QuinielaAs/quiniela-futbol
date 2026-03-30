@@ -1,5 +1,5 @@
 /* ===========================
-ESTILO GENERAL
+FONDO GENERAL
 =========================== */
 
 body {
@@ -12,30 +12,62 @@ padding: 0;
 
 background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 
-text-align: center;
+}
 
-color: black;
+
+/* ===========================
+PANEL PRINCIPAL CLIENTE
+=========================== */
+
+.panel {
+
+max-width: 800px;
+
+margin: 20px auto;
+
+background: white;
+
+border-radius: 12px;
+
+padding: 15px;
+
+box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 
 }
 
 
 /* ===========================
-CONTENEDOR PRINCIPAL
+TITULO
+=========================== */
+
+.titulo {
+
+text-align: center;
+
+font-size: 24px;
+
+font-weight: bold;
+
+margin-bottom: 10px;
+
+color: #203a43;
+
+}
+
+
+/* ===========================
+CONTENEDOR PARTIDOS
 =========================== */
 
 #lista {
 
-max-width: 750px;
-
-margin: auto;
-
-padding: 10px;
+margin-top: 10px;
 
 }
 
 
 /* ===========================
-CADA PARTIDO (CASILLA)
+CASILLA PARTIDO
 =========================== */
 
 .partido {
@@ -46,17 +78,17 @@ justify-content: space-between;
 
 align-items: center;
 
-background: white;
+border: 1px solid #ddd;
 
 border-radius: 10px;
 
-padding: 12px;
+padding: 10px;
 
-margin: 10px 0;
+margin: 8px 0;
 
-box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+background: #f9f9f9;
 
-transition: transform 0.2s;
+transition: 0.2s;
 
 }
 
@@ -65,7 +97,9 @@ transition: transform 0.2s;
 
 .partido:hover {
 
-transform: scale(1.02);
+background: #f1f1f1;
+
+transform: scale(1.01);
 
 }
 
@@ -78,9 +112,9 @@ EQUIPOS
 
 width: 30%;
 
-font-weight: bold;
+text-align: center;
 
-font-size: 15px;
+font-weight: bold;
 
 }
 
@@ -99,14 +133,18 @@ gap: 6px;
 
 
 /* ===========================
-BOTONES BASE
+BOTONES BASE (BLANCOS)
 =========================== */
 
 .btn {
 
-padding: 8px 12px;
+background: white;
 
-border: none;
+border: 2px solid #ccc;
+
+color: black;
+
+padding: 8px 12px;
 
 border-radius: 6px;
 
@@ -116,71 +154,53 @@ font-weight: bold;
 
 transition: 0.2s;
 
-color: white;
+}
+
+
+/* HOVER */
+
+.btn:hover {
+
+border-color: green;
+
+transform: scale(1.1);
 
 }
 
 
 /* ===========================
-COLORES POR TIPO
-=========================== */
-
-/* LOCAL */
-
-.btn:nth-child(1) {
-
-background: #28a745;
-
-}
-
-/* EMPATE */
-
-.btn:nth-child(2) {
-
-background: #ffc107;
-
-color: black;
-
-}
-
-/* VISITA */
-
-.btn:nth-child(3) {
-
-background: #dc3545;
-
-}
-
-
-/* ===========================
-BOTON ACTIVO
+BOTON ACTIVO (VERDE)
 =========================== */
 
 .btn.activo {
 
-box-shadow: 0 0 8px black;
+background: green;
 
-transform: scale(1.1);
+color: white;
 
-}
+border-color: green;
 
+transform: scale(1.15);
 
-/* ===========================
-EFECTO HOVER BOTONES
-=========================== */
-
-.btn:hover {
-
-transform: scale(1.1);
-
-opacity: 0.9;
+box-shadow: 0 0 8px rgba(0,128,0,0.6);
 
 }
 
 
 /* ===========================
-INPUTS
+SECCION INFERIOR
 =========================== */
+
+.panel-inferior {
+
+margin-top: 15px;
+
+text-align: center;
+
+}
+
+
+/* INPUT NOMBRE */
 
 input {
 
@@ -190,20 +210,26 @@ border-radius: 6px;
 
 border: 1px solid #ccc;
 
+margin: 5px;
+
 }
 
 
-/* ===========================
-BOTONES GENERALES
-=========================== */
+/* BOTON ENVIAR */
 
 button {
 
-padding: 8px 14px;
+padding: 10px 16px;
 
 border-radius: 6px;
 
 border: none;
+
+background: green;
+
+color: white;
+
+font-weight: bold;
 
 cursor: pointer;
 
@@ -214,28 +240,18 @@ transition: 0.2s;
 
 button:hover {
 
+background: #006400;
+
 transform: scale(1.05);
 
 }
 
 
-/* ===========================
-RESPONSIVO CELULAR
-=========================== */
+/* RESPONSIVO */
 
 @media(max-width:600px){
 
-.partido {
-
-font-size: 14px;
-
-padding: 10px;
-
-}
-
 .equipo {
-
-width: 28%;
 
 font-size: 13px;
 
@@ -244,8 +260,6 @@ font-size: 13px;
 .btn {
 
 padding: 6px 9px;
-
-font-size: 12px;
 
 }
 
