@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Quiniela Futbol</title>
+<head>
+
+<meta charset="UTF-8">
+
+<title>Quiniela A's</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -12,37 +13,54 @@
 
 <body>
 
-<div class="contenedor">
+<div class="panel">
 
-<h2>⚽Quiniela A's⚽</h2></h2>
+<div class="titulo">
 
-  <div style="margin-bottom:10px">
+🏆 Quiniela A's
 
-<input id="nombre"
-placeholder="Nombre del jugador">
+</div>
+
+<!-- LISTA PARTIDOS -->
 
 <div id="lista"></div>
 
-<div class="footer">
+<!-- PANEL INFERIOR -->
 
-<div class="info">
-<span>Combinaciones:</span>
+<div class="panel-inferior">
+
+<br>
+
+<label><b>Tu Nombre:</b></label>
+
+<br>
+
+<input
+type="text"
+id="nombre"
+placeholder="Escribe tu nombre">
+
+<br><br>
+
+<div>
+
+Combinaciones: 
 <span id="comb">1</span>
+
 </div>
 
-<div class="info">
-<span>Total:</span>
+<div>
+
+Total: 
 <span id="total">$25</span>
+
 </div>
 
-<label>Subir comprobante:</label>
-
-<input type="file"
-accept="image/*">
+<br>
 
 <button onclick="enviar()">
 
-Enviar Quiniela
+📲 Enviar Jugada
 
 </button>
 
@@ -53,4 +71,5 @@ Enviar Quiniela
 <script src="script.js"></script>
 
 </body>
+
 </html>
