@@ -11,18 +11,70 @@ CARGAR PARTIDOS CLIENTE
 
 function cargar(){
 
-let partidos =
-JSON.parse(localStorage.getItem("partidos")) || [
+let partidos = [
 
-{l:"America",v:"Toluca"},
-{l:"Cruz Azul",v:"Guadalajara"},
-{l:"Queretaro",v:"Santos"},
-{l:"Tijuana",v:"Mazatlán"},
-{l:"Liverpool",v:"Arsenal"},
-{l:"Ac Milan",v:"Inter Milan"},
-{l:"Wolves",v:"Leverkusen"},
-{l:"Chelsea",v:"Roma"},
-{l:"Tigres",v:"San Luis"}
+{
+l:"América",
+v:"Tigres",
+logoL:"logos/america.png",
+logoV:"logos/tigres.png"
+},
+
+{
+l:"Chivas",
+v:"Pumas",
+logoL:"logos/chivas.png",
+logoV:"logos/pumas.png"
+},
+
+{
+l:"Cruz Azul",
+v:"León",
+logoL:"logos/cruzazul.png",
+logoV:"logos/leon.png"
+},
+
+{
+l:"Toluca",
+v:"Atlas",
+logoL:"logos/toluca.png",
+logoV:"logos/atlas.png"
+},
+
+{
+l:"Monterrey",
+v:"Santos",
+logoL:"logos/monterrey.png",
+logoV:"logos/santos.png"
+},
+
+{
+l:"Necaxa",
+v:"Puebla",
+logoL:"logos/necaxa.png",
+logoV:"logos/puebla.png"
+},
+
+{
+l:"Mazatlán",
+v:"Juárez",
+logoL:"logos/mazatlan.png",
+logoV:"logos/juarez.png"
+},
+
+{
+l:"Querétaro",
+v:"Pachuca",
+logoL:"logos/queretaro.png",
+logoV:"logos/pachuca.png"
+},
+
+{
+l:"Tijuana",
+v:"San Luis",
+logoL:"logos/tijuana.png",
+logoV:"logos/sanluis.png"
+}
 
 ];
 
