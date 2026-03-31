@@ -207,7 +207,7 @@ document.getElementById("total").innerText =
 }
 
 /* ===========================
-ENVIAR QUINIELA
+ENVIAR WHATSAPP
 =========================== */
 
 function enviar(){
@@ -215,7 +215,7 @@ function enviar(){
 let nombre =
 document.getElementById("nombre").value;
 
-if(nombre==""){
+if(!nombre){
 
 alert("Escribe tu nombre");
 
@@ -223,7 +223,34 @@ return;
 
 }
 
-alert("Quiniela enviada");
+let mensaje =
+"📋 QUINIELA A's\n\n";
+
+mensaje +=
+"Nombre: "+nombre+"\n\n";
+
+partidos.forEach((p,i)=>{
+
+let sel =
+(selecciones[i]||[])
+.join(",");
+
+mensaje +=
+p[0]+" vs "+p[2]
++" = "+sel+"\n";
+
+});
+
+
+guardarJugador(nombre);
+
+let url =
+"https://wa.me/"
++numeroWhatsApp
++"?text="
++encodeURIComponent(mensaje);
+
+window.open(url);
 
 }
 
