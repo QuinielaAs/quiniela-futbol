@@ -145,7 +145,7 @@ ${p.v} <img src="${p.logoV}" class="logo logo-derecha">
 }
 
 /* ===========================
-BOTONES L E V (SOLUCIÓN DEFINITIVA)
+BOTONES L E V
 =========================== */
 
 function toggle(btn, i, val) {
@@ -155,29 +155,26 @@ function toggle(btn, i, val) {
         selecciones[i] = [];
     }
 
-    // Verificar si ya estaba seleccionado
-    let index = selecciones[i].indexOf(val);
+    // Verificar si ya existe el valor
+    if (selecciones[i].includes(val)) {
 
-    if (index !== -1) {
-
-        // QUITAR selección
-        selecciones[i].splice(index, 1);
+        // Quitar selección
+        selecciones[i] = selecciones[i].filter(x => x !== val);
         btn.classList.remove("activo");
 
     } else {
 
-        // AGREGAR selección
+        // Agregar selección
         selecciones[i].push(val);
         btn.classList.add("activo");
 
     }
 
-    // Forzar actualización visual inmediata
+    // Quitar enfoque visual (MUY IMPORTANTE)
     btn.blur();
 
-    // Recalcular
     calcular();
-}
+    }
 
 /* ===========================
 CALCULAR TOTAL
