@@ -4,7 +4,9 @@ CONFIGURACION GENERAL
 
 let numeroWhatsApp = "527821859759";
 
-let costo = 25;
+let precio = 25;
+
+let selecciones = [];
 
 
 /* ===========================
