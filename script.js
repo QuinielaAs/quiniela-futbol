@@ -3,11 +3,8 @@ CONFIGURACION GENERAL
 =========================== */
 
 let numeroWhatsApp = "527821859759";
-
 let precio = 25;
-
 let selecciones = [];
-
 
 /* ===========================
 CARGAR PARTIDOS CLIENTE
@@ -82,6 +79,7 @@ logoV:"logos/atleticosl.png"
 
 ];
 
+// Guardar partidos
 localStorage.setItem(
 "partidos",
 JSON.stringify(partidos)
@@ -136,7 +134,8 @@ V
 
 <div class="equipo">
 
-${p.v} <img src="${p.logoV}" class="logo logo-derecha">
+${p.v}
+<img src="${p.logoV}" class="logo logo-derecha">
 
 </div>
 
@@ -154,31 +153,30 @@ BOTONES L E V
 
 function toggle(btn, i, val) {
 
-    // Crear array si no existe
-    if (!selecciones[i]) {
-        selecciones[i] = [];
-    }
+if (!selecciones[i]) {
+selecciones[i] = [];
+}
 
-    // Verificar si ya existe el valor
-    if (selecciones[i].includes(val)) {
+if (selecciones[i].includes(val)) {
 
-        // Quitar selección
-        selecciones[i] = selecciones[i].filter(x => x !== val);
-        btn.classList.remove("activo");
+selecciones[i] =
+selecciones[i].filter(x => x !== val);
 
-    } else {
+btn.classList.remove("activo");
 
-        // Agregar selección
-        selecciones[i].push(val);
-        btn.classList.add("activo");
+} else {
 
-    }
+selecciones[i].push(val);
 
-    // Quitar enfoque visual (MUY IMPORTANTE)
-    btn.blur();
+btn.classList.add("activo");
 
-    calcular();
-    }
+}
+
+btn.blur();
+
+calcular();
+
+}
 
 /* ===========================
 CALCULAR TOTAL
@@ -223,6 +221,10 @@ return;
 
 }
 
+// Obtener partidos
+let partidos =
+JSON.parse(localStorage.getItem("partidos"));
+
 let mensaje =
 "📋 QUINIELA A's\n\n";
 
@@ -236,13 +238,10 @@ let sel =
 .join(",");
 
 mensaje +=
-p[0]+" vs "+p[2]
+p.l+" vs "+p.v
 +" = "+sel+"\n";
 
 });
-
-
-guardarJugador(nombre);
 
 let url =
 "https://wa.me/"
@@ -250,7 +249,7 @@ let url =
 +"?text="
 +encodeURIComponent(mensaje);
 
-window.open(url);
+window.open(url,"_blank");
 
 }
 
@@ -276,8 +275,6 @@ div.innerHTML += `
 
 <div class="admin-partido">
 
-<!-- LOGO LOCAL -->
-
 <div class="logo-box">
 
 <input
@@ -298,8 +295,6 @@ style="width:100%;height:100%;object-fit:contain">
 
 </div>
 
-<!-- EQUIPO LOCAL -->
-
 <input
 class="admin-input"
 value="${p.l}"
@@ -307,14 +302,10 @@ oninput="editarEquipo(${i},'l',this.value)">
 
 <span>vs</span>
 
-<!-- EQUIPO VISITA -->
-
 <input
 class="admin-input"
 value="${p.v}"
 oninput="editarEquipo(${i},'v',this.value)">
-
-<!-- LOGO VISITA -->
 
 <div class="logo-box">
 
@@ -363,15 +354,8 @@ JSON.stringify(partidos)
 }
 
 /* ===========================
-INICIO GENERAL
+SUBIR LOGOS
 =========================== */
-
-window.onload=function(){
-
-cargar();
-cargarAdmin();
-
-                 }
 
 function subirLogo(i,tipo,input){
 
@@ -416,3 +400,14 @@ JSON.stringify(partidos)
 reader.readAsDataURL(file);
 
 }
+
+/* ===========================
+INICIO GENERAL
+=========================== */
+
+window.onload=function(){
+
+cargar();
+cargarAdmin();
+
+    }
