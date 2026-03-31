@@ -233,3 +233,9 @@ margin-right: 6px;
 vertical-align: middle;
 
 }
+
+/* Evita que el focus deje el botón marcado */
+
+.btn:focus {
+    outline: none;
+}
