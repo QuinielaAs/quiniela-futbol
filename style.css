@@ -239,3 +239,17 @@ padding: 6px 9px;
 }
 
   }
+
+.logo {
+
+width: 26px;
+
+height: 26px;
+
+object-fit: contain;
+
+margin-right: 6px;
+
+vertical-align: middle;
+
+}
