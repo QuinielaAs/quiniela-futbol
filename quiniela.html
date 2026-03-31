@@ -13,32 +13,41 @@
 
 <body>
 
-<div class="panel">
+<div class="contenedor">
 
-<div class="titulo">
+<h2>Mi Quiniela ⚽</h2>
 
-🏆 Quiniela A'saaa
-
-</div>
+<input id="nombre"
+placeholder="Nombre del jugador">
 
 <div id="lista"></div>
 
-<div class="panel-inferior">
+<div class="footer">
 
-<br>
+<div class="info">
+<span>Combinaciones:</span>
+<span id="comb">1</span>
+</div>
 
-<label><b>Nombre:</b></label>
+<div class="info">
+<span>Total:</span>
+<span id="total">$25</span>
+</div>
 
-<br><br>
+<label>Subir comprobante:</label>
 
-<input
-type="text"
-id="nombre"
-placeholder="Escribe tu nombre">
+<input type="file" accept="image/*">
 
-<br><br>
+<button class="enviar"
+onclick="enviar()">
 
-<div>
+Enviar Quiniela
+
+</button>
+
+</div>
+
+</div>
 
 <!-- ===========================
 RESUMEN INFERIOR
@@ -59,16 +68,6 @@ RESUMEN INFERIOR
 </div>
 
 <br>
-
-    <br><br>
-
-<label>Nombre:</label>
-
-<input type="text"
-id="nombre"
-placeholder="Escribe tu nombre">
-
-<br><br>
     
 <button type="button" onclick="enviar()">
 Enviar Quiniela
