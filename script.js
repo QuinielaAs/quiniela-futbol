@@ -132,7 +132,7 @@ V
 
 <div class="equipo">
 
-<img src="${p.logoV}" class="logo"> ${p.v}
+${p.v} <img src="${p.logoV}" class="logo logo-derecha">
 
 </div>
 
