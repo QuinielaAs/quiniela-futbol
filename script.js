@@ -23,7 +23,7 @@ logoV:"logos/tigres.png"
 {
 l:"Chivas",
 v:"Pumas",
-logoL:"logos/chivas.png",
+logoL:"logos/guadalajara.png",
 logoV:"logos/pumas.png"
 },
 
