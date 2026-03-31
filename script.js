@@ -212,8 +212,7 @@ ENVIAR WHATSAPP
 
 function enviar(){
 
-let nombre =
-document.getElementById("nombre").value;
+let nombre =document.getElementById("nombre").value;
 
 if(!nombre){
 
@@ -223,33 +222,22 @@ return;
 
 }
 
-let mensaje =
-"📋 QUINIELA A's\n\n";
+let mensaje ="📋 QUINIELA A's\n\n";
 
-mensaje +=
-"Nombre: "+nombre+"\n\n";
+mensaje +="Nombre: "+nombre+"\n\n";
 
 partidos.forEach((p,i)=>{
 
-let sel =
-(selecciones[i]||[])
-.join(",");
+let sel =(selecciones[i]||[]).join(",");
 
-mensaje +=
-p[0]+" vs "+p[2]
-+" = "+sel+"\n";
+mensaje +=p[0]+" vs "+p[2]+" = "+sel+"\n";
 
 });
 
 
 guardarJugador(nombre);
 
-let url =
-"https://wa.me/"
-+numeroWhatsApp
-+"?text="
-+encodeURIComponent(mensaje);
-
+let url ="https://wa.me/"+numeroWhatsApp+"?text="+encodeURIComponent(mensaje);
 window.open(url);
 
 }
