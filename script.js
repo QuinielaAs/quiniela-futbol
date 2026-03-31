@@ -98,7 +98,7 @@ div.innerHTML += `
 
 <div class="equipo">
 
-${p.l}
+<img src="${p.logoL}" class="logo"> ${p.l}
 
 </div>
 
@@ -132,7 +132,7 @@ V
 
 <div class="equipo">
 
-${p.v}
+<img src="${p.logoV}" class="logo"> ${p.v}
 
 </div>
 
