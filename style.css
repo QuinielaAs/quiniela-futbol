@@ -110,9 +110,9 @@ BOTONES L E V
 
 display: flex;
 
-font-size: 40px;
+font-size: 25px;
 
-gap: 80px;
+gap: 50px;
 
 }
 
@@ -131,7 +131,7 @@ padding: 20px 26px;
 
 border-radius: 6px;
 
-font-size: 40px;
+font-size: 30px;
 
 cursor: pointer;
 
