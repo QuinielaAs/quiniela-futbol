@@ -239,3 +239,30 @@ vertical-align: middle;
 .btn:focus {
     outline: none;
 }
+
+/* ===========================
+RECUADRO VERDE INFERIOR
+=========================== */
+
+.resumen {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #0a8f2f;
+
+    color: white;
+
+    padding: 18px 25px;
+
+    border-radius: 12px;
+
+    margin-top: 25px;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+
+    }
