@@ -195,11 +195,29 @@ div.innerHTML += `
 
 <div class="admin-partido">
 
+<!-- LOGO LOCAL -->
+
 <div class="logo-box">
 
-Logo
+<input
+type="file"
+accept="image/*"
+onchange="subirLogo(${i},'l',this)"
+style="display:none"
+id="logoL${i}">
+
+<label for="logoL${i}">
+
+<img
+id="imgL${i}"
+src="${p.logoL || ''}"
+style="width:100%;height:100%;object-fit:contain">
+
+</label>
 
 </div>
+
+<!-- EQUIPO LOCAL -->
 
 <input
 class="admin-input"
@@ -208,14 +226,32 @@ oninput="editarEquipo(${i},'l',this.value)">
 
 <span>vs</span>
 
+<!-- EQUIPO VISITA -->
+
 <input
 class="admin-input"
 value="${p.v}"
 oninput="editarEquipo(${i},'v',this.value)">
 
+<!-- LOGO VISITA -->
+
 <div class="logo-box">
 
-Logo
+<input
+type="file"
+accept="image/*"
+onchange="subirLogo(${i},'v',this)"
+style="display:none"
+id="logoV${i}">
+
+<label for="logoV${i}">
+
+<img
+id="imgV${i}"
+src="${p.logoV || ''}"
+style="width:100%;height:100%;object-fit:contain">
+
+</label>
 
 </div>
 
