@@ -213,17 +213,21 @@ ENVIAR WHATSAPP
 function enviar(){
 
 let nombre =
-document.getElementById(
-"nombre"
-).value;
+document.getElementById("nombre").value;
+
+if(!nombre){
+
+alert("Escribe tu nombre");
+
+return;
+
+}
 
 let mensaje =
-"📋 QUINIELA\n";
+"📋 QUINIELA A's\n\n";
 
 mensaje +=
-"Nombre: "
-+ nombre +
-"\n\n";
+"Nombre: "+nombre+"\n\n";
 
 partidos.forEach((p,i)=>{
 
@@ -232,20 +236,19 @@ let sel =
 .join(",");
 
 mensaje +=
-p[0]+" vs "
-+p[2]
-+" = "
-+sel+"\n";
+p[0]+" vs "+p[2]
++" = "+sel+"\n";
 
 });
+
+
+guardarJugador(nombre);
 
 let url =
 "https://wa.me/"
 +numeroWhatsApp
 +"?text="
-+encodeURIComponent(
-mensaje
-);
++encodeURIComponent(mensaje);
 
 window.open(url);
 
