@@ -291,3 +291,47 @@ cargar();
 cargarAdmin();
 
                  }
+
+function subirLogo(i,tipo,input){
+
+let file = input.files[0];
+
+if(!file) return;
+
+let reader = new FileReader();
+
+reader.onload=function(e){
+
+let partidos =
+JSON.parse(localStorage.getItem("partidos"));
+
+if(tipo=="l"){
+
+partidos[i].logoL = e.target.result;
+
+document.getElementById(
+"imgL"+i
+).src = e.target.result;
+
+}
+
+if(tipo=="v"){
+
+partidos[i].logoV = e.target.result;
+
+document.getElementById(
+"imgV"+i
+).src = e.target.result;
+
+}
+
+localStorage.setItem(
+"partidos",
+JSON.stringify(partidos)
+);
+
+};
+
+reader.readAsDataURL(file);
+
+}
