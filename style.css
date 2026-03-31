@@ -110,6 +110,8 @@ BOTONES L E V
 
 display: flex;
 
+font-size: 40px;
+
 gap: 50px;
 
 }
