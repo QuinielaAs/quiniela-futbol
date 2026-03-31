@@ -73,7 +73,7 @@ logoV:"logos/pachuca.png"
 l:"Tijuana",
 v:"San Luis",
 logoL:"logos/tijuana.png",
-logoV:"logos/sanluis.png"
+logoV:"logos/atleticosl.png"
 }
 
 ];
