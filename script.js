@@ -145,30 +145,39 @@ ${p.v} <img src="${p.logoV}" class="logo logo-derecha">
 }
 
 /* ===========================
-BOTONES L E V
+BOTONES L E V (CORREGIDO)
 =========================== */
 
-function toggle(btn,i,val){
+function toggle(btn, i, val) {
 
-btn.classList.toggle("activo");
+    // Crear el array si no existe
+    if (!selecciones[i]) {
+        selecciones[i] = [];
+    }
 
-if(!selecciones[i])
-selecciones[i]=[];
+    // Si ya está activo → quitarlo
+    if (btn.classList.contains("activo")) {
 
-if(btn.classList.contains("activo")){
+        btn.classList.remove("activo");
 
-selecciones[i].push(val);
+        // Eliminar valor del array
+        selecciones[i] = selecciones[i].filter(x => x !== val);
 
-}else{
+    } else {
 
-selecciones[i]=
-selecciones[i].filter(x=>x!=val);
+        // Activarlo
+        btn.classList.add("activo");
 
-}
+        // Evitar valores duplicados
+        if (!selecciones[i].includes(val)) {
+            selecciones[i].push(val);
+        }
 
-calcular();
+    }
 
-}
+    // Recalcular resultados
+    calcular();
+  }
 
 /* ===========================
 CALCULAR TOTAL
