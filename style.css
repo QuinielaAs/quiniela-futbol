@@ -107,62 +107,38 @@ BOTONES L E V
 =========================== */
 
 .botones {
-
-display: flex;
-
-font-size: 25px;
-
-gap: 50px;
-
+    display: flex;
+    font-size: 25px;
+    gap: 50px;
 }
-
 
 /* BOTONES BASE */
 
 .btn {
-
-background: white;
-
-border: 2px solid #ccc;
-
-color: black;
-
-padding: 20px 26px;
-
-border-radius: 6px;
-
-font-size: 30px;
-
-cursor: pointer;
-
-font-weight: bold;
-
-transition: 0.2s;
-
+    background: white;
+    border: 2px solid #ccc;
+    color: black;
+    padding: 20px 26px;
+    border-radius: 6px;
+    font-size: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
 }
-
 
 /* HOVER */
 
 .btn:hover {
-
-border-color: green;
-
+    border-color: green;
 }
-
 
 /* ACTIVO */
 
 .btn.activo {
-
-background: green;
-
-color: white;
-
-border-color: green;
-
+    background: green;
+    color: white;
+    border-color: green;
 }
-
 
 /* ===========================
 PANEL INFERIOR CENTRADO
