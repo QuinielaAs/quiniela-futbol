@@ -150,31 +150,25 @@ BOTONES L E V
 
 function toggle(btn,i,val){
 
-if(!selecciones[i])
-selecciones[i]=[];
+c.onclick = (e) => {
 
-/* quitar */
+e.preventDefault();
 
-if(btn.classList.contains("activo")){
+if(c.classList.contains("seleccionado")){
 
-btn.classList.remove("activo");
+c.classList.remove("seleccionado");
 
-selecciones[i] =
-selecciones[i].filter(x=>x!=val);
+c.style.background = "white";
+c.style.color = "black";
 
-}
+}else{
 
-/* agregar */
+c.classList.add("seleccionado");
 
-else{
-
-btn.classList.add("activo");
-
-selecciones[i].push(val);
+c.style.background = "green";
+c.style.color = "white";
 
 }
-
-calcular();
 
 }
 
