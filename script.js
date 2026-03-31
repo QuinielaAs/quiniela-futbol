@@ -145,39 +145,39 @@ ${p.v} <img src="${p.logoV}" class="logo logo-derecha">
 }
 
 /* ===========================
-BOTONES L E V (CORREGIDO)
+BOTONES L E V (SOLUCIÓN DEFINITIVA)
 =========================== */
 
 function toggle(btn, i, val) {
 
-    // Crear el array si no existe
+    // Crear array si no existe
     if (!selecciones[i]) {
         selecciones[i] = [];
     }
 
-    // Si ya está activo → quitarlo
-    if (btn.classList.contains("activo")) {
+    // Verificar si ya estaba seleccionado
+    let index = selecciones[i].indexOf(val);
 
+    if (index !== -1) {
+
+        // QUITAR selección
+        selecciones[i].splice(index, 1);
         btn.classList.remove("activo");
-
-        // Eliminar valor del array
-        selecciones[i] = selecciones[i].filter(x => x !== val);
 
     } else {
 
-        // Activarlo
+        // AGREGAR selección
+        selecciones[i].push(val);
         btn.classList.add("activo");
-
-        // Evitar valores duplicados
-        if (!selecciones[i].includes(val)) {
-            selecciones[i].push(val);
-        }
 
     }
 
-    // Recalcular resultados
+    // Forzar actualización visual inmediata
+    btn.blur();
+
+    // Recalcular
     calcular();
-  }
+}
 
 /* ===========================
 CALCULAR TOTAL
