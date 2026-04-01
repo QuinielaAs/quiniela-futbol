@@ -216,7 +216,6 @@ document.getElementById("nombre").value;
 if(!nombre){
 
 alert("Escribe tu nombre");
-
 return;
 
 }
@@ -243,6 +242,34 @@ p.l+" vs "+p.v
 
 });
 
+/* ===========================
+GUARDAR JUGADOR
+=========================== */
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+jugadores.push({
+
+nombre: nombre,
+
+selecciones: selecciones,
+
+fecha: new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"jugadores",
+JSON.stringify(jugadores)
+);
+
+/* ===========================
+ENVIAR WHATSAPP
+=========================== */
+
 let url =
 "https://wa.me/"
 +numeroWhatsApp
@@ -251,8 +278,9 @@ let url =
 
 window.open(url,"_blank");
 
-}
+alert("Quiniela guardada correctamente");
 
+}
 /* ===========================
 ADMIN PARTIDOS
 =========================== */
