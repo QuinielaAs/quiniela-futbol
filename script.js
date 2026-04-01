@@ -153,6 +153,34 @@ BOTONES L E V
 
 function toggle(btn, i, val) {
 
+/* ===========================
+VALIDAR HORA CIERRE
+=========================== */
+
+let horaGuardada =
+localStorage.getItem("horaCierre");
+
+if(horaGuardada){
+
+let ahora = new Date();
+
+let cierre =
+new Date(horaGuardada);
+
+if(ahora >= cierre){
+
+alert("⛔ La quiniela ya está cerrada");
+
+return;
+
+}
+
+}
+
+/* ===========================
+TOGGLE NORMAL
+=========================== */
+
 if (!selecciones[i]) {
 selecciones[i] = [];
 }
