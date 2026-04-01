@@ -411,3 +411,185 @@ cargar();
 cargarAdmin();
 
     }
+
+/* ===========================
+GUARDAR HORA CIERRE
+=========================== */
+
+function guardarHora(){
+
+let hora =
+document.getElementById("horaCierre").value;
+
+if(!hora){
+
+alert("Selecciona una hora");
+
+return;
+
+}
+
+localStorage.setItem(
+"horaCierre",
+hora
+);
+
+alert("Hora guardada correctamente");
+
+}
+
+/* ===========================
+REINICIAR HORA
+=========================== */
+
+function borrarHora(){
+
+localStorage.removeItem(
+"horaCierre"
+);
+
+document.getElementById(
+"horaCierre"
+).value="";
+
+alert("Hora reiniciada");
+
+}
+
+/* ===========================
+MOSTRAR JUGADORES
+=========================== */
+
+function mostrarJugadores(){
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+let div =
+document.getElementById(
+"listaJugadores"
+);
+
+if(!div) return;
+
+div.innerHTML="";
+
+if(jugadores.length==0){
+
+div.innerHTML=
+"No hay jugadores registrados";
+
+return;
+
+}
+
+jugadores.forEach((j,i)=>{
+
+div.innerHTML += `
+
+<div style="
+border:1px solid #ccc;
+padding:8px;
+margin:5px 0">
+
+<b>${j.nombre}</b>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* ===========================
+BORRAR JUGADORES
+=========================== */
+
+function borrarJugadores(){
+
+if(
+!confirm(
+"¿Seguro que deseas borrar todos los jugadores?"
+)
+) return;
+
+localStorage.removeItem(
+"jugadores"
+);
+
+mostrarJugadores();
+
+alert("Jugadores eliminados");
+
+}
+
+/* ===========================
+GENERAR EXCEL
+=========================== */
+
+function generarExcelGeneral(){
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+if(jugadores.length==0){
+
+alert("No hay jugadores");
+
+return;
+
+}
+
+let datos = [];
+
+jugadores.forEach(j=>{
+
+let fila = {};
+
+fila["Nombre"] =
+j.nombre;
+
+if(j.selecciones){
+
+j.selecciones.forEach((s,i)=>{
+
+fila[
+"Partido "+(i+1)
+] = s.join(",");
+
+});
+
+}
+
+datos.push(fila);
+
+});
+
+let hoja =
+XLSX.utils.json_to_sheet(datos);
+
+let libro =
+XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(
+libro,
+hoja,
+"Quiniela"
+);
+
+let semana =
+document.getElementById(
+"semana"
+).value || 1;
+
+XLSX.writeFile(
+libro,
+"Quiniela_Semana_"+semana+".xlsx"
+);
+
+}
