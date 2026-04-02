@@ -517,13 +517,17 @@ mostrarJugadores();
 };
 
 /* ===========================
-GUARDAR HORA CIERRE
+GUARDAR HORA
 =========================== */
 
 function guardarHora(){
 
-let hora =
-document.getElementById("horaCierre").value;
+let input =
+document.getElementById("horaCierre");
+
+if(!input) return;
+
+let hora = input.value;
 
 if(!hora){
 
@@ -538,25 +542,49 @@ localStorage.setItem(
 hora
 );
 
-alert("Hora guardada correctamente✅");
+alert("✅Hora guardada correctamente✅");
 
 }
 
 /* ===========================
-REINICIAR HORA
+BORRAR HORA
 =========================== */
 
 function borrarHora(){
 
 localStorage.removeItem(
-"horaCierre"
-);
+"horaCierre");
 
-document.getElementById(
-"horaCierre"
-).value="";
+let input =
+document.getElementById("horaCierre");
 
-alert("Hora reiniciada");
+if(input){
+
+input.value="";
+
+}
+
+alert("🔃Hora reiniciada🔃");
+
+}
+
+/* ===========================
+CARGAR HORA
+=========================== */
+
+function cargarHora(){
+
+let hora =
+localStorage.getItem("horaCierre");
+
+let input =
+document.getElementById("horaCierre");
+
+if(hora && input){
+
+input.value = hora;
+
+}
 
 }
 
