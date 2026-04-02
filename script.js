@@ -238,49 +238,17 @@ ENVIAR WHATSAPP
 
 function enviar(){
 
-/* ===========================
-VALIDAR HORA CIERRE
-=========================== */
-
-let horaGuardada =
-localStorage.getItem("horaCierre");
-
-if(horaGuardada){
-
-let ahora = new Date();
-
-let cierre =
-new Date(horaGuardada);
-
-if(ahora >= cierre){
-
-alert("⛔ La quiniela ya está cerrada");
-
-return;
-
-}
-
-}
-
-/* ===========================
-VALIDAR NOMBRE
-=========================== */
-
 let nombre =
 document.getElementById("nombre").value;
 
 if(!nombre){
 
 alert("Escribe tu nombre");
-
 return;
 
 }
 
-/* ===========================
-OBTENER PARTIDOS
-=========================== */
-
+// Obtener partidos
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
 
