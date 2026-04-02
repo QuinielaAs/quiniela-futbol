@@ -153,34 +153,6 @@ BOTONES L E V
 
 function toggle(btn, i, val) {
 
-/* ===========================
-VALIDAR HORA CIERRE
-=========================== */
-
-let horaGuardada =
-localStorage.getItem("horaCierre");
-
-if(horaGuardada){
-
-let ahora = new Date();
-
-let cierre =
-new Date(horaGuardada);
-
-if(ahora >= cierre){
-
-alert("⛔ La quiniela ya está cerrada");
-
-return;
-
-}
-
-}
-
-/* ===========================
-TOGGLE NORMAL
-=========================== */
-
 if (!selecciones[i]) {
 selecciones[i] = [];
 }
@@ -244,6 +216,7 @@ document.getElementById("nombre").value;
 if(!nombre){
 
 alert("Escribe tu nombre");
+
 return;
 
 }
@@ -270,34 +243,6 @@ p.l+" vs "+p.v
 
 });
 
-/* ===========================
-GUARDAR JUGADOR
-=========================== */
-
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
-jugadores.push({
-
-nombre: nombre,
-
-selecciones: selecciones,
-
-fecha: new Date().toLocaleString()
-
-});
-
-localStorage.setItem(
-"jugadores",
-JSON.stringify(jugadores)
-);
-
-/* ===========================
-ENVIAR WHATSAPP
-=========================== */
-
 let url =
 "https://wa.me/"
 +numeroWhatsApp
@@ -306,48 +251,8 @@ let url =
 
 window.open(url,"_blank");
 
-alert("Quiniela guardada correctamente");
-
 }
-/* ===========================
-GUARDAR JUGADOR
-=========================== */
 
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
-jugadores.push({
-
-nombre: nombre,
-
-selecciones: selecciones,
-
-fecha: new Date().toLocaleString()
-
-});
-
-localStorage.setItem(
-"jugadores",
-JSON.stringify(jugadores)
-);
-
-/* ===========================
-ENVIAR WHATSAPP
-=========================== */
-
-let url =
-"https://wa.me/"
-+numeroWhatsApp
-+"?text="
-+encodeURIComponent(mensaje);
-
-window.open(url,"_blank");
-
-alert("Quiniela guardada correctamente");
-
-}
 /* ===========================
 ADMIN PARTIDOS
 =========================== */
@@ -504,231 +409,5 @@ window.onload=function(){
 
 cargar();
 cargarAdmin();
-cargarHora();
-
-}
-
-/* ===========================
-GUARDAR HORA CIERRE
-=========================== */
-
-function guardarHora(){
-
-let hora =
-document.getElementById("horaCierre").value;
-
-if(!hora){
-
-alert("Selecciona una hora");
-
-return;
-
-}
-
-localStorage.setItem(
-"horaCierre",
-hora
-);
-
-alert("Hora guardada correctamente");
-
-}
-
-/* ===========================
-REINICIAR HORA
-=========================== */
-
-function borrarHora(){
-
-localStorage.removeItem(
-"horaCierre"
-);
-
-document.getElementById(
-"horaCierre"
-).value="";
-
-alert("Hora reiniciada");
-
-}
-
-/* ===========================
-MOSTRAR JUGADORES
-=========================== */
-
-function mostrarJugadores(){
-
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
-let div =
-document.getElementById(
-"listaJugadores"
-);
-
-if(!div) return;
-
-div.innerHTML="";
-
-if(jugadores.length==0){
-
-div.innerHTML=
-"No hay jugadores registrados";
-
-return;
-
-}
-
-jugadores.forEach((j,i)=>{
-
-div.innerHTML += `
-
-<div style="
-border:1px solid #ccc;
-padding:8px;
-margin:5px 0">
-
-<b>${j.nombre}</b>
-
-</div>
-
-`;
-
-});
-
-}
-
-/* ===========================
-BORRAR JUGADORES
-=========================== */
-
-function borrarJugadores(){
-
-if(
-!confirm(
-"¿Seguro que deseas borrar todos los jugadores?"
-)
-) return;
-
-localStorage.removeItem(
-"jugadores"
-);
-
-mostrarJugadores();
-
-alert("Jugadores eliminados");
-
-}
-
-/* ===========================
-GENERAR EXCEL
-=========================== */
-
-function generarExcelGeneral(){
-
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
-if(jugadores.length==0){
-
-alert("No hay jugadores");
-
-return;
-
-}
-
-let datos = [];
-
-jugadores.forEach(j=>{
-
-let fila = {};
-
-fila["Nombre"] =
-j.nombre;
-
-if(j.selecciones){
-
-j.selecciones.forEach((s,i)=>{
-
-fila[
-"Partido "+(i+1)
-] = s.join(",");
-
-});
-
-}
-
-datos.push(fila);
-
-});
-
-let hoja =
-XLSX.utils.json_to_sheet(datos);
-
-let libro =
-XLSX.utils.book_new();
-
-XLSX.utils.book_append_sheet(
-libro,
-hoja,
-"Quiniela"
-);
-
-let semana =
-document.getElementById(
-"semana"
-).value || 1;
-
-XLSX.writeFile(
-libro,
-"Quiniela_Semana_"+semana+".xlsx"
-);
-
-}
-
-function verificarCierre(){
-
-let horaGuardada =
-localStorage.getItem("horaCierre");
-
-if(!horaGuardada) return;
-
-let ahora =
-new Date();
-
-let cierre =
-new Date(horaGuardada);
-
-if(ahora >= cierre){
-
-// Bloquear L E V
-
-let botones =
-document.querySelectorAll(".btn");
-
-botones.forEach(b=>{
-
-b.disabled = true;
-b.style.opacity = "0.5";
-
-});
-
-// Bloquear enviar
-
-let btnEnviar =
-document.getElementById("btnEnviar");
-
-if(btnEnviar){
-
-btnEnviar.disabled = true;
-btnEnviar.style.opacity = "0.5";
-
-}
-
-}
 
 }
