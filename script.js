@@ -153,6 +153,34 @@ BOTONES L E V
 
 function toggle(btn, i, val) {
 
+/* ===========================
+VALIDAR HORA CIERRE
+=========================== */
+
+let horaGuardada =
+localStorage.getItem("horaCierre");
+
+if(horaGuardada){
+
+let ahora = new Date();
+
+let cierre =
+new Date(horaGuardada);
+
+if(ahora >= cierre){
+
+alert("⛔ La quiniela ya está cerrada");
+
+return;
+
+}
+
+}
+
+/* ===========================
+TOGGLE NORMAL
+=========================== */
+
 if (!selecciones[i]) {
 selecciones[i] = [];
 }
@@ -216,7 +244,6 @@ document.getElementById("nombre").value;
 if(!nombre){
 
 alert("Escribe tu nombre");
-
 return;
 
 }
@@ -243,6 +270,34 @@ p.l+" vs "+p.v
 
 });
 
+/* ===========================
+GUARDAR JUGADOR
+=========================== */
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+jugadores.push({
+
+nombre: nombre,
+
+selecciones: selecciones,
+
+fecha: new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"jugadores",
+JSON.stringify(jugadores)
+);
+
+/* ===========================
+ENVIAR WHATSAPP
+=========================== */
+
 let url =
 "https://wa.me/"
 +numeroWhatsApp
@@ -250,6 +305,8 @@ let url =
 +encodeURIComponent(mensaje);
 
 window.open(url,"_blank");
+
+alert("Quiniela guardada correctamente");
 
 }
 
