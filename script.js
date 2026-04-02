@@ -434,7 +434,7 @@ localStorage.setItem(
 hora
 );
 
-alert("Hora guardada correctamente");
+alert("Hora guardada correctamente✅");
 
 }
 
