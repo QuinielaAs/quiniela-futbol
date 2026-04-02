@@ -745,3 +745,21 @@ libro,
 );
 
 }
+
+function confirmarPago(index){
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+jugadores[index].pagado = true;
+
+localStorage.setItem(
+"jugadores",
+JSON.stringify(jugadores)
+);
+
+mostrarJugadores();
+
+}
