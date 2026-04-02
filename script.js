@@ -538,3 +538,117 @@ mostrarJugadores();
 }
 
 };
+
+/* ===========================
+GENERAR EXCEL
+=========================== */
+
+function generarExcelGeneral(){
+
+let jugadores =
+JSON.parse(
+localStorage.getItem("jugadores")
+) || [];
+
+let partidos =
+JSON.parse(
+localStorage.getItem("partidos")
+) || [];
+
+if(jugadores.length == 0){
+
+alert("No hay jugadores registrados");
+return;
+
+}
+
+let datos = [];
+
+jugadores.forEach(j=>{
+
+/* SOLO PAGADOS */
+
+if(j.pagado){
+
+let fila = {};
+
+fila["Nombre"] =
+j.nombre;
+
+fila["Combinaciones"] =
+j.combinaciones;
+
+fila["Total"] =
+j.total;
+
+/* PICKS */
+
+if(j.selecciones){
+
+j.selecciones.forEach((s,i)=>{
+
+if(s && s.length>0){
+
+let p = partidos[i];
+
+fila[
+p.l+" vs "+p.v
+] = s.join(",");
+
+}
+
+});
+
+}
+
+datos.push(fila);
+
+}
+
+});
+
+/* VALIDAR PAGADOS */
+
+if(datos.length == 0){
+
+alert("No hay jugadores PAGADOS");
+
+return;
+
+}
+
+/* CREAR EXCEL */
+
+let hoja =
+XLSX.utils.json_to_sheet(datos);
+
+let libro =
+XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(
+libro,
+hoja,
+"Pagados"
+);
+
+/* SEMANA */
+
+let semana = 1;
+
+let input =
+document.getElementById("semana");
+
+if(input){
+
+semana = input.value || 1;
+
+}
+
+/* DESCARGAR */
+
+XLSX.writeFile(
+libro,
+"Quiniela_Pagados_Semana_"+semana+".xlsx"
+);
+
+}
