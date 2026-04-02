@@ -506,8 +506,6 @@ cargar();
 cargarAdmin();
 cargarHora();
 
-verificarCierre();
-
 }
 
 /* ===========================
