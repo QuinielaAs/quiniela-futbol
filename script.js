@@ -550,6 +550,11 @@ JSON.parse(
 localStorage.getItem("jugadores")
 ) || [];
 
+let partidos =
+JSON.parse(
+localStorage.getItem("partidos")
+) || [];
+
 let div =
 document.getElementById(
 "listaJugadores"
@@ -570,14 +575,77 @@ return;
 
 jugadores.forEach((j,i)=>{
 
+let picksHTML = "";
+
+if(j.selecciones){
+
+j.selecciones.forEach((s,index)=>{
+
+if(s && s.length>0){
+
+let p = partidos[index];
+
+picksHTML +=
+"<div>"
++p.l+" vs "+p.v
++" = "+s.join(",")
++"</div>";
+
+}
+
+});
+
+}
+
+let color =
+j.pagado ? "green" : "red";
+
+let estado =
+j.pagado ? "PAGADO" : "PENDIENTE";
+
 div.innerHTML += `
 
 <div style="
 border:1px solid #ccc;
-padding:8px;
-margin:5px 0">
+padding:10px;
+margin:10px 0">
 
 <b>${j.nombre}</b>
+
+<br><br>
+
+${picksHTML}
+
+<br>
+
+<b>Combinaciones:</b>
+${j.combinaciones}
+
+<br>
+
+<b>Total:</b>
+$${j.total}
+
+<br><br>
+
+<span style="
+color:white;
+background:${color};
+padding:4px 8px;
+border-radius:5px">
+
+${estado}
+
+</span>
+
+<br><br>
+
+<button
+onclick="confirmarPago(${i})">
+
+Confirmar Pago
+
+</button>
 
 </div>
 
@@ -585,6 +653,7 @@ margin:5px 0">
 
 });
 
+}
 }
 
 /* ===========================
