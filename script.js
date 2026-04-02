@@ -270,8 +270,9 @@ p.l+" vs "+p.v
 
 });
 
+
 /* ===========================
-GUARDAR JUGADOR
+GUARDAR JUGADOR MEJORADO
 =========================== */
 
 let jugadores =
@@ -279,11 +280,36 @@ JSON.parse(
 localStorage.getItem("jugadores")
 ) || [];
 
+// calcular combinaciones
+
+let totalComb = 1;
+
+selecciones.forEach(s=>{
+
+if(s && s.length>0){
+
+totalComb *= s.length;
+
+}
+
+});
+
+let totalPago =
+totalComb * precio;
+
 jugadores.push({
 
 nombre: nombre,
 
-selecciones: selecciones,
+selecciones: JSON.parse(
+JSON.stringify(selecciones)
+),
+
+combinaciones: totalComb,
+
+total: totalPago,
+
+pagado: false,
 
 fecha: new Date().toLocaleString()
 
