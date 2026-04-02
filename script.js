@@ -488,12 +488,33 @@ reader.readAsDataURL(file);
 INICIO GENERAL
 =========================== */
 
-window.onload=function(){
+window.onload = function(){
 
+/* CLIENTE */
+
+if(document.getElementById("lista")){
 cargar();
-cargarAdmin();
-
 }
+
+/* ADMIN PARTIDOS */
+
+if(document.getElementById("adminLista")){
+cargarAdmin();
+}
+
+/* ADMIN HORA */
+
+if(document.getElementById("horaCierre")){
+cargarHora();
+}
+
+/* MOSTRAR JUGADORES */
+
+if(document.getElementById("listaJugadores")){
+mostrarJugadores();
+}
+
+};
 
 /* ===========================
 GUARDAR HORA CIERRE
