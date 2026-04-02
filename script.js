@@ -536,8 +536,11 @@ window.onload=function(){
 
 cargar();
 cargarAdmin();
+cargarHora();
 
-    }
+verificarCierre();
+
+}
 
 /* ===========================
 GUARDAR HORA CIERRE
