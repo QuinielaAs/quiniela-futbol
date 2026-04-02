@@ -689,30 +689,41 @@ JSON.parse(
 localStorage.getItem("jugadores")
 ) || [];
 
-if(jugadores.length==0){
-
-alert("No hay jugadores");
-
-return;
-
-}
+let partidos =
+JSON.parse(
+localStorage.getItem("partidos")
+) || [];
 
 let datos = [];
 
 jugadores.forEach(j=>{
+
+if(j.pagado){
 
 let fila = {};
 
 fila["Nombre"] =
 j.nombre;
 
+fila["Combinaciones"] =
+j.combinaciones;
+
+fila["Total"] =
+j.total;
+
 if(j.selecciones){
 
 j.selecciones.forEach((s,i)=>{
 
+if(s && s.length>0){
+
+let p = partidos[i];
+
 fila[
-"Partido "+(i+1)
+p.l+" vs "+p.v
 ] = s.join(",");
+
+}
 
 });
 
@@ -720,7 +731,19 @@ fila[
 
 datos.push(fila);
 
+}
+
 });
+
+if(datos.length==0){
+
+alert(
+"No hay jugadores PAGADOS"
+);
+
+return;
+
+}
 
 let hoja =
 XLSX.utils.json_to_sheet(datos);
@@ -731,7 +754,7 @@ XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(
 libro,
 hoja,
-"Quiniela"
+"Pagados"
 );
 
 let semana =
@@ -741,7 +764,7 @@ document.getElementById(
 
 XLSX.writeFile(
 libro,
-"Quiniela_Semana_"+semana+".xlsx"
+"Quiniela_Pagados_Semana_"+semana+".xlsx"
 );
 
 }
