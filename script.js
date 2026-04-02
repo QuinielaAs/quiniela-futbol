@@ -720,3 +720,46 @@ libro,
 );
 
 }
+
+function verificarCierre(){
+
+let horaGuardada =
+localStorage.getItem("horaCierre");
+
+if(!horaGuardada) return;
+
+let ahora =
+new Date();
+
+let cierre =
+new Date(horaGuardada);
+
+if(ahora >= cierre){
+
+// Bloquear L E V
+
+let botones =
+document.querySelectorAll(".btn");
+
+botones.forEach(b=>{
+
+b.disabled = true;
+b.style.opacity = "0.5";
+
+});
+
+// Bloquear enviar
+
+let btnEnviar =
+document.getElementById("btnEnviar");
+
+if(btnEnviar){
+
+btnEnviar.disabled = true;
+btnEnviar.style.opacity = "0.5";
+
+}
+
+}
+
+}
