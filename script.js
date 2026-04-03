@@ -330,7 +330,32 @@ if(!div) return;
 db.ref("jugadores")
 .on("value", snapshot => {
 
-/* CREAR PICKS POR PARTIDO */
+div.innerHTML="";
+
+let jugadores =
+snapshot.val();
+
+if(!jugadores){
+
+div.innerHTML =
+"No hay jugadores";
+
+return;
+
+}
+
+Object.keys(jugadores)
+.forEach(key=>{
+
+let j = jugadores[key];
+
+let color =
+j.pagado ? "green" : "red";
+
+let estado =
+j.pagado ? "PAGADO" : "PENDIENTE";
+
+/* CREAR PICKS */
 
 let picksTexto = "";
 
@@ -349,7 +374,7 @@ picksTexto +=
 
 }
 
-/* CREAR TARJETA */
+/* TARJETA */
 
 div.innerHTML += `
 
@@ -394,6 +419,11 @@ Confirmar Pago
 
 `;
 
+});
+
+});
+
+}
 /* ===========================
 CONFIRMAR PAGO
 =========================== */
@@ -422,15 +452,17 @@ if(document.getElementById("lista")){
 cargar();
 }
 
-/* CARGAR JUGADORES */
+/* ADMIN */
 
 if(document.getElementById("listaJugadores")){
 mostrarJugadores();
 }
 
-/* CARGAR HORA DESDE FIREBASE */
+/* CARGAR HORA */
 
+if(typeof cargarHora === "function"){
 cargarHora();
+}
 
 };
 
