@@ -347,63 +347,7 @@ return;
 Object.entries(jugadores)
 .forEach(([id,j])=>{
 
-/* CREAR PICKS POR PARTIDO */
-
-let picksTexto="";
-
-if(j.selecciones){
-
-j.selecciones.forEach((s,i)=>{
-
-picksTexto +=
-`P${i+1}:${s} `;
-
-});
-
-}
-
-/* MOSTRAR JUGADOR */
-
-div.innerHTML += `
-
-<div class="jugador">
-
-<b>${j.nombre}</b>
-
-<br>
-
-${picksTexto}
-
-<br>
-
-💰 $${j.total}
-
-<br><br>
-
-<button onclick="confirmarPago('${id}')">
-✅ Confirmar Pago
-</button>
-
-<button onclick="borrarJugador('${id}')">
-🗑️ Borrar
-</button>
-
-<hr>
-
-</div>
-
-`;
-
-});
-
-});
-
-}
-
-Object.keys(jugadores)
-.forEach(key=>{
-
-let j = jugadores[key];
+/* COLOR ESTADO */
 
 let color =
 j.pagado ? "green" : "red";
@@ -413,16 +357,16 @@ j.pagado ? "PAGADO" : "PENDIENTE";
 
 /* CREAR PICKS */
 
-let picksTexto = "";
+let picksTexto="";
 
 if(j.selecciones){
 
 j.selecciones.forEach((s,i)=>{
 
-if(s && s.length>0){
+if(s){
 
 picksTexto +=
-"P"+(i+1)+":"+s.join("")+" ";
+`P${i+1}:${s} `;
 
 }
 
@@ -465,11 +409,20 @@ ${estado}
 <br><br>
 
 <button
-onclick="confirmarPago('${key}')">
+onclick="confirmarPago('${id}')">
 
-Confirmar Pago
+✅ Confirmar Pago
 
 </button>
+
+<button
+onclick="borrarJugador('${id}')">
+
+🗑️ Borrar
+
+</button>
+
+<hr>
 
 </div>
 
