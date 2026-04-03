@@ -320,8 +320,6 @@ alert("Hora reiniciada");
 MOSTRAR JUGADORES
 =========================== */
 
-/* CREAR PICKS POR PARTIDO */
-
 function mostrarJugadores(){
 
 let div =
@@ -343,6 +341,62 @@ div.innerHTML =
 "No hay jugadores";
 
 return;
+
+}
+
+Object.entries(jugadores)
+.forEach(([id,j])=>{
+
+/* CREAR PICKS POR PARTIDO */
+
+let picksTexto="";
+
+if(j.selecciones){
+
+j.selecciones.forEach((s,i)=>{
+
+picksTexto +=
+`P${i+1}:${s} `;
+
+});
+
+}
+
+/* MOSTRAR JUGADOR */
+
+div.innerHTML += `
+
+<div class="jugador">
+
+<b>${j.nombre}</b>
+
+<br>
+
+${picksTexto}
+
+<br>
+
+💰 $${j.total}
+
+<br><br>
+
+<button onclick="confirmarPago('${id}')">
+✅ Confirmar Pago
+</button>
+
+<button onclick="borrarJugador('${id}')">
+🗑️ Borrar
+</button>
+
+<hr>
+
+</div>
+
+`;
+
+});
+
+});
 
 }
 
