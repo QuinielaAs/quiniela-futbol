@@ -661,3 +661,35 @@ console.log(error);
 });
 
       }
+
+/* ===========================
+GENERAR COMBINACIONES
+=========================== */
+
+function generarCombinaciones(picks){
+
+let resultado = [[]];
+
+picks.forEach(pick=>{
+
+let opciones = pick.split("");
+
+let temp = [];
+
+resultado.forEach(base=>{
+
+opciones.forEach(op=>{
+
+temp.push([...base, op]);
+
+});
+
+});
+
+resultado = temp;
+
+});
+
+return resultado;
+
+}
