@@ -12,71 +12,59 @@ CARGAR PARTIDOS CLIENTE
 
 function cargar(){
 
-let partidosBase = [
+let partidos = [
 
-{l:"América",v:"Tigres",logoL:"logos/america.png",logoV:"logos/tigres.png"},
-{l:"Chivas",v:"Pumas",logoL:"logos/guadalajara.png",logoV:"logos/pumas.png"},
-{l:"Cruz Azul",v:"León",logoL:"logos/cruzazul.png",logoV:"logos/leon.png"},
-{l:"Toluca",v:"Atlas",logoL:"logos/toluca.png",logoV:"logos/atlas.png"},
-{l:"Monterrey",v:"Santos",logoL:"logos/monterrey.png",logoV:"logos/santos.png"},
-{l:"Necaxa",v:"Puebla",logoL:"logos/necaxa.png",logoV:"logos/puebla.png"},
-{l:"Mazatlán",v:"Juárez",logoL:"logos/mazatlan.png",logoV:"logos/juarez.png"},
-{l:"Querétaro",v:"Pachuca",logoL:"logos/queretaro.png",logoV:"logos/pachuca.png"},
-{l:"Tijuana",v:"San Luis",logoL:"logos/tijuana.png",logoV:"logos/atleticosl.png"}
+{ l:"América", v:"Tigres" },
+{ l:"Chivas", v:"Atlas" },
+{ l:"Cruz Azul", v:"Pumas" },
+{ l:"Toluca", v:"León" },
+{ l:"Monterrey", v:"Santos" },
+{ l:"Necaxa", v:"Mazatlán" },
+{ l:"Pachuca", v:"Puebla" },
+{ l:"Tijuana", v:"Querétaro" },
+{ l:"San Luis", v:"Juárez" }
 
 ];
 
-if(!localStorage.getItem("partidos")){
-
-localStorage.setItem(
-"partidos",
-JSON.stringify(partidosBase)
-);
-
-}
-
-let partidos =
-JSON.parse(localStorage.getItem("partidos"));
-
-let div =
+let lista =
 document.getElementById("lista");
 
-if(!div) return;
+if(!lista) return;
 
-div.innerHTML="";
+lista.innerHTML="";
 
 partidos.forEach((p,i)=>{
 
-div.innerHTML += `
+selecciones[i]="";
+
+lista.innerHTML+=`
 
 <div class="partido">
 
-<div class="equipo">
+<div>
 
-<img src="${p.logoL}" class="logo">
+<b>P${i+1}</b>
+<br>
+
 ${p.l}
-
-</div>
-
-<div class="botones">
-
-<button class="btn"
-onclick="toggle(this,${i},'L')">L</button>
-
-<button class="btn"
-onclick="toggle(this,${i},'E')">E</button>
-
-<button class="btn"
-onclick="toggle(this,${i},'V')">V</button>
-
-</div>
-
-<div class="equipo">
-
+vs
 ${p.v}
 
-<img src="${p.logoV}"
-class="logo logo-derecha">
+</div>
+
+<div>
+
+<button onclick="toggle(${i},'L',this)">
+L
+</button>
+
+<button onclick="toggle(${i},'E',this)">
+E
+</button>
+
+<button onclick="toggle(${i},'V',this)">
+V
+</button>
 
 </div>
 
@@ -86,46 +74,39 @@ class="logo logo-derecha">
 
 });
 
+/* CARGAR HORA */
+
+verificarHora();
+
 }
 
 /* ===========================
-BOTONES L E V
+SELECCION PICKS
 =========================== */
 
-function toggle(btn,i,val){
+function toggle(i,opcion,btn){
 
-if(verificarCierre()){
+let valor =
+selecciones[i] || "";
 
-alert("⛔ Quiniela cerrada");
-return;
+if(valor.includes(opcion)){
 
-}
+valor =
+valor.replace(opcion,"");
 
-if(!selecciones[i]){
-
-selecciones[i]=[];
-
-}
-
-if(selecciones[i].includes(val)){
-
-selecciones[i] =
-selecciones[i]
-.filter(x=>x!==val);
-
-btn.classList.remove("activo");
+btn.style.background="";
 
 }else{
 
-selecciones[i].push(val);
+valor += opcion;
 
-btn.classList.add("activo");
+btn.style.background="green";
 
 }
 
-btn.blur();
+selecciones[i]=valor;
 
-calcular();
+calcularTotal();
 
 }
 
@@ -133,223 +114,116 @@ calcular();
 CALCULAR TOTAL
 =========================== */
 
-function calcular(){
+function calcularTotal(){
 
-let totalComb=1;
+let combinaciones = 1;
 
 selecciones.forEach(s=>{
 
-if(s && s.length>0){
+if(s.length>0){
 
-totalComb *= s.length;
+combinaciones *= s.length;
 
 }
 
 });
 
-let comb =
-document.getElementById("comb");
+document.getElementById("comb").innerText =
+combinaciones;
 
-let total =
-document.getElementById("total");
-
-if(comb)
-comb.innerText = totalComb;
-
-if(total)
-total.innerText =
-"$"+(totalComb*precio);
+document.getElementById("total").innerText =
+"$"+(combinaciones*precio);
 
 }
 
 /* ===========================
-ENVIAR WHATSAPP + FIREBASE
+VALIDAR PICKS
 =========================== */
 
-function enviar(){
+function validarPicks(){
 
-if(verificarCierre()){
-
-alert("⛔ Quiniela cerrada");
-return;
-
-}
-
-let nombre =
-document.getElementById("nombre").value;
-
-if(!nombre){
-
-alert("Escribe tu nombre");
-return;
-
-}
-
-let partidos =
-JSON.parse(localStorage.getItem("partidos"));
-
-for(let i=0;i<partidos.length;i++){
+for(let i=0;i<9;i++){
 
 if(!selecciones[i] ||
 selecciones[i].length==0){
 
-alert("Debes seleccionar todos los partidos");
-return;
-
-}
-
-}
-
-let mensaje =
-"📋 QUINIELA A's\n\n";
-
-mensaje +=
-"Nombre: "+nombre+"\n\n";
-
-partidos.forEach((p,i)=>{
-
-let sel =
-(selecciones[i]||[])
-.join(",");
-
-mensaje +=
-p.l+" vs "+p.v
-+" = "+sel+"\n";
-
-});
-
-let totalComb=1;
-
-selecciones.forEach(s=>{
-
-if(s && s.length>0){
-
-totalComb *= s.length;
-
-}
-
-});
-
-let totalPago =
-totalComb*precio;
-
-let jugador = {
-
-nombre:nombre,
-selecciones:selecciones,
-combinaciones:totalComb,
-total:totalPago,
-pagado:false,
-fecha:new Date().toLocaleString()
-
-};
-
-db.ref("jugadores")
-.push(jugador);
-
-let url =
-"https://wa.me/"
-+numeroWhatsApp
-+"?text="
-+encodeURIComponent(mensaje);
-
-window.open(url,"_blank");
-
-alert("✅ Quiniela enviada");
-
-}
-
-/* ===========================
-GUARDAR HORA
-=========================== */
-
-function guardarHora(){
-
-let hora =
-document.getElementById("horaCierre").value;
-
-if(!hora){
-
-alert("Selecciona hora");
-return;
-
-}
-
-let hoy = new Date();
-
-let fechaCompleta =
-hoy.toDateString()
-+" "
-+hora;
-
-db.ref("config/horaCierre")
-.set(fechaCompleta);
-
-localStorage.setItem(
-"horaCierre",
-fechaCompleta
+alert(
+"Debes seleccionar todos los partidos"
 );
 
-alert("Hora guardada");
+return false;
 
 }
 
-/* ===========================
-BORRAR HORA
-=========================== */
-
-function borrarHora(){
-
-db.ref("config/horaCierre")
-.remove();
-
-localStorage.removeItem(
-"horaCierre"
-);
-
-let input =
-document.getElementById("horaCierre");
-
-if(input){
-
-input.value="";
-
 }
-
-alert("Hora reiniciada");
-
-}
-
-/* ===========================
-VERIFICAR CIERRE GLOBAL
-=========================== */
-
-function verificarCierre(){
-
-let horaGuardada =
-localStorage.getItem("horaCierre");
-
-if(!horaGuardada) return false;
-
-let ahora = new Date();
-let cierre = new Date(horaGuardada);
-
-if(ahora >= cierre){
-
-let botones =
-document.querySelectorAll(".btn");
-
-botones.forEach(b=>{
-
-b.disabled = true;
-
-});
 
 return true;
 
 }
 
-return false;
+/* ===========================
+ENVIAR QUINIELA
+=========================== */
+
+function enviar(){
+
+if(!validarPicks()) return;
+
+let nombre =
+document.getElementById("nombre").value;
+
+if(nombre==""){
+
+alert("Escribe tu nombre");
+
+return;
+
+}
+
+let combinaciones =
+document.getElementById("comb").innerText;
+
+let total =
+document.getElementById("total")
+.innerText.replace("$","");
+
+/* GUARDAR EN FIREBASE */
+
+let id =
+Date.now();
+
+db.ref("jugadores/"+id)
+.set({
+
+nombre:nombre,
+selecciones:selecciones,
+total:total,
+pagado:false
+
+});
+
+/* MENSAJE WHATSAPP */
+
+let mensaje =
+"Quiniela %0A";
+
+selecciones.forEach((s,i)=>{
+
+mensaje +=
+"P"+(i+1)+":"+s+"%0A";
+
+});
+
+mensaje +=
+"Total:$"+total;
+
+window.open(
+
+"https://wa.me/"+
+numeroWhatsApp+
+"?text="+mensaje
+
+);
 
 }
 
@@ -385,26 +259,19 @@ Object.entries(jugadores)
 .forEach(([id,j])=>{
 
 let color =
-j.pagado ? "green" : "red";
+j.pagado ? "green":"red";
 
 let estado =
-j.pagado ? "PAGADO" : "PENDIENTE";
+j.pagado ? "PAGADO":"PENDIENTE";
 
 let picksTexto="";
 
 if(j.selecciones){
 
-j.selecciones
-.forEach((s,i)=>{
-
-if(s){
+j.selecciones.forEach((s,i)=>{
 
 picksTexto +=
-"P"+(i+1)+":"
-+s.join("")
-+" ";
-
-}
+`P${i+1}:${s} `;
 
 });
 
@@ -429,7 +296,7 @@ ${picksTexto}
 <span style="
 background:${color};
 color:white;
-padding:4px 8px">
+padding:4px 8px;">
 
 ${estado}
 
@@ -437,18 +304,12 @@ ${estado}
 
 <br><br>
 
-<button
-onclick="confirmarPago('${id}')">
-
+<button onclick="confirmarPago('${id}')">
 ✅ Confirmar Pago
-
 </button>
 
-<button
-onclick="borrarJugador('${id}')">
-
+<button onclick="borrarJugador('${id}')">
 🗑️ Borrar
-
 </button>
 
 <hr>
@@ -467,11 +328,10 @@ onclick="borrarJugador('${id}')">
 CONFIRMAR PAGO
 =========================== */
 
-function confirmarPago(key){
+function confirmarPago(id){
 
-db.ref(
-"jugadores/"+key
-).update({
+db.ref("jugadores/"+id)
+.update({
 
 pagado:true
 
@@ -483,55 +343,60 @@ pagado:true
 BORRAR JUGADOR
 =========================== */
 
-function borrarJugador(key){
+function borrarJugador(id){
 
-let confirmar =
-confirm("¿Borrar jugador?");
+if(confirm("¿Borrar jugador?")){
 
-if(!confirmar) return;
-
-db.ref(
-"jugadores/"+key
-).remove();
-
-}
-
-/* ===========================
-BORRAR TODOS
-=========================== */
-
-function borrarJugadores(){
-
-let confirmar =
-confirm(
-"¿Borrar TODOS los jugadores?"
-);
-
-if(!confirmar) return;
-
-db.ref("jugadores")
+db.ref("jugadores/"+id)
 .remove();
 
 }
 
+}
+
 /* ===========================
-CARGAR HORA DESDE FIREBASE
+GUARDAR HORA CIERRE
 =========================== */
 
-function cargarHora(){
+function guardarHora(){
 
-db.ref("config/horaCierre")
-.on("value",snapshot=>{
+let hora =
+document.getElementById("horaCierre").value;
+
+db.ref("horaCierre")
+.set(hora);
+
+}
+
+/* ===========================
+VERIFICAR HORA
+=========================== */
+
+function verificarHora(){
+
+db.ref("horaCierre")
+.on("value", snapshot=>{
 
 let hora =
 snapshot.val();
 
-if(hora){
+if(!hora) return;
 
-localStorage.setItem(
-"horaCierre",
-hora
-);
+let ahora =
+new Date();
+
+let cierre =
+new Date();
+
+let partes =
+hora.split(":");
+
+cierre.setHours(partes[0]);
+cierre.setMinutes(partes[1]);
+
+if(ahora>=cierre){
+
+bloquear();
 
 }
 
@@ -540,7 +405,24 @@ hora
 }
 
 /* ===========================
-GENERAR EXCEL REAL (.xlsx)
+BLOQUEAR QUINIELA
+=========================== */
+
+function bloquear(){
+
+let botones =
+document.querySelectorAll("button");
+
+botones.forEach(b=>{
+
+b.disabled=true;
+
+});
+
+}
+
+/* ===========================
+GENERAR EXCEL (ESTABLE)
 =========================== */
 
 function generarExcel(){
@@ -551,123 +433,59 @@ db.ref("jugadores")
 let jugadores =
 snapshot.val();
 
-if(!jugadores){
+let contenido =
+"Nombre,P1,P2,P3,P4,P5,P6,P7,P8,P9,Total,Estado\n";
 
-alert("No hay jugadores");
-return;
+if(jugadores){
 
-}
+Object.entries(jugadores)
+.forEach(([id,j])=>{
 
-let datos=[];
+let estado =
+j.pagado ? "PAGADO":"PENDIENTE";
 
-Object.values(jugadores)
-.forEach(j=>{
+let fila=[
 
-if(j.selecciones){
+j.nombre,
+...(j.selecciones || []),
+j.total,
+estado
 
-let combinaciones =
-generarCombinaciones(
-j.selecciones
-);
+];
 
-combinaciones.forEach(combo=>{
-
-datos.push({
-
-Nombre:j.nombre,
-P1:combo[0],
-P2:combo[1],
-P3:combo[2],
-P4:combo[3],
-P5:combo[4],
-P6:combo[5],
-P7:combo[6],
-P8:combo[7],
-P9:combo[8]
-
-});
+contenido +=
+fila.join(",")+"\n";
 
 });
 
 }
 
-});
+let blob =
+new Blob([contenido],
+{type:"text/csv"});
 
-let hoja =
-XLSX.utils.json_to_sheet(datos);
+let link =
+document.createElement("a");
 
-let libro =
-XLSX.utils.book_new();
+link.href =
+URL.createObjectURL(blob);
 
-XLSX.utils.book_append_sheet(
-libro,
-hoja,
-"Quiniela"
-);
+link.download =
+"quiniela_jugadores.csv";
 
-XLSX.writeFile(
-libro,
-"Quiniela_Combinaciones.xlsx"
-);
+link.click();
 
 });
 
 }
 
 /* ===========================
-GENERAR COMBINACIONES
+INICIAR
 =========================== */
 
-function generarCombinaciones(picks){
+window.onload = function(){
 
-let resultado=[[]];
-
-picks.forEach(opciones=>{
-
-let temp=[];
-
-resultado.forEach(base=>{
-
-opciones.forEach(op=>{
-
-temp.push([
-...base,
-op
-]);
-
-});
-
-});
-
-resultado=temp;
-
-});
-
-return resultado;
-
-}
-
-/* ===========================
-INICIO GENERAL
-=========================== */
-
-window.onload=function(){
-
-if(document.getElementById("lista")){
 cargar();
-}
-
-if(document.getElementById("listaJugadores")){
 mostrarJugadores();
-}
-
-cargarHora();
-
-/* VERIFICAR CIERRE CADA 5 SEG */
-
-setInterval(
-verificarCierre,
-5000
-);
 
 };
