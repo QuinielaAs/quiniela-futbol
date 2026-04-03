@@ -388,12 +388,47 @@ INICIO GENERAL
 
 window.onload = function(){
 
+/* CARGAR PARTIDOS */
+
 if(document.getElementById("lista")){
 cargar();
 }
+
+/* CARGAR JUGADORES */
 
 if(document.getElementById("listaJugadores")){
 mostrarJugadores();
 }
 
+/* CARGAR HORA DESDE FIREBASE */
+
+cargarHora();
+
 };
+
+/* ===========================
+CARGAR HORA DESDE FIREBASE
+=========================== */
+
+function cargarHora(){
+
+db.ref("config/horaCierre")
+.on("value", snapshot=>{
+
+let hora =
+snapshot.val();
+
+if(hora){
+
+/* GUARDAR LOCAL */
+
+localStorage.setItem(
+"horaCierre",
+hora
+);
+
+}
+
+});
+
+    }
