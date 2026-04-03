@@ -554,26 +554,20 @@ Confirmar Pago
 }
 
 /* ===========================
-CONFIRMAR PAGO
+CONFIRMAR PAGO FIREBASE
 =========================== */
 
-function confirmarPago(index){
+function confirmarPago(key){
 
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
+db.ref(
+"jugadores/"+key
+).update({
 
-jugadores[index].pagado = true;
+pagado: true
 
-localStorage.setItem(
-"jugadores",
-JSON.stringify(jugadores)
-);
+});
 
-mostrarJugadores();
-
-}
+  }
 
 /* ===========================
 INICIO GENERAL
