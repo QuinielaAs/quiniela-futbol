@@ -26,8 +26,6 @@ let partidosBase = [
 
 ];
 
-/* GUARDAR BASE */
-
 if(!localStorage.getItem("partidos")){
 
 localStorage.setItem(
@@ -36,8 +34,6 @@ JSON.stringify(partidosBase)
 );
 
 }
-
-/* OBTENER */
 
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
@@ -48,8 +44,6 @@ document.getElementById("lista");
 if(!div) return;
 
 div.innerHTML="";
-
-/* CREAR PARTIDOS */
 
 partidos.forEach((p,i)=>{
 
@@ -100,34 +94,18 @@ BOTONES L E V
 
 function toggle(btn,i,val){
 
-/* VALIDAR HORA */
-
-let horaGuardada =
-localStorage.getItem("horaCierre");
-
-if(horaGuardada){
-
-let ahora = new Date();
-let cierre = new Date(horaGuardada);
-
-if(ahora >= cierre){
+if(verificarCierre()){
 
 alert("⛔ Quiniela cerrada");
 return;
 
 }
 
-}
-
-/* CREAR ARRAY */
-
 if(!selecciones[i]){
 
 selecciones[i]=[];
 
 }
-
-/* TOGGLE */
 
 if(selecciones[i].includes(val)){
 
@@ -190,6 +168,13 @@ ENVIAR WHATSAPP + FIREBASE
 
 function enviar(){
 
+if(verificarCierre()){
+
+alert("⛔ Quiniela cerrada");
+return;
+
+}
+
 let nombre =
 document.getElementById("nombre").value;
 
@@ -203,8 +188,6 @@ return;
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
 
-/* VALIDAR PICKS */
-
 for(let i=0;i<partidos.length;i++){
 
 if(!selecciones[i] ||
@@ -216,8 +199,6 @@ return;
 }
 
 }
-
-/* MENSAJE */
 
 let mensaje =
 "📋 QUINIELA A's\n\n";
@@ -237,8 +218,6 @@ p.l+" vs "+p.v
 
 });
 
-/* CALCULAR */
-
 let totalComb=1;
 
 selecciones.forEach(s=>{
@@ -254,8 +233,6 @@ totalComb *= s.length;
 let totalPago =
 totalComb*precio;
 
-/* OBJETO */
-
 let jugador = {
 
 nombre:nombre,
@@ -267,12 +244,8 @@ fecha:new Date().toLocaleString()
 
 };
 
-/* FIREBASE */
-
 db.ref("jugadores")
 .push(jugador);
-
-/* WHATSAPP */
 
 let url =
 "https://wa.me/"
@@ -301,8 +274,6 @@ alert("Selecciona hora");
 return;
 
 }
-
-/* CREAR FECHA COMPLETA */
 
 let hoy = new Date();
 
@@ -350,6 +321,39 @@ alert("Hora reiniciada");
 }
 
 /* ===========================
+VERIFICAR CIERRE GLOBAL
+=========================== */
+
+function verificarCierre(){
+
+let horaGuardada =
+localStorage.getItem("horaCierre");
+
+if(!horaGuardada) return false;
+
+let ahora = new Date();
+let cierre = new Date(horaGuardada);
+
+if(ahora >= cierre){
+
+let botones =
+document.querySelectorAll(".btn");
+
+botones.forEach(b=>{
+
+b.disabled = true;
+
+});
+
+return true;
+
+}
+
+return false;
+
+}
+
+/* ===========================
 MOSTRAR JUGADORES
 =========================== */
 
@@ -386,8 +390,6 @@ j.pagado ? "green" : "red";
 let estado =
 j.pagado ? "PAGADO" : "PENDIENTE";
 
-/* PICKS */
-
 let picksTexto="";
 
 if(j.selecciones){
@@ -407,8 +409,6 @@ picksTexto +=
 });
 
 }
-
-/* TARJETA */
 
 div.innerHTML += `
 
@@ -540,20 +540,25 @@ hora
 }
 
 /* ===========================
-GENERAR COMBINACIONES CSV
+GENERAR EXCEL REAL (.xlsx)
 =========================== */
 
 function generarExcel(){
 
 db.ref("jugadores")
-.once("value",snapshot=>{
+.once("value", snapshot=>{
 
 let jugadores =
 snapshot.val();
 
-let filas=[];
+if(!jugadores){
 
-if(jugadores){
+alert("No hay jugadores");
+return;
+
+}
+
+let datos=[];
 
 Object.values(jugadores)
 .forEach(j=>{
@@ -565,13 +570,22 @@ generarCombinaciones(
 j.selecciones
 );
 
-combinaciones
-.forEach(combo=>{
+combinaciones.forEach(combo=>{
 
-filas.push([
-j.nombre,
-...combo
-]);
+datos.push({
+
+Nombre:j.nombre,
+P1:combo[0],
+P2:combo[1],
+P3:combo[2],
+P4:combo[3],
+P5:combo[4],
+P6:combo[5],
+P7:combo[6],
+P8:combo[7],
+P9:combo[8]
+
+});
 
 });
 
@@ -579,35 +593,22 @@ j.nombre,
 
 });
 
-}
+let hoja =
+XLSX.utils.json_to_sheet(datos);
 
-let contenido =
-"Nombre,P1,P2,P3,P4,P5,P6,P7,P8,P9\n";
+let libro =
+XLSX.utils.book_new();
 
-filas.forEach(fila=>{
-
-contenido +=
-fila.join(",")
-+"\n";
-
-});
-
-let blob =
-new Blob(
-[contenido],
-{type:"text/csv"}
+XLSX.utils.book_append_sheet(
+libro,
+hoja,
+"Quiniela"
 );
 
-let link =
-document.createElement("a");
-
-link.href =
-URL.createObjectURL(blob);
-
-link.download =
-"quiniela_combinaciones.csv";
-
-link.click();
+XLSX.writeFile(
+libro,
+"Quiniela_Combinaciones.xlsx"
+);
 
 });
 
@@ -652,18 +653,21 @@ INICIO GENERAL
 
 window.onload=function(){
 
-if(
-document.getElementById("lista")
-){
+if(document.getElementById("lista")){
 cargar();
 }
 
-if(
-document.getElementById("listaJugadores")
-){
+if(document.getElementById("listaJugadores")){
 mostrarJugadores();
 }
 
 cargarHora();
+
+/* VERIFICAR CIERRE CADA 5 SEG */
+
+setInterval(
+verificarCierre,
+5000
+);
 
 };
