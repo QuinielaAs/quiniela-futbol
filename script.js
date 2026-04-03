@@ -380,37 +380,50 @@ input.value = hora;
 }
 
 /* ===========================
-MOSTRAR JUGADORES (DISEÑO NUEVO)
+MOSTRAR JUGADORES FIREBASE
 =========================== */
 
 function mostrarJugadores(){
 
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
 let div =
-document.getElementById(
-"listaJugadores"
-);
+document.getElementById("listaJugadores");
 
 if(!div) return;
 
-div.innerHTML="";
+div.innerHTML = "Cargando jugadores...";
 
-if(jugadores.length==0){
+/* LEER FIREBASE */
+
+db.ref("jugadores")
+.on("value", snapshot => {
+
+div.innerHTML = "";
+
+let jugadores =
+snapshot.val();
+
+if(!jugadores){
 
 div.innerHTML =
-"<p>No hay jugadores registrados</p>";
+"No hay jugadores registrados";
 
 return;
 
 }
 
-jugadores.forEach((j,i)=>{
+Object.keys(jugadores)
+.forEach(key=>{
 
-/* ARMAR PICKS EN LINEA */
+let j =
+jugadores[key];
+
+let color =
+j.pagado ? "green" : "red";
+
+let estado =
+j.pagado ? "PAGADO" : "PENDIENTE";
+
+/* CREAR PICKS */
 
 let picksLinea = "";
 
@@ -424,6 +437,58 @@ picksLinea +=
 s.join(" ") + " ";
 
 }
+
+});
+
+}
+
+/* TARJETA */
+
+div.innerHTML += `
+
+<div class="jugador-card">
+
+<div class="jugador-nombre">
+
+${j.nombre}
+
+</div>
+
+<div class="jugador-picks">
+
+${picksLinea}
+
+</div>
+
+<div class="jugador-total">
+
+💰 $${j.total}
+
+</div>
+
+<div class="jugador-botones">
+
+<span class="estado"
+style="background:${color}">
+
+${estado}
+
+</span>
+
+<button
+onclick="confirmarPago('${key}')">
+
+Confirmar Pago
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
 
 });
 
