@@ -652,3 +652,43 @@ libro,
 );
 
 }
+
+/* ===========================
+BORRAR JUGADORES (NUEVA SEMANA)
+=========================== */
+
+function borrarJugadores(){
+
+/* CONFIRMAR */
+
+let confirmar = confirm(
+"¿Seguro que deseas borrar TODOS los jugadores para iniciar nueva semana?"
+);
+
+if(!confirmar) return;
+
+/* BORRAR STORAGE */
+
+localStorage.removeItem("jugadores");
+
+/* LIMPIAR SELECCIONES */
+
+selecciones = [];
+
+/* ACTUALIZAR PANEL */
+
+let div =
+document.getElementById("listaJugadores");
+
+if(div){
+
+div.innerHTML =
+"No hay jugadores registrados";
+
+}
+
+/* MENSAJE */
+
+alert("🗑️ Jugadores eliminados correctamente");
+
+}
