@@ -768,3 +768,30 @@ mostrarJugadores();
 }
 
 };
+
+/* ===========================
+CARGAR HORA GUARDADA
+=========================== */
+
+function cargarHora(){
+
+let input =
+document.getElementById("horaCierre");
+
+if(!input) return;
+
+db.ref("config/horaCierre")
+.on("value", snapshot=>{
+
+let hora =
+snapshot.val();
+
+if(hora){
+
+input.value = hora;
+
+}
+
+});
+
+}
