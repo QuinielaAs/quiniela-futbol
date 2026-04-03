@@ -322,6 +322,43 @@ MOSTRAR JUGADORES
 
 /* CREAR PICKS POR PARTIDO */
 
+function mostrarJugadores(){
+
+let div =
+document.getElementById("listaJugadores");
+
+if(!div) return;
+
+db.ref("jugadores")
+.on("value", snapshot => {
+
+div.innerHTML="";
+
+let jugadores =
+snapshot.val();
+
+if(!jugadores){
+
+div.innerHTML =
+"No hay jugadores";
+
+return;
+
+}
+
+Object.keys(jugadores)
+.forEach(key=>{
+
+let j = jugadores[key];
+
+let color =
+j.pagado ? "green" : "red";
+
+let estado =
+j.pagado ? "PAGADO" : "PENDIENTE";
+
+/* CREAR PICKS */
+
 let picksTexto = "";
 
 if(j.selecciones){
@@ -339,7 +376,7 @@ picksTexto +=
 
 }
 
-/* CREAR TARJETA */
+/* TARJETA */
 
 div.innerHTML += `
 
@@ -383,6 +420,12 @@ Confirmar Pago
 </div>
 
 `;
+
+});
+
+});
+
+}
 
 /* ===========================
 CONFIRMAR PAGO
