@@ -179,8 +179,26 @@ return;
 
 }
 
+/* OBTENER PARTIDOS */
+
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
+
+/* VALIDAR QUE TODOS TENGAN PICK */
+
+for(let i=0;i<partidos.length;i++){
+
+if(!selecciones[i] || selecciones[i].length==0){
+
+alert("Debes seleccionar todos los partidos");
+
+return;
+
+}
+
+}
+
+/* CREAR MENSAJE */
 
 let mensaje =
 "📋 QUINIELA A's\n\n";
@@ -230,11 +248,11 @@ fecha: new Date().toLocaleString()
 
 };
 
-/* GUARDAR EN FIREBASE */
+/* GUARDAR FIREBASE */
 
 db.ref("jugadores").push(jugador);
 
-/* WHATSAPP */
+/* ENVIAR WHATSAPP */
 
 let url =
 "https://wa.me/"
@@ -246,7 +264,7 @@ window.open(url,"_blank");
 
 alert("✅ Quiniela enviada");
 
-}
+    }
 
 /* ===========================
 GUARDAR HORA
