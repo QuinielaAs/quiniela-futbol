@@ -330,42 +330,58 @@ if(!div) return;
 db.ref("jugadores")
 .on("value", snapshot => {
 
-div.innerHTML="";
+/* CREAR PICKS POR PARTIDO */
 
-let jugadores =
-snapshot.val();
+let picksTexto = "";
 
-if(!jugadores){
+if(j.selecciones){
 
-div.innerHTML =
-"No hay jugadores";
+j.selecciones.forEach((s,i)=>{
 
-return;
+if(s && s.length>0){
+
+picksTexto +=
+"P"+(i+1)+":"+s.join("")+" ";
 
 }
 
-Object.keys(jugadores)
-.forEach(key=>{
+});
 
-let j = jugadores[key];
+}
 
-let color =
-j.pagado ? "green" : "red";
-
-let estado =
-j.pagado ? "PAGADO" : "PENDIENTE";
+/* CREAR TARJETA */
 
 div.innerHTML += `
 
 <div class="jugador-card">
 
-<div>${j.nombre}</div>
+<div>
+<b>${j.nombre}</b>
+</div>
 
-<div>💰 $${j.total}</div>
+<div style="
+font-size:13px;
+margin:5px 0;
+color:#333">
 
-<span style="background:${color}">
+${picksTexto}
+
+</div>
+
+<div>
+💰 $${j.total}
+</div>
+
+<span style="
+background:${color};
+padding:4px 8px;
+color:white">
+
 ${estado}
+
 </span>
+
+<br><br>
 
 <button
 onclick="confirmarPago('${key}')">
@@ -377,12 +393,6 @@ Confirmar Pago
 </div>
 
 `;
-
-});
-
-});
-
-}
 
 /* ===========================
 CONFIRMAR PAGO
