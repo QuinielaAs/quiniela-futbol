@@ -26,6 +26,8 @@ let partidosBase = [
 
 ];
 
+/* GUARDAR BASE */
+
 if(!localStorage.getItem("partidos")){
 
 localStorage.setItem(
@@ -34,6 +36,8 @@ JSON.stringify(partidosBase)
 );
 
 }
+
+/* OBTENER */
 
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
@@ -45,6 +49,8 @@ if(!div) return;
 
 div.innerHTML="";
 
+/* CREAR PARTIDOS */
+
 partidos.forEach((p,i)=>{
 
 div.innerHTML += `
@@ -53,17 +59,21 @@ div.innerHTML += `
 
 <div class="equipo">
 
-<img src="${p.logoL}" class="logo"> ${p.l}
+<img src="${p.logoL}" class="logo">
+${p.l}
 
 </div>
 
 <div class="botones">
 
-<button class="btn" onclick="toggle(this,${i},'L')">L</button>
+<button class="btn"
+onclick="toggle(this,${i},'L')">L</button>
 
-<button class="btn" onclick="toggle(this,${i},'E')">E</button>
+<button class="btn"
+onclick="toggle(this,${i},'E')">E</button>
 
-<button class="btn" onclick="toggle(this,${i},'V')">V</button>
+<button class="btn"
+onclick="toggle(this,${i},'V')">V</button>
 
 </div>
 
@@ -71,7 +81,8 @@ div.innerHTML += `
 
 ${p.v}
 
-<img src="${p.logoV}" class="logo logo-derecha">
+<img src="${p.logoV}"
+class="logo logo-derecha">
 
 </div>
 
@@ -87,7 +98,7 @@ ${p.v}
 BOTONES L E V
 =========================== */
 
-function toggle(btn, i, val) {
+function toggle(btn,i,val){
 
 /* VALIDAR HORA */
 
@@ -101,25 +112,32 @@ let cierre = new Date(horaGuardada);
 
 if(ahora >= cierre){
 
-alert("⛔ La quiniela ya está cerrada");
+alert("⛔ Quiniela cerrada");
 return;
 
 }
 
 }
 
-if (!selecciones[i]) {
-selecciones[i] = [];
+/* CREAR ARRAY */
+
+if(!selecciones[i]){
+
+selecciones[i]=[];
+
 }
 
-if (selecciones[i].includes(val)) {
+/* TOGGLE */
+
+if(selecciones[i].includes(val)){
 
 selecciones[i] =
-selecciones[i].filter(x => x !== val);
+selecciones[i]
+.filter(x=>x!==val);
 
 btn.classList.remove("activo");
 
-} else {
+}else{
 
 selecciones[i].push(val);
 
@@ -157,8 +175,11 @@ document.getElementById("comb");
 let total =
 document.getElementById("total");
 
-if(comb) comb.innerText = totalComb;
-if(total) total.innerText =
+if(comb)
+comb.innerText = totalComb;
+
+if(total)
+total.innerText =
 "$"+(totalComb*precio);
 
 }
@@ -179,26 +200,24 @@ return;
 
 }
 
-/* OBTENER PARTIDOS */
-
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
 
-/* VALIDAR QUE TODOS TENGAN PICK */
+/* VALIDAR PICKS */
 
 for(let i=0;i<partidos.length;i++){
 
-if(!selecciones[i] || selecciones[i].length==0){
+if(!selecciones[i] ||
+selecciones[i].length==0){
 
 alert("Debes seleccionar todos los partidos");
-
 return;
 
 }
 
 }
 
-/* CREAR MENSAJE */
+/* MENSAJE */
 
 let mensaje =
 "📋 QUINIELA A's\n\n";
@@ -218,9 +237,9 @@ p.l+" vs "+p.v
 
 });
 
-/* CALCULAR TOTAL */
+/* CALCULAR */
 
-let totalComb = 1;
+let totalComb=1;
 
 selecciones.forEach(s=>{
 
@@ -233,26 +252,27 @@ totalComb *= s.length;
 });
 
 let totalPago =
-totalComb * precio;
+totalComb*precio;
 
-/* CREAR OBJETO */
+/* OBJETO */
 
 let jugador = {
 
-nombre: nombre,
-selecciones: selecciones,
-combinaciones: totalComb,
-total: totalPago,
-pagado: false,
-fecha: new Date().toLocaleString()
+nombre:nombre,
+selecciones:selecciones,
+combinaciones:totalComb,
+total:totalPago,
+pagado:false,
+fecha:new Date().toLocaleString()
 
 };
 
-/* GUARDAR FIREBASE */
+/* FIREBASE */
 
-db.ref("jugadores").push(jugador);
+db.ref("jugadores")
+.push(jugador);
 
-/* ENVIAR WHATSAPP */
+/* WHATSAPP */
 
 let url =
 "https://wa.me/"
@@ -277,16 +297,26 @@ document.getElementById("horaCierre").value;
 
 if(!hora){
 
-alert("Selecciona una hora");
+alert("Selecciona hora");
 return;
 
 }
 
-db.ref("config/horaCierre").set(hora);
+/* CREAR FECHA COMPLETA */
+
+let hoy = new Date();
+
+let fechaCompleta =
+hoy.toDateString()
++" "
++hora;
+
+db.ref("config/horaCierre")
+.set(fechaCompleta);
 
 localStorage.setItem(
 "horaCierre",
-hora
+fechaCompleta
 );
 
 alert("Hora guardada");
@@ -299,9 +329,12 @@ BORRAR HORA
 
 function borrarHora(){
 
-db.ref("config/horaCierre").remove();
+db.ref("config/horaCierre")
+.remove();
 
-localStorage.removeItem("horaCierre");
+localStorage.removeItem(
+"horaCierre"
+);
 
 let input =
 document.getElementById("horaCierre");
@@ -328,7 +361,7 @@ document.getElementById("listaJugadores");
 if(!div) return;
 
 db.ref("jugadores")
-.on("value", snapshot => {
+.on("value", snapshot=>{
 
 div.innerHTML="";
 
@@ -347,26 +380,27 @@ return;
 Object.entries(jugadores)
 .forEach(([id,j])=>{
 
-/* COLOR ESTADO */
-
 let color =
 j.pagado ? "green" : "red";
 
 let estado =
 j.pagado ? "PAGADO" : "PENDIENTE";
 
-/* CREAR PICKS */
+/* PICKS */
 
 let picksTexto="";
 
 if(j.selecciones){
 
-j.selecciones.forEach((s,i)=>{
+j.selecciones
+.forEach((s,i)=>{
 
 if(s){
 
 picksTexto +=
-`P${i+1}:${s} `;
+"P"+(i+1)+":"
++s.join("")
++" ";
 
 }
 
@@ -380,27 +414,22 @@ div.innerHTML += `
 
 <div class="jugador-card">
 
-<div>
 <b>${j.nombre}</b>
-</div>
 
-<div style="
-font-size:13px;
-margin:5px 0;
-color:#333">
+<br>
 
 ${picksTexto}
 
-</div>
+<br>
 
-<div>
 💰 $${j.total}
-</div>
+
+<br>
 
 <span style="
 background:${color};
-padding:4px 8px;
-color:white">
+color:white;
+padding:4px 8px">
 
 ${estado}
 
@@ -444,37 +473,46 @@ db.ref(
 "jugadores/"+key
 ).update({
 
-pagado: true
+pagado:true
 
 });
 
 }
 
 /* ===========================
-INICIO GENERAL
+BORRAR JUGADOR
 =========================== */
 
-window.onload = function(){
+function borrarJugador(key){
 
-/* CARGAR PARTIDOS */
+let confirmar =
+confirm("¿Borrar jugador?");
 
-if(document.getElementById("lista")){
-cargar();
+if(!confirmar) return;
+
+db.ref(
+"jugadores/"+key
+).remove();
+
 }
 
-/* ADMIN */
+/* ===========================
+BORRAR TODOS
+=========================== */
 
-if(document.getElementById("listaJugadores")){
-mostrarJugadores();
+function borrarJugadores(){
+
+let confirmar =
+confirm(
+"¿Borrar TODOS los jugadores?"
+);
+
+if(!confirmar) return;
+
+db.ref("jugadores")
+.remove();
+
 }
-
-/* CARGAR HORA */
-
-if(typeof cargarHora === "function"){
-cargarHora();
-}
-
-};
 
 /* ===========================
 CARGAR HORA DESDE FIREBASE
@@ -483,14 +521,12 @@ CARGAR HORA DESDE FIREBASE
 function cargarHora(){
 
 db.ref("config/horaCierre")
-.on("value", snapshot=>{
+.on("value",snapshot=>{
 
 let hora =
 snapshot.val();
 
 if(hora){
-
-/* GUARDAR LOCAL */
 
 localStorage.setItem(
 "horaCierre",
@@ -504,17 +540,18 @@ hora
 }
 
 /* ===========================
-GENERAR EXCEL CON COMBINACIONES
+GENERAR COMBINACIONES CSV
 =========================== */
 
 function generarExcel(){
 
 db.ref("jugadores")
-.once("value", snapshot=>{
+.once("value",snapshot=>{
 
-let jugadores = snapshot.val();
+let jugadores =
+snapshot.val();
 
-let filas = [];
+let filas=[];
 
 if(jugadores){
 
@@ -524,9 +561,12 @@ Object.values(jugadores)
 if(j.selecciones){
 
 let combinaciones =
-generarCombinaciones(j.selecciones);
+generarCombinaciones(
+j.selecciones
+);
 
-combinaciones.forEach(combo=>{
+combinaciones
+.forEach(combo=>{
 
 filas.push([
 j.nombre,
@@ -541,21 +581,22 @@ j.nombre,
 
 }
 
-/* CREAR CSV */
-
-let contenido = "Nombre,P1,P2,P3,P4,P5,P6,P7,P8,P9\n";
+let contenido =
+"Nombre,P1,P2,P3,P4,P5,P6,P7,P8,P9\n";
 
 filas.forEach(fila=>{
 
-contenido += fila.join(",") + "\n";
+contenido +=
+fila.join(",")
++"\n";
 
 });
 
-/* DESCARGAR */
-
 let blob =
-new Blob([contenido],
-{ type:"text/csv" });
+new Blob(
+[contenido],
+{type:"text/csv"}
+);
 
 let link =
 document.createElement("a");
@@ -572,119 +613,57 @@ link.click();
 
 }
 
-/* CREAR EXCEL */
-
-let hoja =
-XLSX.utils.json_to_sheet(datos);
-
-let libro =
-XLSX.utils.book_new();
-
-XLSX.utils.book_append_sheet(
-libro,
-hoja,
-"Pagados"
-);
-
-/* SEMANA */
-
-let semana = 1;
-
-let input =
-document.getElementById("semana");
-
-if(input){
-
-semana = input.value || 1;
-
-}
-
-/* DESCARGAR */
-
-XLSX.writeFile(
-libro,
-"Quiniela_Pagados_Semana_"+semana+".xlsx"
-);
-
-});
-
-}
-
-function borrarJugadores(){
-
-/* CONFIRMAR */
-
-let confirmar = confirm(
-"¿Seguro que deseas borrar TODOS los jugadores para iniciar nueva semana?"
-);
-
-if(!confirmar) return;
-
-/* BORRAR EN FIREBASE */
-
-db.ref("jugadores")
-.remove()
-.then(()=>{
-
-/* LIMPIAR PANTALLA */
-
-let div =
-document.getElementById("listaJugadores");
-
-if(div){
-
-div.innerHTML =
-"No hay jugadores registrados";
-
-}
-
-/* LIMPIAR SELECCIONES */
-
-selecciones = [];
-
-/* MENSAJE */
-
-alert("🗑️ Jugadores eliminados correctamente");
-
-})
-.catch(error=>{
-
-alert("Error al borrar jugadores");
-
-console.log(error);
-
-});
-
-      }
-
 /* ===========================
 GENERAR COMBINACIONES
 =========================== */
 
 function generarCombinaciones(picks){
 
-let resultado = [[]];
+let resultado=[[]];
 
-picks.forEach(pick=>{
+picks.forEach(opciones=>{
 
-let opciones = pick.split("");
-
-let temp = [];
+let temp=[];
 
 resultado.forEach(base=>{
 
 opciones.forEach(op=>{
 
-temp.push([...base, op]);
+temp.push([
+...base,
+op
+]);
 
 });
 
 });
 
-resultado = temp;
+resultado=temp;
 
 });
 
 return resultado;
 
 }
+
+/* ===========================
+INICIO GENERAL
+=========================== */
+
+window.onload=function(){
+
+if(
+document.getElementById("lista")
+){
+cargar();
+}
+
+if(
+document.getElementById("listaJugadores")
+){
+mostrarJugadores();
+}
+
+cargarHora();
+
+};
