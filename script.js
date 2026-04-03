@@ -179,6 +179,23 @@ return;
 
 }
 
+/* VALIDAR QUE TODOS LOS PARTIDOS TENGAN PICK */
+
+let partidos =
+JSON.parse(localStorage.getItem("partidos"));
+
+for(let i=0;i<partidos.length;i++){
+
+if(!selecciones[i] || selecciones[i].length==0){
+
+alert("Debes seleccionar todos los partidos");
+
+return;
+
+}
+
+}
+  
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
 
