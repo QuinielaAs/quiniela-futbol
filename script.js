@@ -496,64 +496,37 @@ hora
 
 }
 
-function generarExcelGeneral(){
+/* ===========================
+GENERAR EXCEL CON COMBINACIONES
+=========================== */
+
+function generarExcel(){
 
 db.ref("jugadores")
 .once("value", snapshot=>{
 
-let jugadores =
-snapshot.val();
+let jugadores = snapshot.val();
 
-if(!jugadores){
+let filas = [];
 
-alert("No hay jugadores registrados");
-return;
+if(jugadores){
 
-}
-
-let partidos =
-JSON.parse(
-localStorage.getItem("partidos")
-) || [];
-
-let datos = [];
-
-/* RECORRER JUGADORES */
-
-Object.keys(jugadores)
-.forEach(key=>{
-
-let j =
-jugadores[key];
-
-/* SOLO PAGADOS */
-
-if(j.pagado){
-
-let fila = {};
-
-fila["Nombre"] =
-j.nombre;
-
-fila["Combinaciones"] =
-j.combinaciones;
-
-fila["Total"] =
-j.total;
-
-/* PICKS */
+Object.values(jugadores)
+.forEach(j=>{
 
 if(j.selecciones){
 
-j.selecciones.forEach((s,i)=>{
+let combinaciones =
+generarCombinaciones(j.selecciones);
 
-if(s && s.length>0){
+combinaciones.forEach(combo=>{
 
-let p = partidos[i];
+filas.push([
+j.nombre,
+...combo
+]);
 
-fila[
-p.l+" vs "+p.v
-] = s.join(",");
+});
 
 }
 
@@ -561,19 +534,34 @@ p.l+" vs "+p.v
 
 }
 
-datos.push(fila);
+/* CREAR CSV */
 
-}
+let contenido = "Nombre,P1,P2,P3,P4,P5,P6,P7,P8,P9\n";
+
+filas.forEach(fila=>{
+
+contenido += fila.join(",") + "\n";
 
 });
 
-/* VALIDAR */
+/* DESCARGAR */
 
-if(datos.length == 0){
+let blob =
+new Blob([contenido],
+{ type:"text/csv" });
 
-alert("No hay jugadores PAGADOS");
+let link =
+document.createElement("a");
 
-return;
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"quiniela_combinaciones.csv";
+
+link.click();
+
+});
 
 }
 
