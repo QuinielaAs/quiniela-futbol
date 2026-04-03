@@ -746,3 +746,23 @@ div.innerHTML =
 alert("🗑️ Jugadores eliminados correctamente");
 
 }
+
+/* ===========================
+INICIAR SISTEMA
+=========================== */
+
+window.onload = function(){
+
+if(typeof cargar === "function"){
+
+cargar();
+
+}
+
+if(typeof mostrarJugadores === "function"){
+
+mostrarJugadores();
+
+}
+
+};
