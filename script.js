@@ -767,8 +767,13 @@ mostrarJugadores();
 
 }
 
-};
+if(typeof cargarHora === "function"){
 
+cargarHora();
+
+}
+
+};
 /* ===========================
 CARGAR HORA GUARDADA
 =========================== */
