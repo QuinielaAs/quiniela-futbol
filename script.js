@@ -569,3 +569,50 @@ libro,
 });
 
 }
+
+function borrarJugadores(){
+
+/* CONFIRMAR */
+
+let confirmar = confirm(
+"¿Seguro que deseas borrar TODOS los jugadores para iniciar nueva semana?"
+);
+
+if(!confirmar) return;
+
+/* BORRAR EN FIREBASE */
+
+db.ref("jugadores")
+.remove()
+.then(()=>{
+
+/* LIMPIAR PANTALLA */
+
+let div =
+document.getElementById("listaJugadores");
+
+if(div){
+
+div.innerHTML =
+"No hay jugadores registrados";
+
+}
+
+/* LIMPIAR SELECCIONES */
+
+selecciones = [];
+
+/* MENSAJE */
+
+alert("🗑️ Jugadores eliminados correctamente");
+
+})
+.catch(error=>{
+
+alert("Error al borrar jugadores");
+
+console.log(error);
+
+});
+
+      }
