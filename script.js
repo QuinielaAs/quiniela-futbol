@@ -26,8 +26,6 @@ let partidosBase = [
 
 ];
 
-/* SOLO GUARDAR SI NO EXISTEN */
-
 if(!localStorage.getItem("partidos")){
 
 localStorage.setItem(
@@ -61,29 +59,18 @@ div.innerHTML += `
 
 <div class="botones">
 
-<button
-class="btn"
-onclick="toggle(this,${i},'L')">
-L
-</button>
+<button class="btn" onclick="toggle(this,${i},'L')">L</button>
 
-<button
-class="btn"
-onclick="toggle(this,${i},'E')">
-E
-</button>
+<button class="btn" onclick="toggle(this,${i},'E')">E</button>
 
-<button
-class="btn"
-onclick="toggle(this,${i},'V')">
-V
-</button>
+<button class="btn" onclick="toggle(this,${i},'V')">V</button>
 
 </div>
 
 <div class="equipo">
 
 ${p.v}
+
 <img src="${p.logoV}" class="logo logo-derecha">
 
 </div>
@@ -120,8 +107,6 @@ return;
 }
 
 }
-
-/* TOGGLE */
 
 if (!selecciones[i]) {
 selecciones[i] = [];
@@ -179,7 +164,7 @@ if(total) total.innerText =
 }
 
 /* ===========================
-ENVIAR WHATSAPP
+ENVIAR WHATSAPP + FIREBASE
 =========================== */
 
 function enviar(){
@@ -215,9 +200,7 @@ p.l+" vs "+p.v
 
 });
 
-/* ===========================
-GUARDAR JUGADOR FIREBASE
-=========================== */
+/* CALCULAR TOTAL */
 
 let totalComb = 1;
 
@@ -239,15 +222,10 @@ totalComb * precio;
 let jugador = {
 
 nombre: nombre,
-
 selecciones: selecciones,
-
 combinaciones: totalComb,
-
 total: totalPago,
-
 pagado: false,
-
 fecha: new Date().toLocaleString()
 
 };
@@ -266,76 +244,12 @@ let url =
 
 window.open(url,"_blank");
 
-alert("✅ Quiniela guardada correctamente");
-
-}
-
-/* ===========================
-ADMIN PARTIDOS
-=========================== */
-
-function cargarAdmin(){
-
-let partidos =
-JSON.parse(localStorage.getItem("partidos"));
-
-let div =
-document.getElementById("adminLista");
-
-if(!div || !partidos) return;
-
-div.innerHTML="";
-
-partidos.forEach((p,i)=>{
-
-div.innerHTML += `
-
-<div class="admin-partido">
-
-<input
-class="admin-input"
-value="${p.l}"
-oninput="editarEquipo(${i},'l',this.value)">
-
-<span>vs</span>
-
-<input
-class="admin-input"
-value="${p.v}"
-oninput="editarEquipo(${i},'v',this.value)">
-
-</div>
-
-`;
-
-});
-
-}
-
-/* ===========================
-EDITAR EQUIPOS
-=========================== */
-
-function editarEquipo(i,tipo,valor){
-
-let partidos =
-JSON.parse(localStorage.getItem("partidos"));
-
-partidos[i][tipo] = valor;
-
-localStorage.setItem(
-"partidos",
-JSON.stringify(partidos)
-);
+alert("✅ Quiniela enviada");
 
 }
 
 /* ===========================
 GUARDAR HORA
-=========================== */
-
-/* ===========================
-GUARDAR HORA FIREBASE
 =========================== */
 
 function guardarHora(){
@@ -346,43 +260,46 @@ document.getElementById("horaCierre").value;
 if(!hora){
 
 alert("Selecciona una hora");
-
 return;
 
 }
 
-/* GUARDAR EN FIREBASE */
+db.ref("config/horaCierre").set(hora);
 
-db.ref("config")
-.child("horaCierre")
-.set(hora);
+localStorage.setItem(
+"horaCierre",
+hora
+);
 
 alert("Hora guardada");
 
 }
 
 /* ===========================
-CARGAR HORA
+BORRAR HORA
 =========================== */
 
-function cargarHora(){
+function borrarHora(){
 
-let hora =
-localStorage.getItem("horaCierre");
+db.ref("config/horaCierre").remove();
+
+localStorage.removeItem("horaCierre");
 
 let input =
 document.getElementById("horaCierre");
 
-if(hora && input){
+if(input){
 
-input.value = hora;
+input.value="";
 
 }
+
+alert("Hora reiniciada");
 
 }
 
 /* ===========================
-MOSTRAR JUGADORES FIREBASE
+MOSTRAR JUGADORES
 =========================== */
 
 function mostrarJugadores(){
@@ -392,14 +309,10 @@ document.getElementById("listaJugadores");
 
 if(!div) return;
 
-div.innerHTML = "Cargando jugadores...";
-
-/* LEER FIREBASE */
-
 db.ref("jugadores")
 .on("value", snapshot => {
 
-div.innerHTML = "";
+div.innerHTML="";
 
 let jugadores =
 snapshot.val();
@@ -407,7 +320,7 @@ snapshot.val();
 if(!jugadores){
 
 div.innerHTML =
-"No hay jugadores registrados";
+"No hay jugadores";
 
 return;
 
@@ -416,8 +329,7 @@ return;
 Object.keys(jugadores)
 .forEach(key=>{
 
-let j =
-jugadores[key];
+let j = jugadores[key];
 
 let color =
 j.pagado ? "green" : "red";
@@ -425,56 +337,16 @@ j.pagado ? "green" : "red";
 let estado =
 j.pagado ? "PAGADO" : "PENDIENTE";
 
-/* CREAR PICKS */
-
-let picksLinea = "";
-
-if(j.selecciones){
-
-j.selecciones.forEach(s=>{
-
-if(s && s.length>0){
-
-picksLinea +=
-s.join(" ") + " ";
-
-}
-
-});
-
-}
-
-/* TARJETA */
-
 div.innerHTML += `
 
 <div class="jugador-card">
 
-<div class="jugador-nombre">
+<div>${j.nombre}</div>
 
-${j.nombre}
+<div>💰 $${j.total}</div>
 
-</div>
-
-<div class="jugador-picks">
-
-${picksLinea}
-
-</div>
-
-<div class="jugador-total">
-
-💰 $${j.total}
-
-</div>
-
-<div class="jugador-botones">
-
-<span class="estado"
-style="background:${color}">
-
+<span style="background:${color}">
 ${estado}
-
 </span>
 
 <button
@@ -486,77 +358,16 @@ Confirmar Pago
 
 </div>
 
-</div>
-
 `;
 
 });
-
-});
-
-}
-
-/* ESTADO */
-
-let color =
-j.pagado ? "green" : "red";
-
-let estado =
-j.pagado ? "PAGADO" : "PENDIENTE";
-
-/* CREAR TARJETA */
-
-div.innerHTML += `
-
-<div class="jugador-card">
-
-<div class="jugador-nombre">
-
-${j.nombre}
-
-</div>
-
-<div class="jugador-picks">
-
-${picksLinea}
-
-</div>
-
-<div class="jugador-total">
-
-💰 Precio: $${j.total}
-
-</div>
-
-<div class="jugador-botones">
-
-<span class="estado"
-style="background:${color}">
-
-${estado}
-
-</span>
-
-<button
-class="btn-confirmar"
-onclick="confirmarPago(${i})">
-
-Confirmar Pago
-
-</button>
-
-</div>
-
-</div>
-
-`;
 
 });
 
 }
 
 /* ===========================
-CONFIRMAR PAGO FIREBASE
+CONFIRMAR PAGO
 =========================== */
 
 function confirmarPago(key){
@@ -569,7 +380,7 @@ pagado: true
 
 });
 
-  }
+}
 
 /* ===========================
 INICIO GENERAL
@@ -581,222 +392,8 @@ if(document.getElementById("lista")){
 cargar();
 }
 
-if(document.getElementById("adminLista")){
-cargarAdmin();
-}
-
-if(document.getElementById("horaCierre")){
-cargarHora();
-}
-
 if(document.getElementById("listaJugadores")){
 mostrarJugadores();
 }
 
 };
-
-/* ===========================
-GENERAR EXCEL
-=========================== */
-
-function generarExcelGeneral(){
-
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
-
-let partidos =
-JSON.parse(
-localStorage.getItem("partidos")
-) || [];
-
-if(jugadores.length == 0){
-
-alert("No hay jugadores registrados");
-return;
-
-}
-
-let datos = [];
-
-jugadores.forEach(j=>{
-
-/* SOLO PAGADOS */
-
-if(j.pagado){
-
-let fila = {};
-
-fila["Nombre"] =
-j.nombre;
-
-fila["Combinaciones"] =
-j.combinaciones;
-
-fila["Total"] =
-j.total;
-
-/* PICKS */
-
-if(j.selecciones){
-
-j.selecciones.forEach((s,i)=>{
-
-if(s && s.length>0){
-
-let p = partidos[i];
-
-fila[
-p.l+" vs "+p.v
-] = s.join(",");
-
-}
-
-});
-
-}
-
-datos.push(fila);
-
-}
-
-});
-
-/* VALIDAR PAGADOS */
-
-if(datos.length == 0){
-
-alert("No hay jugadores PAGADOS");
-
-return;
-
-}
-
-/* CREAR EXCEL */
-
-let hoja =
-XLSX.utils.json_to_sheet(datos);
-
-let libro =
-XLSX.utils.book_new();
-
-XLSX.utils.book_append_sheet(
-libro,
-hoja,
-"Pagados"
-);
-
-/* SEMANA */
-
-let semana = 1;
-
-let input =
-document.getElementById("semana");
-
-if(input){
-
-semana = input.value || 1;
-
-}
-
-/* DESCARGAR */
-
-XLSX.writeFile(
-libro,
-"Quiniela_Pagados_Semana_"+semana+".xlsx"
-);
-
-}
-
-/* ===========================
-BORRAR JUGADORES (NUEVA SEMANA)
-=========================== */
-
-function borrarJugadores(){
-
-/* CONFIRMAR */
-
-let confirmar = confirm(
-"¿Seguro que deseas borrar TODOS los jugadores para iniciar nueva semana?"
-);
-
-if(!confirmar) return;
-
-/* BORRAR STORAGE */
-
-localStorage.removeItem("jugadores");
-
-/* LIMPIAR SELECCIONES */
-
-selecciones = [];
-
-/* ACTUALIZAR PANEL */
-
-let div =
-document.getElementById("listaJugadores");
-
-if(div){
-
-div.innerHTML =
-"No hay jugadores registrados";
-
-}
-
-/* MENSAJE */
-
-alert("🗑️ Jugadores eliminados correctamente");
-
-}
-
-/* ===========================
-INICIAR SISTEMA
-=========================== */
-
-window.onload = function(){
-
-if(typeof cargar === "function"){
-
-cargar();
-
-}
-
-if(typeof mostrarJugadores === "function"){
-
-mostrarJugadores();
-
-}
-
-if(typeof cargarHora === "function"){
-
-cargarHora();
-
-}
-
-};
-/* ===========================
-CARGAR HORA GUARDADA
-=========================== */
-
-function cargarHora(){
-
-let input =
-document.getElementById("horaCierre");
-
-if(!input) return;
-
-db.ref("config/horaCierre")
-.on("value", snapshot=>{
-
-let hora =
-snapshot.val();
-
-if(hora){
-
-input.value = hora;
-
-}
-
-});
-
-}
