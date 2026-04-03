@@ -378,7 +378,7 @@ input.value = hora;
 }
 
 /* ===========================
-MOSTRAR JUGADORES
+MOSTRAR JUGADORES (DISEÑO NUEVO)
 =========================== */
 
 function mostrarJugadores(){
@@ -386,11 +386,6 @@ function mostrarJugadores(){
 let jugadores =
 JSON.parse(
 localStorage.getItem("jugadores")
-) || [];
-
-let partidos =
-JSON.parse(
-localStorage.getItem("partidos")
 ) || [];
 
 let div =
@@ -404,8 +399,8 @@ div.innerHTML="";
 
 if(jugadores.length==0){
 
-div.innerHTML=
-"No hay jugadores registrados";
+div.innerHTML =
+"<p>No hay jugadores registrados</p>";
 
 return;
 
@@ -413,21 +408,18 @@ return;
 
 jugadores.forEach((j,i)=>{
 
-let picksHTML = "";
+/* ARMAR PICKS EN LINEA */
+
+let picksLinea = "";
 
 if(j.selecciones){
 
-j.selecciones.forEach((s,index)=>{
+j.selecciones.forEach(s=>{
 
 if(s && s.length>0){
 
-let p = partidos[index];
-
-picksHTML +=
-"<div>"
-+p.l+" vs "+p.v
-+" = "+s.join(",")
-+"</div>";
+picksLinea +=
+s.join(" ") + " ";
 
 }
 
@@ -435,55 +427,56 @@ picksHTML +=
 
 }
 
+/* ESTADO */
+
 let color =
 j.pagado ? "green" : "red";
 
 let estado =
 j.pagado ? "PAGADO" : "PENDIENTE";
 
+/* CREAR TARJETA */
+
 div.innerHTML += `
 
-<div style="
-border:1px solid #ccc;
-padding:10px;
-margin:10px 0">
+<div class="jugador-card">
 
-<b>${j.nombre}</b>
+<div class="jugador-nombre">
 
-<br><br>
+${j.nombre}
 
-${picksHTML}
+</div>
 
-<br>
+<div class="jugador-picks">
 
-<b>Combinaciones:</b>
-${j.combinaciones}
+${picksLinea}
 
-<br>
+</div>
 
-<b>Total:</b>
-$${j.total}
+<div class="jugador-total">
 
-<br><br>
+💰 Precio: $${j.total}
 
-<span style="
-color:white;
-background:${color};
-padding:4px 8px;
-border-radius:5px">
+</div>
+
+<div class="jugador-botones">
+
+<span class="estado"
+style="background:${color}">
 
 ${estado}
 
 </span>
 
-<br><br>
-
 <button
+class="btn-confirmar"
 onclick="confirmarPago(${i})">
 
 Confirmar Pago
 
 </button>
+
+</div>
 
 </div>
 
