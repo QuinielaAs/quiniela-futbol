@@ -412,15 +412,17 @@ if(document.getElementById("lista")){
 cargar();
 }
 
-/* CARGAR JUGADORES */
+/* ADMIN */
 
 if(document.getElementById("listaJugadores")){
 mostrarJugadores();
 }
 
-/* CARGAR HORA DESDE FIREBASE */
+/* CARGAR HORA */
 
+if(typeof cargarHora === "function"){
 cargarHora();
+}
 
 };
 
