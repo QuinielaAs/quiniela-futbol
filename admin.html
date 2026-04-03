@@ -119,7 +119,33 @@ LIBRERIAS (ORDEN IMPORTANTE)
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- SCRIPT PRINCIPAL -->
+<!-- FIREBASE -->
 
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBFJT6GPBavDPvG9sDxRK5TgqphtAFcUiw",
+authDomain: "quiniela-futbol-b6d8d.firebaseapp.com",
+databaseURL: "https://quiniela-futbol-b6d8d-default-rtdb.firebaseio.com",
+projectId: "quiniela-futbol-b6d8d",
+storageBucket: "quiniela-futbol-b6d8d.firebasestorage.app",
+messagingSenderId: "287348860139",
+appId: "1:287348860139:web:093c97580333e5d07f0aae",
+measurementId: "G-ZJPVX39KG8"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.database();
+
+</script>
+  
 <script src="script.js"></script>
 
 <script>
