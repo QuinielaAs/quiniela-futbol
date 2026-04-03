@@ -195,9 +195,6 @@ return;
 }
 
 }
-  
-let partidos =
-JSON.parse(localStorage.getItem("partidos"));
 
 let mensaje =
 "📋 QUINIELA A's\n\n";
