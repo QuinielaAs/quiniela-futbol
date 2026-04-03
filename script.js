@@ -450,3 +450,169 @@ hora
 });
 
     }
+
+function borrarJugadores(){
+
+/* CONFIRMAR */
+
+let confirmar = confirm(
+"¿Seguro que deseas borrar TODOS los jugadores para iniciar nueva semana?"
+);
+
+if(!confirmar) return;
+
+/* BORRAR EN FIREBASE */
+
+db.ref("jugadores")
+.remove()
+.then(()=>{
+
+/* LIMPIAR PANTALLA */
+
+let div =
+document.getElementById("listaJugadores");
+
+if(div){
+
+div.innerHTML =
+"No hay jugadores registrados";
+
+}
+
+/* LIMPIAR SELECCIONES */
+
+selecciones = [];
+
+/* MENSAJE */
+
+alert("🗑️ Jugadores eliminados correctamente");
+
+})
+.catch(error=>{
+
+alert("Error al borrar jugadores");
+
+console.log(error);
+
+});
+
+}
+
+function generarExcelGeneral(){
+
+db.ref("jugadores")
+.once("value", snapshot=>{
+
+let jugadores =
+snapshot.val();
+
+if(!jugadores){
+
+alert("No hay jugadores registrados");
+return;
+
+}
+
+let partidos =
+JSON.parse(
+localStorage.getItem("partidos")
+) || [];
+
+let datos = [];
+
+/* RECORRER JUGADORES */
+
+Object.keys(jugadores)
+.forEach(key=>{
+
+let j =
+jugadores[key];
+
+/* SOLO PAGADOS */
+
+if(j.pagado){
+
+let fila = {};
+
+fila["Nombre"] =
+j.nombre;
+
+fila["Combinaciones"] =
+j.combinaciones;
+
+fila["Total"] =
+j.total;
+
+/* PICKS */
+
+if(j.selecciones){
+
+j.selecciones.forEach((s,i)=>{
+
+if(s && s.length>0){
+
+let p = partidos[i];
+
+fila[
+p.l+" vs "+p.v
+] = s.join(",");
+
+}
+
+});
+
+}
+
+datos.push(fila);
+
+}
+
+});
+
+/* VALIDAR */
+
+if(datos.length == 0){
+
+alert("No hay jugadores PAGADOS");
+
+return;
+
+}
+
+/* CREAR EXCEL */
+
+let hoja =
+XLSX.utils.json_to_sheet(datos);
+
+let libro =
+XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(
+libro,
+hoja,
+"Pagados"
+);
+
+/* SEMANA */
+
+let semana = 1;
+
+let input =
+document.getElementById("semana");
+
+if(input){
+
+semana = input.value || 1;
+
+}
+
+/* DESCARGAR */
+
+XLSX.writeFile(
+libro,
+"Quiniela_Pagados_Semana_"+semana+".xlsx"
+);
+
+});
+
+    }
