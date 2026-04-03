@@ -215,12 +215,9 @@ p.l+" vs "+p.v
 
 });
 
-/* GUARDAR JUGADOR */
-
-let jugadores =
-JSON.parse(
-localStorage.getItem("jugadores")
-) || [];
+/* ===========================
+GUARDAR JUGADOR FIREBASE
+=========================== */
 
 let totalComb = 1;
 
@@ -237,22 +234,27 @@ totalComb *= s.length;
 let totalPago =
 totalComb * precio;
 
-jugadores.push({
+/* CREAR OBJETO */
+
+let jugador = {
 
 nombre: nombre,
-selecciones:
-JSON.parse(JSON.stringify(selecciones)),
+
+selecciones: selecciones,
+
 combinaciones: totalComb,
+
 total: totalPago,
+
 pagado: false,
+
 fecha: new Date().toLocaleString()
 
-});
+};
 
-localStorage.setItem(
-"jugadores",
-JSON.stringify(jugadores)
-);
+/* GUARDAR EN FIREBASE */
+
+db.ref("jugadores").push(jugador);
 
 /* WHATSAPP */
 
