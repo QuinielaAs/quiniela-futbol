@@ -334,28 +334,30 @@ JSON.stringify(partidos)
 GUARDAR HORA
 =========================== */
 
+/* ===========================
+GUARDAR HORA FIREBASE
+=========================== */
+
 function guardarHora(){
 
-let input =
-document.getElementById("horaCierre");
-
-if(!input) return;
-
-let hora = input.value;
+let hora =
+document.getElementById("horaCierre").value;
 
 if(!hora){
 
 alert("Selecciona una hora");
+
 return;
 
 }
 
-localStorage.setItem(
-"horaCierre",
-hora
-);
+/* GUARDAR EN FIREBASE */
 
-alert("✅ Hora guardada");
+db.ref("config")
+.child("horaCierre")
+.set(hora);
+
+alert("Hora guardada");
 
 }
 
