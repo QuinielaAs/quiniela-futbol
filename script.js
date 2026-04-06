@@ -757,11 +757,15 @@ workbook.addWorksheet("Quiniela");
 CONFIGURACION PARA PDF
 =========================== */
 
+/* ===========================
+MARGENES LATERALES
+=========================== */
+
 sheet.pageSetup = {
 
 paperSize: 9, // A4
 
-orientation: 'landscape', // horizontal
+orientation: 'landscape',
 
 horizontalCentered: true,
 
@@ -774,12 +778,16 @@ fitToWidth: 1,
 fitToHeight: 1,
 
 margins: {
-left: 0.3,
-right: 0.3,
-top: 0.5,
-bottom: 0.5,
-header: 0.3,
-footer: 0.3
+
+left: 0.8,   // margen izquierdo
+right: 0.8,  // margen derecho
+
+top: 0.3,
+bottom: 0.3,
+
+header: 0.2,
+footer: 0.2
+
 }
 
 };
