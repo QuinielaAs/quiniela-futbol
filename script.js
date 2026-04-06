@@ -60,9 +60,7 @@ div.innerHTML += `
 <div class="botones">
 
 <button class="btn" onclick="toggle(this,${i},'L')">L</button>
-
 <button class="btn" onclick="toggle(this,${i},'E')">E</button>
-
 <button class="btn" onclick="toggle(this,${i},'V')">V</button>
 
 </div>
@@ -88,8 +86,6 @@ BOTONES L E V
 =========================== */
 
 function toggle(btn, i, val) {
-
-/* VALIDAR HORA */
 
 let horaGuardada =
 localStorage.getItem("horaCierre");
@@ -179,12 +175,8 @@ return;
 
 }
 
-/* OBTENER PARTIDOS */
-
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
-
-/* VALIDAR QUE TODOS TENGAN PICK */
 
 for(let i=0;i<partidos.length;i++){
 
@@ -197,8 +189,6 @@ return;
 }
 
 }
-
-/* CREAR MENSAJE */
 
 let mensaje =
 "📋 QUINIELA A's\n\n";
@@ -218,8 +208,6 @@ p.l+" vs "+p.v
 
 });
 
-/* CALCULAR TOTAL */
-
 let totalComb = 1;
 
 selecciones.forEach(s=>{
@@ -235,8 +223,6 @@ totalComb *= s.length;
 let totalPago =
 totalComb * precio;
 
-/* CREAR OBJETO */
-
 let jugador = {
 
 nombre: nombre,
@@ -248,11 +234,7 @@ fecha: new Date().toLocaleString()
 
 };
 
-/* GUARDAR FIREBASE */
-
 db.ref("jugadores").push(jugador);
-
-/* ENVIAR WHATSAPP */
 
 let url =
 "https://wa.me/"
@@ -264,281 +246,48 @@ window.open(url,"_blank");
 
 alert("✅ Quiniela enviada");
 
-    }
-
-/* ===========================
-GUARDAR HORA
-=========================== */
-
-function guardarHora(){
-
-let hora =
-document.getElementById("horaCierre").value;
-
-if(!hora){
-
-alert("Selecciona una hora");
-return;
-
-}
-
-db.ref("config/horaCierre").set(hora);
-
-localStorage.setItem(
-"horaCierre",
-hora
-);
-
-alert("Hora guardada");
-
 }
 
 /* ===========================
-BORRAR HORA
+FUNCION NUEVA
+GENERAR COMBINACIONES
 =========================== */
 
-function borrarHora(){
+function generarCombinaciones(selecciones){
 
-db.ref("config/horaCierre").remove();
+let resultados = [[]];
 
-localStorage.removeItem("horaCierre");
+for(let i=0;i<selecciones.length;i++){
 
-let input =
-document.getElementById("horaCierre");
+let nuevas = [];
 
-if(input){
+let opciones = selecciones[i];
 
-input.value="";
+if(!opciones || opciones.length==0){
+opciones = [""];
+}
+
+for(let r of resultados){
+
+for(let op of opciones){
+
+nuevas.push([...r, op]);
 
 }
 
-alert("Hora reiniciada");
+}
+
+resultados = nuevas;
+
+}
+
+return resultados;
 
 }
 
 /* ===========================
-MOSTRAR JUGADORES
+EXCEL GENERAL MEJORADO
 =========================== */
-
-function mostrarJugadores(){
-
-let div =
-document.getElementById("listaJugadores");
-
-if(!div) return;
-
-db.ref("jugadores")
-.on("value", snapshot => {
-
-div.innerHTML="";
-
-let jugadores =
-snapshot.val();
-
-if(!jugadores){
-
-div.innerHTML =
-"No hay jugadores";
-
-return;
-
-}
-
-Object.keys(jugadores)
-.forEach(key=>{
-
-let j = jugadores[key];
-
-let color =
-j.pagado ? "green" : "red";
-
-let estado =
-j.pagado ? "PAGADO" : "PENDIENTE";
-
-/* CREAR PICKS */
-
-let picksTexto = "";
-
-if(j.selecciones){
-
-j.selecciones.forEach((s,i)=>{
-
-if(s && s.length>0){
-
-picksTexto +=
-"P"+(i+1)+":"+s.join("")+" ";
-
-}
-
-});
-
-}
-
-/* TARJETA */
-
-div.innerHTML += `
-
-<div class="jugador-card">
-
-<div>
-<b>${j.nombre}</b>
-</div>
-
-<div style="
-font-size:13px;
-margin:5px 0;
-color:#333">
-
-${picksTexto}
-
-</div>
-
-<div>
-💰 $${j.total}
-</div>
-
-<span style="
-background:${color};
-padding:4px 8px;
-color:white">
-
-${estado}
-
-</span>
-
-<br><br>
-
-<button
-onclick="confirmarPago('${key}')">
-
-Confirmar Pago
-
-</button>
-
-</div>
-
-`;
-
-});
-
-});
-
-}
-/* ===========================
-CONFIRMAR PAGO
-=========================== */
-
-function confirmarPago(key){
-
-db.ref(
-"jugadores/"+key
-).update({
-
-pagado: true
-
-});
-
-}
-
-/* ===========================
-INICIO GENERAL
-=========================== */
-
-window.onload = function(){
-
-/* CARGAR PARTIDOS */
-
-if(document.getElementById("lista")){
-cargar();
-}
-
-/* ADMIN */
-
-if(document.getElementById("listaJugadores")){
-mostrarJugadores();
-}
-
-/* CARGAR HORA */
-
-if(typeof cargarHora === "function"){
-cargarHora();
-}
-
-};
-
-/* ===========================
-CARGAR HORA DESDE FIREBASE
-=========================== */
-
-function cargarHora(){
-
-db.ref("config/horaCierre")
-.on("value", snapshot=>{
-
-let hora =
-snapshot.val();
-
-if(hora){
-
-/* GUARDAR LOCAL */
-
-localStorage.setItem(
-"horaCierre",
-hora
-);
-
-}
-
-});
-
-    }
-
-function borrarJugadores(){
-
-/* CONFIRMAR */
-
-let confirmar = confirm(
-"¿Seguro que deseas borrar TODOS los jugadores para iniciar nueva semana?"
-);
-
-if(!confirmar) return;
-
-/* BORRAR EN FIREBASE */
-
-db.ref("jugadores")
-.remove()
-.then(()=>{
-
-/* LIMPIAR PANTALLA */
-
-let div =
-document.getElementById("listaJugadores");
-
-if(div){
-
-div.innerHTML =
-"No hay jugadores registrados";
-
-}
-
-/* LIMPIAR SELECCIONES */
-
-selecciones = [];
-
-/* MENSAJE */
-
-alert("🗑️ Jugadores eliminados correctamente");
-
-})
-.catch(error=>{
-
-alert("Error al borrar jugadores");
-
-console.log(error);
-
-});
-
-}
 
 function generarExcelGeneral(){
 
@@ -562,56 +311,51 @@ localStorage.getItem("partidos")
 
 let datos = [];
 
-/* RECORRER JUGADORES */
-
 Object.keys(jugadores)
 .forEach(key=>{
 
-let j =
-jugadores[key];
+let j = jugadores[key];
 
-/* SOLO PAGADOS */
+if(j.pagado && j.selecciones){
 
-if(j.pagado){
+let combinaciones =
+generarCombinaciones(
+j.selecciones
+);
+
+combinaciones.forEach(c=>{
 
 let fila = {};
 
 fila["Nombre"] =
 j.nombre;
 
-fila["Combinaciones"] =
-j.combinaciones;
+let texto = "";
 
-fila["Total"] =
-j.total;
-
-/* PICKS */
-
-if(j.selecciones){
-
-j.selecciones.forEach((s,i)=>{
-
-if(s && s.length>0){
+c.forEach((op,i)=>{
 
 let p = partidos[i];
 
-fila[
-p.l+" vs "+p.v
-] = s.join(",");
+if(op){
+
+texto +=
+p.l+"-"+p.v+
+":"+op+" | ";
 
 }
 
 });
 
-}
+fila["Combinacion"] =
+texto;
 
 datos.push(fila);
 
+});
+
 }
 
 });
-
-/* VALIDAR */
 
 if(datos.length == 0){
 
@@ -620,8 +364,6 @@ alert("No hay jugadores PAGADOS");
 return;
 
 }
-
-/* CREAR EXCEL */
 
 let hoja =
 XLSX.utils.json_to_sheet(datos);
@@ -632,10 +374,8 @@ XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(
 libro,
 hoja,
-"Pagados"
+"Combinaciones"
 );
-
-/* SEMANA */
 
 let semana = 1;
 
@@ -648,11 +388,9 @@ semana = input.value || 1;
 
 }
 
-/* DESCARGAR */
-
 XLSX.writeFile(
 libro,
-"Quiniela_Pagados_Semana_"+semana+".xlsx"
+"Quiniela_Combinaciones_Semana_"+semana+".xlsx"
 );
 
 });
