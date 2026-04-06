@@ -538,28 +538,55 @@ console.log(error);
 });
 
 }
+/* ===========================
+GENERAR COMBINACIONES SEGURAS
+=========================== */
 
 function generarCombinaciones(selecciones){
 
+/* NORMALIZAR ARRAYS */
+
+let listas = [];
+
+selecciones.forEach(s=>{
+
+if(s){
+
+if(Array.isArray(s)){
+
+listas.push(s);
+
+}else{
+
+listas.push(Object.values(s));
+
+}
+
+}
+
+});
+
+/* GENERAR PRODUCTO */
+
 let resultados = [[]];
 
-for(let i=0;i<selecciones.length;i++){
+listas.forEach(lista=>{
 
 let nuevas = [];
 
-for(let r of resultados){
+resultados.forEach(r=>{
 
-for(let opcion of selecciones[i]){
+lista.forEach(opcion=>{
 
 nuevas.push([...r, opcion]);
 
-}
+});
 
-}
+});
 
 resultados = nuevas;
 
-}
+});
 
 return resultados;
 
@@ -600,12 +627,9 @@ if(j.pagado && j.selecciones){
 
 /* GENERAR COMBINACIONES */
 
-let combinaciones =
-generarCombinaciones(
-j.selecciones
-);
+let combinaciones = generarCombinaciones(j.selecciones);
 
-/* RECORRER CADA COMBINACION */
+/* CREAR FILAS */
 
 combinaciones.forEach(c=>{
 
@@ -623,7 +647,7 @@ j.combinaciones;
 fila["Total $"] =
 j.total;
 
-/* AGREGAR PARTIDOS */
+/* PARTIDOS */
 
 c.forEach((valor,i)=>{
 
@@ -693,4 +717,4 @@ libro,
 
 });
 
-}
+    }
