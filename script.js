@@ -38,8 +38,7 @@ JSON.stringify(partidosBase)
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
 
-let div =
-document.getElementById("lista");
+let div = document.getElementById("lista");
 
 if(!div) return;
 
