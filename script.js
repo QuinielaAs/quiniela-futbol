@@ -60,7 +60,9 @@ div.innerHTML += `
 <div class="botones">
 
 <button class="btn" onclick="toggle(this,${i},'L')">L</button>
+
 <button class="btn" onclick="toggle(this,${i},'E')">E</button>
+
 <button class="btn" onclick="toggle(this,${i},'V')">V</button>
 
 </div>
@@ -86,6 +88,8 @@ BOTONES L E V
 =========================== */
 
 function toggle(btn, i, val) {
+
+/* VALIDAR HORA */
 
 let horaGuardada =
 localStorage.getItem("horaCierre");
@@ -175,8 +179,12 @@ return;
 
 }
 
+/* OBTENER PARTIDOS */
+
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
+
+/* VALIDAR QUE TODOS TENGAN PICK */
 
 for(let i=0;i<partidos.length;i++){
 
@@ -189,6 +197,8 @@ return;
 }
 
 }
+
+/* CREAR MENSAJE */
 
 let mensaje =
 "📋 QUINIELA A's\n\n";
@@ -208,6 +218,8 @@ p.l+" vs "+p.v
 
 });
 
+/* CALCULAR TOTAL */
+
 let totalComb = 1;
 
 selecciones.forEach(s=>{
@@ -223,6 +235,8 @@ totalComb *= s.length;
 let totalPago =
 totalComb * precio;
 
+/* CREAR OBJETO */
+
 let jugador = {
 
 nombre: nombre,
@@ -234,7 +248,11 @@ fecha: new Date().toLocaleString()
 
 };
 
+/* GUARDAR FIREBASE */
+
 db.ref("jugadores").push(jugador);
+
+/* ENVIAR WHATSAPP */
 
 let url =
 "https://wa.me/"
@@ -249,7 +267,6 @@ alert("✅ Quiniela enviada");
 }
 
 /* ===========================
-FUNCION NUEVA
 GENERAR COMBINACIONES
 =========================== */
 
@@ -261,17 +278,11 @@ for(let i=0;i<selecciones.length;i++){
 
 let nuevas = [];
 
-let opciones = selecciones[i];
-
-if(!opciones || opciones.length==0){
-opciones = [""];
-}
-
 for(let r of resultados){
 
-for(let op of opciones){
+for(let opcion of selecciones[i]){
 
-nuevas.push([...r, op]);
+nuevas.push([...r, opcion]);
 
 }
 
@@ -286,7 +297,7 @@ return resultados;
 }
 
 /* ===========================
-EXCEL GENERAL MEJORADO
+GENERAR EXCEL CON CONVENCIONES
 =========================== */
 
 function generarExcelGeneral(){
@@ -327,27 +338,30 @@ combinaciones.forEach(c=>{
 
 let fila = {};
 
-fila["Nombre"] =
-j.nombre;
+fila["Nombre"] = j.nombre;
 
-let texto = "";
+fila["Combinacion"] =
+c.join("-");
 
-c.forEach((op,i)=>{
+fila["Total Comb"] =
+j.combinaciones;
+
+fila["Total $"] =
+j.total;
+
+c.forEach((valor,i)=>{
 
 let p = partidos[i];
 
-if(op){
+if(p){
 
-texto +=
-p.l+"-"+p.v+
-":"+op+" | ";
+fila[
+p.l+" vs "+p.v
+] = valor;
 
 }
 
 });
-
-fila["Combinacion"] =
-texto;
 
 datos.push(fila);
 
@@ -395,4 +409,4 @@ libro,
 
 });
 
-    }
+}
