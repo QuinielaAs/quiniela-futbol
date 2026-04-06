@@ -754,6 +754,39 @@ let sheet =
 workbook.addWorksheet("Quiniela");
 
     /* ===========================
+IMAGEN DE FONDO
+=========================== */
+
+try{
+
+let fondo =
+await fetch("logos/fondo.png")
+.then(r=>r.blob())
+.then(b=>b.arrayBuffer());
+
+let fondoId =
+workbook.addImage({
+buffer: fondo,
+extension: 'png'
+});
+
+/* FONDO TAMAÑO HOJA */
+
+sheet.addImage(fondoId, {
+
+tl: { col: 0, row: 0 },
+
+ext: { width: 1120, height: 790 }
+
+});
+
+}catch(e){
+
+console.log("Error cargando fondo");
+
+}
+
+    /* ===========================
 CONFIGURACION PARA PDF
 =========================== */
 
