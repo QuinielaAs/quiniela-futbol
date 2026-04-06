@@ -720,10 +720,12 @@ libro,
     }
 
 /* ===========================
-EXCEL PROFESIONAL CON MERGES
+EXCEL PROFESIONAL SEGURO
 =========================== */
 
 async function generarExcelGeneral(){
+
+try{
 
 let snapshot =
 await db.ref("jugadores").once("value");
@@ -752,92 +754,51 @@ let sheet =
 workbook.addWorksheet("Quiniela");
 
 /* ===========================
-ANCHO COLUMNAS
+COLUMNAS
 =========================== */
 
-sheet.columns = [
-{width:5}, // Numero
-{width:20} // Nombre
-];
+let columnas = [];
+
+columnas.push({width:5});  // No
+columnas.push({width:20}); // Nombre
 
 for(let i=0;i<partidos.length;i++){
 
-sheet.columns.push({width:5});
+columnas.push({width:5});
 
 }
 
-/* ACIERTOS */
+columnas.push({width:10}); // Aciertos
 
-sheet.columns.push({width:10});
+sheet.columns = columnas;
 
 /* ===========================
-ENCABEZADOS
+ENCABEZADO
 =========================== */
 
 sheet.addRow([]);
 sheet.addRow([]);
 sheet.addRow([]);
 
-/* NUMERO + NOMBRE */
+/* NUMERO */
 
 sheet.mergeCells("A1:A3");
 sheet.getCell("A1").value = "No.";
 
+/* NOMBRE */
+
 sheet.mergeCells("B1:B3");
 sheet.getCell("B1").value = "Nombre";
 
-/* LOGOS */
+/* PARTIDOS */
 
 for(let i=0;i<partidos.length;i++){
 
 let col = i + 3;
 
-/* LOGO LOCAL */
-
-let imgLocal =
-await fetch(partidos[i].logoL)
-.then(r=>r.blob())
-.then(b=>b.arrayBuffer());
-
-let idLocal =
-workbook.addImage({
-buffer: imgLocal,
-extension: 'png'
-});
-
-/* MERGE 3 CELDAS */
-
-sheet.mergeCells(
-1,col,
-1,col
-);
-
-sheet.addImage(idLocal,{
-tl:{col:col-1,row:0},
-ext:{width:40,height:40}
-});
-
 /* VS */
 
 sheet.getCell(2,col).value = "VS";
-
-/* LOGO VISITA */
-
-let imgVisita =
-await fetch(partidos[i].logoV)
-.then(r=>r.blob())
-.then(b=>b.arrayBuffer());
-
-let idVisita =
-workbook.addImage({
-buffer: imgVisita,
-extension: 'png'
-});
-
-sheet.addImage(idVisita,{
-tl:{col:col-1,row:2},
-ext:{width:40,height:40}
-});
 
 }
 
@@ -853,6 +814,62 @@ sheet.mergeCells(
 
 sheet.getCell(1,colFinal)
 .value = "ACIERTOS";
+
+/* ===========================
+AGREGAR LOGOS
+=========================== */
+
+for(let i=0;i<partidos.length;i++){
+
+let col = i + 3;
+
+let p = partidos[i];
+
+try{
+
+/* LOCAL */
+
+let imgLocal =
+await fetch(p.logoL)
+.then(r=>r.blob())
+.then(b=>b.arrayBuffer());
+
+let idLocal =
+workbook.addImage({
+buffer: imgLocal,
+extension: 'png'
+});
+
+sheet.addImage(idLocal,{
+tl:{col:col-1,row:0},
+ext:{width:40,height:40}
+});
+
+/* VISITA */
+
+let imgVisita =
+await fetch(p.logoV)
+.then(r=>r.blob())
+.then(b=>b.arrayBuffer());
+
+let idVisita =
+workbook.addImage({
+buffer: imgVisita,
+extension: 'png'
+});
+
+sheet.addImage(idVisita,{
+tl:{col:col-1,row:2},
+ext:{width:40,height:40}
+});
+
+}catch(e){
+
+console.log("Error logo:",p.logoL);
+
+}
+
+}
 
 /* ===========================
 JUGADORES
@@ -872,13 +889,12 @@ generarCombinaciones(
 j.selecciones
 );
 
-/* CADA COMBINACION */
-
 combinaciones.forEach(c=>{
 
 let fila = [];
 
 fila.push(numero);
+
 fila.push(j.nombre);
 
 c.forEach(v=>{
@@ -901,10 +917,10 @@ numero++;
 
 });
 
-/* CONGELAR ENCABEZADO */
+/* CONGELAR */
 
 sheet.views = [
-{state:'frozen', ySplit:3}
+{state:'frozen',ySplit:3}
 ];
 
 /* DESCARGAR */
@@ -937,4 +953,12 @@ link.download =
 
 link.click();
 
+}catch(error){
+
+console.log(error);
+
+alert("Error generando Excel");
+
 }
+
+            }
