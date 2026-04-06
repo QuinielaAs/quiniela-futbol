@@ -539,6 +539,32 @@ console.log(error);
 
 }
 
+function generarCombinaciones(selecciones){
+
+let resultados = [[]];
+
+for(let i=0;i<selecciones.length;i++){
+
+let nuevas = [];
+
+for(let r of resultados){
+
+for(let opcion of selecciones[i]){
+
+nuevas.push([...r, opcion]);
+
+}
+
+}
+
+resultados = nuevas;
+
+}
+
+return resultados;
+
+}
+
 function generarExcelGeneral(){
 
 db.ref("jugadores")
@@ -566,45 +592,56 @@ let datos = [];
 Object.keys(jugadores)
 .forEach(key=>{
 
-let j =
-jugadores[key];
+let j = jugadores[key];
 
 /* SOLO PAGADOS */
 
-if(j.pagado){
+if(j.pagado && j.selecciones){
+
+/* GENERAR COMBINACIONES */
+
+let combinaciones =
+generarCombinaciones(
+j.selecciones
+);
+
+/* RECORRER CADA COMBINACION */
+
+combinaciones.forEach(c=>{
 
 let fila = {};
 
 fila["Nombre"] =
 j.nombre;
 
-fila["Combinaciones"] =
+fila["Combinacion"] =
+c.join("-");
+
+fila["Total Comb"] =
 j.combinaciones;
 
-fila["Total"] =
+fila["Total $"] =
 j.total;
 
-/* PICKS */
+/* AGREGAR PARTIDOS */
 
-if(j.selecciones){
-
-j.selecciones.forEach((s,i)=>{
-
-if(s && s.length>0){
+c.forEach((valor,i)=>{
 
 let p = partidos[i];
 
+if(p){
+
 fila[
 p.l+" vs "+p.v
-] = s.join(",");
+] = valor;
 
 }
 
 });
 
-}
-
 datos.push(fila);
+
+});
 
 }
 
@@ -631,7 +668,7 @@ XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(
 libro,
 hoja,
-"Pagados"
+"Combinaciones"
 );
 
 /* SEMANA */
@@ -651,7 +688,7 @@ semana = input.value || 1;
 
 XLSX.writeFile(
 libro,
-"Quiniela_Pagados_Semana_"+semana+".xlsx"
+"Quiniela_Combinaciones_Semana_"+semana+".xlsx"
 );
 
 });
