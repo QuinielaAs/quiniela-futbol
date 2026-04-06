@@ -753,8 +753,8 @@ new ExcelJS.Workbook();
 let sheet =
 workbook.addWorksheet("Quiniela");
 
-    /* ===========================
-IMAGEN DE FONDO
+/* ===========================
+FONDO REAL DE HOJA
 =========================== */
 
 try{
@@ -770,21 +770,15 @@ buffer: fondo,
 extension: 'png'
 });
 
-/* FONDO TAMAÑO HOJA */
+/* FONDO DETRAS */
 
-sheet.addImage(fondoId, {
-
-tl: { col: 0, row: 0 },
-
-ext: { width: 1120, height: 790 }
-
-});
+sheet.addBackgroundImage(fondoId);
 
 }catch(e){
 
 console.log("Error cargando fondo");
 
-}
+    }
 
     /* ===========================
 CONFIGURACION PARA PDF
