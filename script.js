@@ -264,41 +264,281 @@ window.open(url,"_blank");
 
 alert("✅ Quiniela enviada");
 
-}
+    }
 
 /* ===========================
-GENERAR COMBINACIONES
+GUARDAR HORA
 =========================== */
 
-function generarCombinaciones(selecciones){
+function guardarHora(){
 
-let resultados = [[]];
+let hora =
+document.getElementById("horaCierre").value;
 
-for(let i=0;i<selecciones.length;i++){
+if(!hora){
 
-let nuevas = [];
-
-for(let r of resultados){
-
-for(let opcion of selecciones[i]){
-
-nuevas.push([...r, opcion]);
+alert("Selecciona una hora");
+return;
 
 }
 
-}
+db.ref("config/horaCierre").set(hora);
 
-resultados = nuevas;
+localStorage.setItem(
+"horaCierre",
+hora
+);
 
-}
-
-return resultados;
+alert("Hora guardada");
 
 }
 
 /* ===========================
-GENERAR EXCEL CON CONVENCIONES
+BORRAR HORA
 =========================== */
+
+function borrarHora(){
+
+db.ref("config/horaCierre").remove();
+
+localStorage.removeItem("horaCierre");
+
+let input =
+document.getElementById("horaCierre");
+
+if(input){
+
+input.value="";
+
+}
+
+alert("Hora reiniciada");
+
+}
+
+/* ===========================
+MOSTRAR JUGADORES
+=========================== */
+
+function mostrarJugadores(){
+
+let div =
+document.getElementById("listaJugadores");
+
+if(!div) return;
+
+db.ref("jugadores")
+.on("value", snapshot => {
+
+div.innerHTML="";
+
+let jugadores =
+snapshot.val();
+
+if(!jugadores){
+
+div.innerHTML =
+"No hay jugadores";
+
+return;
+
+}
+
+Object.keys(jugadores)
+.forEach(key=>{
+
+let j = jugadores[key];
+
+let color =
+j.pagado ? "green" : "red";
+
+let estado =
+j.pagado ? "PAGADO" : "PENDIENTE";
+
+/* CREAR PICKS */
+
+let picksTexto = "";
+
+if(j.selecciones){
+
+j.selecciones.forEach((s,i)=>{
+
+if(s && s.length>0){
+
+picksTexto +=
+"P"+(i+1)+":"+s.join("")+" ";
+
+}
+
+});
+
+}
+
+/* TARJETA */
+
+div.innerHTML += `
+
+<div class="jugador-card">
+
+<div>
+<b>${j.nombre}</b>
+</div>
+
+<div style="
+font-size:13px;
+margin:5px 0;
+color:#333">
+
+${picksTexto}
+
+</div>
+
+<div>
+💰 $${j.total}
+</div>
+
+<span style="
+background:${color};
+padding:4px 8px;
+color:white">
+
+${estado}
+
+</span>
+
+<br><br>
+
+<button
+onclick="confirmarPago('${key}')">
+
+Confirmar Pago
+
+</button>
+
+</div>
+
+`;
+
+});
+
+});
+
+}
+/* ===========================
+CONFIRMAR PAGO
+=========================== */
+
+function confirmarPago(key){
+
+db.ref(
+"jugadores/"+key
+).update({
+
+pagado: true
+
+});
+
+}
+
+/* ===========================
+INICIO GENERAL
+=========================== */
+
+window.onload = function(){
+
+/* CARGAR PARTIDOS */
+
+if(document.getElementById("lista")){
+cargar();
+}
+
+/* ADMIN */
+
+if(document.getElementById("listaJugadores")){
+mostrarJugadores();
+}
+
+/* CARGAR HORA */
+
+if(typeof cargarHora === "function"){
+cargarHora();
+}
+
+};
+
+/* ===========================
+CARGAR HORA DESDE FIREBASE
+=========================== */
+
+function cargarHora(){
+
+db.ref("config/horaCierre")
+.on("value", snapshot=>{
+
+let hora =
+snapshot.val();
+
+if(hora){
+
+/* GUARDAR LOCAL */
+
+localStorage.setItem(
+"horaCierre",
+hora
+);
+
+}
+
+});
+
+    }
+
+function borrarJugadores(){
+
+/* CONFIRMAR */
+
+let confirmar = confirm(
+"¿Seguro que deseas borrar TODOS los jugadores para iniciar nueva semana?"
+);
+
+if(!confirmar) return;
+
+/* BORRAR EN FIREBASE */
+
+db.ref("jugadores")
+.remove()
+.then(()=>{
+
+/* LIMPIAR PANTALLA */
+
+let div =
+document.getElementById("listaJugadores");
+
+if(div){
+
+div.innerHTML =
+"No hay jugadores registrados";
+
+}
+
+/* LIMPIAR SELECCIONES */
+
+selecciones = [];
+
+/* MENSAJE */
+
+alert("🗑️ Jugadores eliminados correctamente");
+
+})
+.catch(error=>{
+
+alert("Error al borrar jugadores");
+
+console.log(error);
+
+});
+
+}
 
 function generarExcelGeneral(){
 
@@ -322,54 +562,56 @@ localStorage.getItem("partidos")
 
 let datos = [];
 
+/* RECORRER JUGADORES */
+
 Object.keys(jugadores)
 .forEach(key=>{
 
-let j = jugadores[key];
+let j =
+jugadores[key];
 
-if(j.pagado && j.selecciones){
+/* SOLO PAGADOS */
 
-let combinaciones =
-generarCombinaciones(
-j.selecciones
-);
-
-combinaciones.forEach(c=>{
+if(j.pagado){
 
 let fila = {};
 
-fila["Nombre"] = j.nombre;
+fila["Nombre"] =
+j.nombre;
 
-fila["Combinacion"] =
-c.join("-");
-
-fila["Total Comb"] =
+fila["Combinaciones"] =
 j.combinaciones;
 
-fila["Total $"] =
+fila["Total"] =
 j.total;
 
-c.forEach((valor,i)=>{
+/* PICKS */
+
+if(j.selecciones){
+
+j.selecciones.forEach((s,i)=>{
+
+if(s && s.length>0){
 
 let p = partidos[i];
 
-if(p){
-
 fila[
 p.l+" vs "+p.v
-] = valor;
+] = s.join(",");
 
 }
 
 });
+
+}
 
 datos.push(fila);
 
-});
-
 }
 
 });
+
+/* VALIDAR */
 
 if(datos.length == 0){
 
@@ -378,6 +620,8 @@ alert("No hay jugadores PAGADOS");
 return;
 
 }
+
+/* CREAR EXCEL */
 
 let hoja =
 XLSX.utils.json_to_sheet(datos);
@@ -388,8 +632,10 @@ XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(
 libro,
 hoja,
-"Combinaciones"
+"Pagados"
 );
+
+/* SEMANA */
 
 let semana = 1;
 
@@ -402,9 +648,11 @@ semana = input.value || 1;
 
 }
 
+/* DESCARGAR */
+
 XLSX.writeFile(
 libro,
-"Quiniela_Combinaciones_Semana_"+semana+".xlsx"
+"Quiniela_Pagados_Semana_"+semana+".xlsx"
 );
 
 });
