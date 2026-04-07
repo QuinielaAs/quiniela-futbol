@@ -758,6 +758,37 @@ new ExcelJS.Workbook();
 let sheet =
 workbook.addWorksheet("Quiniela");
 
+  /* ===========================
+CONFIGURACION PARA PDF
+=========================== */
+
+sheet.pageSetup = {
+
+paperSize: 9, // A4
+
+orientation: 'landscape', // horizontal
+
+horizontalCentered: true,
+
+verticalCentered: true,
+
+fitToPage: true,
+
+fitToWidth: 1,
+
+fitToHeight: 1,
+
+margins: {
+left: 0.3,
+right: 0.3,
+top: 0.5,
+bottom: 0.5,
+header: 0.3,
+footer: 0.3
+}
+
+};
+
 /* ===========================
 COLUMNAS
 =========================== */
