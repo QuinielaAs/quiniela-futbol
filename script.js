@@ -28,18 +28,15 @@ let partidosBase = [
 
 if(!localStorage.getItem("partidos")){
 
-localStorage.setItem(
-"partidos",
+localStorage.setItem("partidos",
 JSON.stringify(partidosBase)
 );
 
 }
 
-let partidos =
-JSON.parse(localStorage.getItem("partidos"));
+let partidos =JSON.parse(localStorage.getItem("partidos"));
 
-let div =
-document.getElementById("lista");
+let div =document.getElementById("lista");
 
 if(!div) return;
 
