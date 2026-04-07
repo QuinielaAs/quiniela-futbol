@@ -1018,19 +1018,17 @@ alert("Error generando Excel");
 }
 
 /* ===========================
-FILA RESULTADOS
+FILA RESULTADOS (fila 1)
 =========================== */
 
-let filaResultados = 4;
+sheet.getCell(1,2).value = "RES";
 
-sheet.getCell(filaResultados,2).value = "RES";
-
-/* C hasta K = 9 partidos */
+/* 9 partidos */
 
 for(let i=0;i<9;i++){
 
 sheet.getCell(
-filaResultados,
+1,
 3 + i
 ).value = "";
 
