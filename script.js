@@ -970,18 +970,6 @@ fila.push(v);
 });
 
 /* ===========================
-ACIERTOS VACIO + FORMULA
-=========================== */
-
-/* deja espacio para aciertos */
-
-fila.push("");
-
-/* agrega fila del jugador */
-
-sheet.addRow(fila);
-
-/* ===========================
 ACIERTOS VACIO (CORREGIDO)
 =========================== */
 
