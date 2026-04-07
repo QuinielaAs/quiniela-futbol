@@ -933,11 +933,29 @@ fila.push(numero);
 
 fila.push(j.nombre);
 
+/* PICKS */
+
 c.forEach(v=>{
 
 fila.push(v);
 
 });
+
+/* FORMULA ACIERTOS */
+
+let filaJugador =
+sheet.rowCount + 1;
+
+fila.push({
+
+formula:
+`COUNTIF(C${filaJugador}:K${filaJugador},C$4:K$4)`
+
+});
+
+/* AGREGAR FILA */
+
+sheet.addRow(fila);
 
 /* ACIERTOS VACIO */
 
@@ -1003,9 +1021,11 @@ alert("Error generando Excel");
 FILA RESULTADOS
 =========================== */
 
-let filaResultados = 3;
+let filaResultados = 4;
 
 sheet.getCell(filaResultados,2).value = "RES";
+
+/* C hasta K = 9 partidos */
 
 for(let i=0;i<9;i++){
 
