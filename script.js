@@ -982,29 +982,38 @@ fila.push("");
 sheet.addRow(fila);
 
 /* ===========================
-FORMULA AUTOMATICA ACIERTOS
+ACIERTOS VACIO (CORREGIDO)
 =========================== */
 
-/* obtiene fila actual */
+fila.push("");
+
+sheet.addRow(fila);
+
+/* FORMULA DE ACIERTOS */
 
 let filaJugador =
 sheet.lastRow.number;
 
-/* columna de aciertos */
-
 let colAciertos =
 partidos.length + 3;
 
-/* formula COUNTIF */
+/* FORMULA */
 
 sheet.getCell(
 filaJugador,
 colAciertos
 ).value = {
 
-formula:`COUNTIF(C${filaJugador}:K${filaJugador},C$4:K$4)`
+formula:
+"COUNTIF(C" + filaJugador +
+":K" + filaJugador +
+",C$4:K$4)"
 
 };
+
+numero++;
+
+});
 
 /* siguiente numero */
 
@@ -1054,8 +1063,8 @@ console.log(error);
 alert("Error generando Excel");
 
 }
-
-            }
+    
+}
 
 /* ===========================
 FILA DE RESULTADOS
