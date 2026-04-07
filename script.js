@@ -976,8 +976,6 @@ fila.push(v);
     numero++; 
 
 }); 
-
-}
     
 /* CONGELAR */
 
