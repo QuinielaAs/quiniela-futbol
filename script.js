@@ -589,40 +589,15 @@ let fila = {};
 fila["Nombre"] =
 j.nombre;
 
-fila["Combinacion"] =
-c.join("-");
-
-fila["Total Comb"] =
-j.combinaciones;
-
-fila["Total $"] =
-j.total;
-
 /* PARTIDOS */
 
 c.forEach((valor,i)=>{
 
-let p = partidos[i];
-
-if(p){
-
-fila[
-p.l+" vs "+p.v
-] = valor;
-
-}
+fila["P"+(i+1)] = valor;
 
 });
-
-datos.push(fila);
-
-});
-
-}
-
-});
-
-/* VALIDAR */
+  
+  /* VALIDAR */
 
 if(datos.length == 0){
 
