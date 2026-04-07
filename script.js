@@ -941,7 +941,9 @@ fila.push(v);
 
 });
 
-/* FORMULA ACIERTOS */
+/* ===========================
+FORMULA ACIERTOS
+=========================== */
 
 let filaJugador =
 sheet.rowCount + 1;
@@ -949,7 +951,7 @@ sheet.rowCount + 1;
 fila.push({
 
 formula:
-`COUNTIF(C${filaJugador}:K${filaJugador},C$4:K$4)`
+`COUNTIF(C${filaJugador}:K${filaJugador},C$1:K$1)`
 
 });
 
