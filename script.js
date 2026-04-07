@@ -1002,8 +1002,7 @@ filaJugador,
 colAciertos
 ).value = {
 
-formula:
-`COUNTIF(C${filaJugador}:K${filaJugador},C$4:K$4)`
+formula:`COUNTIF(C${filaJugador}:K${filaJugador},C$4:K$4)`
 
 };
 
@@ -1044,8 +1043,7 @@ document.createElement("a");
 link.href =
 URL.createObjectURL(blob);
 
-link.download =
-"Quiniela_Profesional_Semana_"+semana+".xlsx";
+link.download ="Quiniela_Profesional_Semana_"+semana+".xlsx";
 
 link.click();
 
@@ -1071,9 +1069,6 @@ sheet.getCell(filaResultados,2).value = "RES";
 
 for(let i=0;i<9;i++){
 
-sheet.getCell(
-filaResultados,
-3 + i
-).value = "";
+sheet.getCell(filaResultados,3 + i).value = "";
 
 }
