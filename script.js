@@ -28,7 +28,8 @@ let partidosBase = [
 
 if(!localStorage.getItem("partidos")){
 
-localStorage.setItem("partidos",
+localStorage.setItem(
+"partidos",
 JSON.stringify(partidosBase)
 );
 
@@ -37,7 +38,8 @@ JSON.stringify(partidosBase)
 let partidos =
 JSON.parse(localStorage.getItem("partidos"));
 
-let div = document.getElementById("lista");
+let div =
+document.getElementById("lista");
 
 if(!div) return;
 
@@ -262,7 +264,7 @@ window.open(url,"_blank");
 
 alert("✅ Quiniela enviada");
 
-    }
+    }
 
 /* ===========================
 GUARDAR HORA
@@ -489,7 +491,7 @@ hora
 
 });
 
-    }
+    }
 
 function borrarJugadores(){
 
@@ -537,59 +539,6 @@ console.log(error);
 });
 
 }
-/* ===========================
-GENERAR COMBINACIONES SEGURAS
-=========================== */
-
-function generarCombinaciones(selecciones){
-
-/* NORMALIZAR ARRAYS */
-
-let listas = [];
-
-selecciones.forEach(s=>{
-
-if(s){
-
-if(Array.isArray(s)){
-
-listas.push(s);
-
-}else{
-
-listas.push(Object.values(s));
-
-}
-
-}
-
-});
-
-/* GENERAR PRODUCTO */
-
-let resultados = [[]];
-
-listas.forEach(lista=>{
-
-let nuevas = [];
-
-resultados.forEach(r=>{
-
-lista.forEach(opcion=>{
-
-nuevas.push([...r, opcion]);
-
-});
-
-});
-
-resultados = nuevas;
-
-});
-
-return resultados;
-
-}
 
 function generarExcelGeneral(){
 
@@ -618,53 +567,45 @@ let datos = [];
 Object.keys(jugadores)
 .forEach(key=>{
 
-let j = jugadores[key];
+let j =
+jugadores[key];
 
 /* SOLO PAGADOS */
 
-if(j.pagado && j.selecciones){
-
-/* GENERAR COMBINACIONES */
-
-let combinaciones = generarCombinaciones(j.selecciones);
-
-/* CREAR FILAS */
-
-combinaciones.forEach(c=>{
+if(j.pagado){
 
 let fila = {};
 
 fila["Nombre"] =
 j.nombre;
 
-fila["Combinacion"] =
-c.join("-");
-
-fila["Total Comb"] =
+fila["Combinaciones"] =
 j.combinaciones;
 
-fila["Total $"] =
+fila["Total"] =
 j.total;
 
-/* PARTIDOS */
+/* PICKS */
 
-c.forEach((valor,i)=>{
+if(j.selecciones){
+
+j.selecciones.forEach((s,i)=>{
+
+if(s && s.length>0){
 
 let p = partidos[i];
 
-if(p){
-
 fila[
 p.l+" vs "+p.v
-] = valor;
+] = s.join(",");
 
 }
 
 });
 
-datos.push(fila);
+}
 
-});
+datos.push(fila);
 
 }
 
@@ -691,7 +632,7 @@ XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(
 libro,
 hoja,
-"Combinaciones"
+"Pagados"
 );
 
 /* SEMANA */
@@ -711,312 +652,9 @@ semana = input.value || 1;
 
 XLSX.writeFile(
 libro,
-"Quiniela_Combinaciones_Semana_"+semana+".xlsx"
+"Quiniela_Pagados_Semana_"+semana+".xlsx"
 );
 
 });
 
-    }
-
-/* ===========================
-EXCEL PROFESIONAL SEGURO
-=========================== */
-
-async function generarExcelGeneral(){
-
-try{
-
-let snapshot =
-await db.ref("jugadores").once("value");
-
-let jugadores =
-snapshot.val();
-
-if(!jugadores){
-
-alert("No hay jugadores");
-return;
-
-}
-
-let partidos =
-JSON.parse(
-localStorage.getItem("partidos")
-) || [];
-
-/* CREAR LIBRO */
-
-let workbook =
-new ExcelJS.Workbook();
-
-let sheet =
-workbook.addWorksheet("Quiniela");
-
-/* ===========================
-FONDO REAL DE HOJA
-=========================== */
-
-try{
-
-let fondo =
-await fetch("logos/fondo.png")
-.then(r=>r.blob())
-.then(b=>b.arrayBuffer());
-
-let fondoId =
-workbook.addImage({
-buffer: fondo,
-extension: 'png'
-});
-
-/* FONDO DETRAS */
-
-sheet.addBackgroundImage(fondoId);
-
-}catch(e){
-
-console.log("Error cargando fondo");
-
-    }
-
-    /* ===========================
-CONFIGURACION PARA PDF
-=========================== */
-
-/* ===========================
-MARGENES LATERALES
-=========================== */
-
-sheet.pageSetup = {
-
-paperSize: 9, // A4
-
-orientation: 'landscape',
-
-horizontalCentered: true,
-
-verticalCentered: true,
-
-fitToPage: true,
-
-fitToWidth: 1,
-
-fitToHeight: 1,
-
-margins: {
-
-left: 0.8,   // margen izquierdo
-right: 0.8,  // margen derecho
-
-top: 0.3,
-bottom: 0.3,
-
-header: 0.2,
-footer: 0.2
-
-}
-
-};
-
-/* ===========================
-COLUMNAS
-=========================== */
-
-let columnas = [];
-
-columnas.push({width:5});  // No
-columnas.push({width:20}); // Nombre
-
-for(let i=0;i<partidos.length;i++){
-
-columnas.push({width:5});
-
-}
-
-columnas.push({width:10}); // Aciertos
-
-sheet.columns = columnas;
-
-/* ===========================
-ENCABEZADO
-=========================== */
-
-sheet.addRow([]);
-sheet.addRow([]);
-sheet.addRow([]);
-
-/* NUMERO */
-
-sheet.mergeCells("A1:A3");
-sheet.getCell("A1").value = "No.";
-
-/* NOMBRE */
-
-sheet.mergeCells("B1:B3");
-sheet.getCell("B1").value = "Nombre";
-
-/* PARTIDOS */
-
-for(let i=0;i<partidos.length;i++){
-
-let col = i + 3;
-
-/* VS */
-
-sheet.getCell(2,col).value = "VS";
-
-}
-
-/* ACIERTOS */
-
-let colFinal =
-partidos.length + 3;
-
-sheet.mergeCells(
-1,colFinal,
-3,colFinal
-);
-
-sheet.getCell(1,colFinal)
-.value = "ACIERTOS";
-
-/* ===========================
-AGREGAR LOGOS
-=========================== */
-
-for(let i=0;i<partidos.length;i++){
-
-let col = i + 3;
-
-let p = partidos[i];
-
-try{
-
-/* LOCAL */
-
-let imgLocal =
-await fetch(p.logoL)
-.then(r=>r.blob())
-.then(b=>b.arrayBuffer());
-
-let idLocal =
-workbook.addImage({
-buffer: imgLocal,
-extension: 'png'
-});
-
-sheet.addImage(idLocal,{
-tl:{col:col-1,row:0},
-ext:{width:40,height:40}
-});
-
-/* VISITA */
-
-let imgVisita =
-await fetch(p.logoV)
-.then(r=>r.blob())
-.then(b=>b.arrayBuffer());
-
-let idVisita =
-workbook.addImage({
-buffer: imgVisita,
-extension: 'png'
-});
-
-sheet.addImage(idVisita,{
-tl:{col:col-1,row:2},
-ext:{width:40,height:40}
-});
-
-}catch(e){
-
-console.log("Error logo:",p.logoL);
-
-}
-
-}
-
-/* ===========================
-JUGADORES
-=========================== */
-
-let numero = 1;
-
-Object.keys(jugadores)
-.forEach(key=>{
-
-let j = jugadores[key];
-
-if(j.pagado && j.selecciones){
-
-let combinaciones =
-generarCombinaciones(
-j.selecciones
-);
-
-combinaciones.forEach(c=>{
-
-let fila = [];
-
-fila.push(numero);
-
-fila.push(j.nombre);
-
-c.forEach(v=>{
-
-fila.push(v);
-
-});
-
-/* ACIERTOS VACIO */
-    fila.push(""); 
-    
-    sheet.addRow(fila);
-    
-    numero++; 
-
-}); 
-    
-/* CONGELAR */
-
-sheet.views = [
-{state:'frozen',ySplit:3}
-];
-
-/* DESCARGAR */
-
-let semana = 1;
-
-let input =
-document.getElementById("semana");
-
-if(input){
-
-semana = input.value || 1;
-
-}
-
-let buffer =
-await workbook.xlsx.writeBuffer();
-
-let blob =
-new Blob([buffer]);
-
-let link =
-document.createElement("a");
-
-link.href =
-URL.createObjectURL(blob);
-
-link.download ="Quiniela_Profesional_Semana_"+semana+".xlsx";
-
-link.click();
-
-}catch(error){
-
-console.log(error);
-
-alert("Error generando Excel");
-
-}
-
+    }
