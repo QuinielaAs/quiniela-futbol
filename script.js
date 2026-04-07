@@ -974,7 +974,9 @@ fila.push(v);
     
     sheet.addRow(fila);
     
-    numero++; }); 
+    numero++; 
+
+}); 
 
 }
     
@@ -1023,18 +1025,3 @@ alert("Error generando Excel");
     
 }
 
-/* ===========================
-FILA DE RESULTADOS
-=========================== */
-
-let filaResultados = 4;
-
-sheet.getCell(filaResultados,2).value = "RES";
-
-/* C hasta K = 9 partidos */
-
-for(let i=0;i<9;i++){
-
-sheet.getCell(filaResultados,3 + i).value = "";
-
-}
