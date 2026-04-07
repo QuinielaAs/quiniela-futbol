@@ -723,3 +723,182 @@ resultados = nuevas;
 return resultados;
 
 }
+
+/* ===========================
+EXCEL CON LOGOS Y VS
+=========================== */
+
+async function generarExcelGeneral(){
+
+let snapshot =
+await db.ref("jugadores").once("value");
+
+let jugadores =
+snapshot.val();
+
+if(!jugadores){
+
+alert("No hay jugadores");
+return;
+
+}
+
+let partidos =
+JSON.parse(
+localStorage.getItem("partidos")
+) || [];
+
+/* CREAR LIBRO */
+
+let workbook =
+new ExcelJS.Workbook();
+
+let sheet =
+workbook.addWorksheet("Quiniela");
+
+/* ENCABEZADO */
+
+let filaLogoLocal =
+[""];
+
+let filaVS =
+["Nombre"];
+
+let filaLogoVisitante =
+[""];
+
+/* AGREGAR LOGOS */
+
+for(let i=0;i<partidos.length;i++){
+
+let p = partidos[i];
+
+/* LOGO LOCAL */
+
+let imgLocal =
+await fetch(p.logoL)
+.then(res=>res.blob())
+.then(blob=>blob.arrayBuffer());
+
+let idLocal =
+workbook.addImage({
+buffer: imgLocal,
+extension: 'png'
+});
+
+sheet.addImage(idLocal,{
+tl:{col:i+1,row:0},
+ext:{width:40,height:40}
+});
+
+/* VS */
+
+filaVS.push("VS");
+
+/* LOGO VISITA */
+
+let imgVisita =
+await fetch(p.logoV)
+.then(res=>res.blob())
+.then(blob=>blob.arrayBuffer());
+
+let idVisita =
+workbook.addImage({
+buffer: imgVisita,
+extension: 'png'
+});
+
+sheet.addImage(idVisita,{
+tl:{col:i+1,row:2},
+ext:{width:40,height:40}
+});
+
+}
+
+/* AGREGAR VS */
+
+sheet.addRow(filaLogoLocal);
+sheet.addRow(filaVS);
+sheet.addRow(filaLogoVisitante);
+
+/* JUGADORES */
+
+Object.keys(jugadores)
+.forEach(key=>{
+
+let j = jugadores[key];
+
+if(j.pagado && j.selecciones){
+
+let combinaciones =
+generarCombinaciones(
+j.selecciones
+);
+
+/* CADA COMBINACION */
+
+combinaciones.forEach(c=>{
+
+let fila = [];
+
+fila.push(j.nombre);
+
+c.forEach(v=>{
+
+fila.push(v);
+
+});
+
+sheet.addRow(fila);
+
+});
+
+}
+
+});
+
+/* AJUSTAR ANCHOS */
+
+sheet.columns.forEach(col=>{
+
+col.width = 12;
+
+});
+
+/* CONGELAR ENCABEZADO */
+
+sheet.views = [
+{state:'frozen',ySplit:3}
+];
+
+/* DESCARGAR */
+
+let semana = 1;
+
+let input =
+document.getElementById("semana");
+
+if(input){
+
+semana = input.value || 1;
+
+}
+
+let buffer =
+await workbook.xlsx.writeBuffer();
+
+let blob =
+new Blob([buffer]);
+
+let link =
+document.createElement("a");
+
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"Quiniela_Semana_"+semana+".xlsx";
+
+link.click();
+
+  }
