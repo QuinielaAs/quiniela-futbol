@@ -725,10 +725,12 @@ return resultados;
 }
 
 /* ===========================
-EXCEL CON LOGOS Y VS
+EXCEL PROFESIONAL SEGURO
 =========================== */
 
 async function generarExcelGeneral(){
+
+try{
 
 let snapshot =
 await db.ref("jugadores").once("value");
@@ -756,29 +758,86 @@ new ExcelJS.Workbook();
 let sheet =
 workbook.addWorksheet("Quiniela");
 
-/* ENCABEZADO */
+/* ===========================
+COLUMNAS
+=========================== */
 
-let filaLogoLocal =
-[""];
+let columnas = [];
 
-let filaVS =
-["Nombre"];
-
-let filaLogoVisitante =
-[""];
-
-/* AGREGAR LOGOS */
+columnas.push({width:5});  // No
+columnas.push({width:20}); // Nombre
 
 for(let i=0;i<partidos.length;i++){
 
+columnas.push({width:5});
+
+}
+
+columnas.push({width:10}); // Aciertos
+
+sheet.columns = columnas;
+
+/* ===========================
+ENCABEZADO
+=========================== */
+
+sheet.addRow([]);
+sheet.addRow([]);
+sheet.addRow([]);
+
+/* NUMERO */
+
+sheet.mergeCells("A1:A3");
+sheet.getCell("A1").value = "No.";
+
+/* NOMBRE */
+
+sheet.mergeCells("B1:B3");
+sheet.getCell("B1").value = "Nombre";
+
+/* PARTIDOS */
+
+for(let i=0;i<partidos.length;i++){
+
+let col = i + 3;
+
+/* VS */
+
+sheet.getCell(2,col).value = "VS";
+
+}
+
+/* ACIERTOS */
+
+let colFinal =
+partidos.length + 3;
+
+sheet.mergeCells(
+1,colFinal,
+3,colFinal
+);
+
+sheet.getCell(1,colFinal)
+.value = "ACIERTOS";
+
+/* ===========================
+AGREGAR LOGOS
+=========================== */
+
+for(let i=0;i<partidos.length;i++){
+
+let col = i + 3;
+
 let p = partidos[i];
 
-/* LOGO LOCAL */
+try{
+
+/* LOCAL */
 
 let imgLocal =
 await fetch(p.logoL)
-.then(res=>res.blob())
-.then(blob=>blob.arrayBuffer());
+.then(r=>r.blob())
+.then(b=>b.arrayBuffer());
 
 let idLocal =
 workbook.addImage({
@@ -787,20 +846,16 @@ extension: 'png'
 });
 
 sheet.addImage(idLocal,{
-tl:{col:i+1,row:0},
+tl:{col:col-1,row:0},
 ext:{width:40,height:40}
 });
 
-/* VS */
-
-filaVS.push("VS");
-
-/* LOGO VISITA */
+/* VISITA */
 
 let imgVisita =
 await fetch(p.logoV)
-.then(res=>res.blob())
-.then(blob=>blob.arrayBuffer());
+.then(r=>r.blob())
+.then(b=>b.arrayBuffer());
 
 let idVisita =
 workbook.addImage({
@@ -809,19 +864,23 @@ extension: 'png'
 });
 
 sheet.addImage(idVisita,{
-tl:{col:i+1,row:2},
+tl:{col:col-1,row:2},
 ext:{width:40,height:40}
 });
 
+}catch(e){
+
+console.log("Error logo:",p.logoL);
+
 }
 
-/* AGREGAR VS */
+}
 
-sheet.addRow(filaLogoLocal);
-sheet.addRow(filaVS);
-sheet.addRow(filaLogoVisitante);
+/* ===========================
+JUGADORES
+=========================== */
 
-/* JUGADORES */
+let numero = 1;
 
 Object.keys(jugadores)
 .forEach(key=>{
@@ -835,11 +894,11 @@ generarCombinaciones(
 j.selecciones
 );
 
-/* CADA COMBINACION */
-
 combinaciones.forEach(c=>{
 
 let fila = [];
+
+fila.push(numero);
 
 fila.push(j.nombre);
 
@@ -849,7 +908,13 @@ fila.push(v);
 
 });
 
+/* ACIERTOS VACIO */
+
+fila.push("");
+
 sheet.addRow(fila);
+
+numero++;
 
 });
 
@@ -857,15 +922,7 @@ sheet.addRow(fila);
 
 });
 
-/* AJUSTAR ANCHOS */
-
-sheet.columns.forEach(col=>{
-
-col.width = 12;
-
-});
-
-/* CONGELAR ENCABEZADO */
+/* CONGELAR */
 
 sheet.views = [
 {state:'frozen',ySplit:3}
@@ -897,8 +954,16 @@ link.href =
 URL.createObjectURL(blob);
 
 link.download =
-"Quiniela_Semana_"+semana+".xlsx";
+"Quiniela_Profesional_Semana_"+semana+".xlsx";
 
 link.click();
 
-  }
+}catch(error){
+
+console.log(error);
+
+alert("Error generando Excel");
+
+}
+
+}
