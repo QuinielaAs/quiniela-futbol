@@ -969,17 +969,47 @@ fila.push(v);
 
 });
 
-/* ACIERTOS VACIO */
+/* ===========================
+ACIERTOS VACIO + FORMULA
+=========================== */
+
+/* deja espacio para aciertos */
 
 fila.push("");
 
+/* agrega fila del jugador */
+
 sheet.addRow(fila);
 
+/* ===========================
+FORMULA AUTOMATICA ACIERTOS
+=========================== */
+
+/* obtiene fila actual */
+
+let filaJugador =
+sheet.lastRow.number;
+
+/* columna de aciertos */
+
+let colAciertos =
+partidos.length + 3;
+
+/* formula COUNTIF */
+
+sheet.getCell(
+filaJugador,
+colAciertos
+).value = {
+
+formula:
+`COUNTIF(C${filaJugador}:K${filaJugador},C$4:K$4)`
+
+};
+
+/* siguiente numero */
+
 numero++;
-
-});
-
-}
 
 });
 
