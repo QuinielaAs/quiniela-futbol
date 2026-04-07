@@ -998,3 +998,20 @@ alert("Error generando Excel");
 }
 
 }
+
+/* ===========================
+FILA RESULTADOS
+=========================== */
+
+let filaResultados = 3;
+
+sheet.getCell(filaResultados,2).value = "RES";
+
+for(let i=0;i<9;i++){
+
+sheet.getCell(
+filaResultados,
+3 + i
+).value = "";
+
+}
