@@ -28,8 +28,7 @@ let partidosBase = [
 
 if(!localStorage.getItem("partidos")){
 
-localStorage.setItem(
-"partidos",
+localStorage.setItem("partidos",
 JSON.stringify(partidosBase)
 );
 
@@ -1021,7 +1020,5 @@ console.log(error);
 
 alert("Error generando Excel");
 
-}
-    
 }
 
