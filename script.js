@@ -969,46 +969,15 @@ fila.push(v);
 
 });
 
-/* ===========================
-ACIERTOS VACIO (CORREGIDO)
-=========================== */
+/* ACIERTOS VACIO */
+    fila.push(""); 
+    
+    sheet.addRow(fila);
+    
+    numero++; }); 
 
-fila.push("");
-
-sheet.addRow(fila);
-
-/* FORMULA DE ACIERTOS */
-
-let filaJugador =
-sheet.lastRow.number;
-
-let colAciertos =
-partidos.length + 3;
-
-/* FORMULA */
-
-sheet.getCell(
-filaJugador,
-colAciertos
-).value = {
-
-formula:
-"COUNTIF(C" + filaJugador +
-":K" + filaJugador +
-",C$4:K$4)"
-
-};
-
-numero++;
-
-});
-
-/* siguiente numero */
-
-numero++;
-
-});
-
+}
+    
 /* CONGELAR */
 
 sheet.views = [
