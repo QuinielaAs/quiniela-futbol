@@ -929,6 +929,8 @@ bgColor:{argb:'FFFFA500'}
 }
 
 ]
+});
+    
 /* DESCARGAR */
 
 let semana = 1;
