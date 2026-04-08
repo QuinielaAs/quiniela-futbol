@@ -844,8 +844,6 @@ FORMATO CONDICIONAL PICKS
 let filaInicio = 5;
 let filaFin = sheet.lastRow.number;
 
-/* COLUMNAS C A K */
-
 for(let col=3; col<=11; col++){
 
 let letra = numeroALetra(col);
@@ -860,7 +858,7 @@ rules: [
 type: 'expression',
 
 formulae: [
-`${letra}5=${letra}$4`
+`UPPER(${letra}5)=UPPER(${letra}$4)`
 ],
 
 style: {
@@ -870,7 +868,7 @@ fill: {
 type: 'pattern',
 pattern:'solid',
 
-fgColor:{argb:'FF00FF00'}
+bgColor:{argb:'FF92D050'}
 
 }
 
