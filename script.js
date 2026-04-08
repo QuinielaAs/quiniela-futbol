@@ -859,17 +859,6 @@ state:'frozen',
 ySplit:4
 }
 ];
-
-
-    
-/* ===========================
-DESCARGAR
-=========================== */
-
-let semana = 1;
-
-let input =
-document.getElement
     
 /* ===========================
 COLORES CORREGIDOS
@@ -940,7 +929,12 @@ bgColor:{argb:'FFFFA500'}
 }
 
 ]
-});ById("semana");
+/* DESCARGAR */
+
+let semana = 1;
+
+let input =
+document.getElementById("semana");
 
 if(input){
 
@@ -973,7 +967,7 @@ alert("Error generando Excel");
 
 }
 
-}
+    }
 
 function numeroALetra(num){
 
