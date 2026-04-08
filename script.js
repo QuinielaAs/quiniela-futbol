@@ -838,53 +838,6 @@ result:0
 });
 
 /* ===========================
-FORMATO CONDICIONAL PICKS
-=========================== */
-
-let filaInicio = 5;
-let filaFin = sheet.lastRow.number;
-
-/* COLUMNAS C A K */
-
-for(let col=3; col<=11; col++){
-
-let letra = numeroALetra(col);
-
-sheet.addConditionalFormatting({
-
-ref: `${letra}${filaInicio}:${letra}${filaFin}`,
-
-rules: [
-
-{
-type: 'expression',
-
-formulae: [
-`${letra}5=${letra}$4`
-],
-
-style: {
-
-fill: {
-
-type: 'pattern',
-pattern:'solid',
-
-fgColor:{argb:'FF00FF00'}
-
-}
-
-}
-
-}
-
-]
-
-});
-
-}
-
-/* ===========================
 CONGELAR FILAS
 =========================== */
 
