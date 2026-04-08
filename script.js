@@ -921,6 +921,272 @@ let j = jugadores[key];
 if(j.pagado && j.selecciones){
 
 let combinaciones =
+/* ===========================
+GENERAR COMBINACIONES SEGURAS
+=========================== */
+
+function generarCombinaciones(selecciones){
+
+let listas = [];
+
+selecciones.forEach(s=>{
+
+if(s){
+
+if(Array.isArray(s)){
+
+listas.push(s);
+
+}else{
+
+listas.push(Object.values(s));
+
+}
+
+}
+
+});
+
+let resultados = [[]];
+
+listas.forEach(lista=>{
+
+let nuevas = [];
+
+resultados.forEach(r=>{
+
+lista.forEach(opcion=>{
+
+nuevas.push([...r, opcion]);
+
+});
+
+});
+
+resultados = nuevas;
+
+});
+
+return resultados;
+
+}
+
+/* ===========================
+EXCEL PROFESIONAL COMPLETO
+=========================== */
+
+async function generarExcelGeneral(){
+
+try{
+
+let snapshot =
+await db.ref("jugadores").once("value");
+
+let jugadores =
+snapshot.val();
+
+if(!jugadores){
+
+alert("No hay jugadores");
+return;
+
+}
+
+let partidos =
+JSON.parse(
+localStorage.getItem("partidos")
+) || [];
+
+/* ===========================
+CREAR LIBRO
+=========================== */
+
+let workbook =
+new ExcelJS.Workbook();
+
+let sheet =
+workbook.addWorksheet("Quiniela");
+
+/* ===========================
+CONFIGURACION PARA PDF
+=========================== */
+
+sheet.pageSetup = {
+
+paperSize: 9,
+orientation: 'landscape',
+
+horizontalCentered: true,
+verticalCentered: true,
+
+fitToPage: true,
+fitToWidth: 1,
+fitToHeight: 1,
+
+margins: {
+left: 0.3,
+right: 0.3,
+top: 0.5,
+bottom: 0.5,
+header: 0.3,
+footer: 0.3
+}
+
+};
+
+/* ===========================
+COLUMNAS
+=========================== */
+
+let columnas = [];
+
+columnas.push({width:5});   // No
+columnas.push({width:20});  // Nombre
+
+for(let i=0;i<partidos.length;i++){
+
+columnas.push({width:5});
+
+}
+
+columnas.push({width:10});  // Aciertos
+
+sheet.columns = columnas;
+
+/* ===========================
+CREAR FILAS HASTA LA 4
+=========================== */
+
+sheet.addRow([]); // fila 1
+sheet.addRow([]); // fila 2
+sheet.addRow([]); // fila 3
+sheet.addRow([]); // fila 4 (RESULTADOS)
+
+/* ===========================
+ENCABEZADOS
+=========================== */
+
+/* NUMERO */
+
+sheet.mergeCells("A1:A3");
+sheet.getCell("A1").value = "No.";
+
+/* NOMBRE */
+
+sheet.mergeCells("B1:B3");
+sheet.getCell("B1").value = "Nombre";
+
+/* PARTIDOS */
+
+for(let i=0;i<partidos.length;i++){
+
+let col = i + 3;
+
+/* VS */
+
+sheet.getCell(2,col).value = "VS";
+
+}
+
+/* ACIERTOS */
+
+let colFinal =
+partidos.length + 3;
+
+sheet.mergeCells(
+1,colFinal,
+3,colFinal
+);
+
+sheet.getCell(1,colFinal)
+.value = "ACIERTOS";
+
+/* ===========================
+FILA RESULTADOS (FILA 4)
+=========================== */
+
+sheet.getCell(4,2).value =
+"RESULTADOS";
+
+for(let i=0;i<partidos.length;i++){
+
+sheet.getCell(
+4,
+3 + i
+).value = "";
+
+}
+
+/* ===========================
+AGREGAR LOGOS
+=========================== */
+
+for(let i=0;i<partidos.length;i++){
+
+let col = i + 3;
+
+let p = partidos[i];
+
+try{
+
+/* LOCAL */
+
+let imgLocal =
+await fetch(p.logoL)
+.then(r=>r.blob())
+.then(b=>b.arrayBuffer());
+
+let idLocal =
+workbook.addImage({
+buffer: imgLocal,
+extension: 'png'
+});
+
+sheet.addImage(idLocal,{
+tl:{col:col-1,row:0},
+ext:{width:40,height:40}
+});
+
+/* VISITA */
+
+let imgVisita =
+await fetch(p.logoV)
+.then(r=>r.blob())
+.then(b=>b.arrayBuffer());
+
+let idVisita =
+workbook.addImage({
+buffer: imgVisita,
+extension: 'png'
+});
+
+sheet.addImage(idVisita,{
+tl:{col:col-1,row:2},
+ext:{width:40,height:40}
+});
+
+}catch(e){
+
+console.log("Error logo:",p.logoL);
+
+}
+
+}
+
+/* ===========================
+JUGADORES DESDE FILA 5
+=========================== */
+
+let numero = 1;
+
+Object.keys(jugadores)
+.forEach(key=>{
+
+let j = jugadores[key];
+
+if(j.pagado && j.selecciones){
+
+let combinaciones =
 generarCombinaciones(
 j.selecciones
 );
@@ -930,7 +1196,6 @@ combinaciones.forEach(c=>{
 let fila = [];
 
 fila.push(numero);
-
 fila.push(j.nombre);
 
 /* PICKS */
@@ -943,25 +1208,27 @@ fila.push(v);
 
 /* ===========================
 FORMULA ACIERTOS
+CONTAR VS RESULTADOS FILA 4
 =========================== */
 
 let filaJugador =
 sheet.rowCount + 1;
 
+let letraInicio = "C";
+
+let letraFin =
+String.fromCharCode(
+67 + partidos.length - 1
+);
+
 fila.push({
 
 formula:
-`COUNTIF(C${filaJugador}:K${filaJugador},C$1:K$1)`
+`COUNTIF(${letraInicio}${filaJugador}:${letraFin}${filaJugador},${letraInicio}$4:${letraFin}$4)`
 
 });
 
 /* AGREGAR FILA */
-
-sheet.addRow(fila);
-
-/* ACIERTOS VACIO */
-
-fila.push("");
 
 sheet.addRow(fila);
 
@@ -973,13 +1240,20 @@ numero++;
 
 });
 
-/* CONGELAR */
+/* ===========================
+CONGELAR HASTA FILA 4
+=========================== */
 
 sheet.views = [
-{state:'frozen',ySplit:3}
+{
+state:'frozen',
+ySplit:4
+}
 ];
 
-/* DESCARGAR */
+/* ===========================
+DESCARGAR
+=========================== */
 
 let semana = 1;
 
@@ -1017,21 +1291,4 @@ alert("Error generando Excel");
 
 }
 
-}
-
-/* ===========================
-FILA RESULTADOS (fila 1)
-=========================== */
-
-sheet.getCell(1,2).value = "RES";
-
-/* 9 partidos */
-
-for(let i=0;i<9;i++){
-
-sheet.getCell(
-1,
-3 + i
-).value = "";
-
-}
+    }
