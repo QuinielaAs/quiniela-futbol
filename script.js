@@ -861,75 +861,125 @@ ySplit:4
 ];
     
 /* ===========================
-COLORES CORREGIDOS
+COLORES DINAMICOS CORRECTOS
 =========================== */
+
+try{
 
 let colAciertos = partidos.length + 3;
 
 let filaInicio = 5;
 let filaFin = sheet.rowCount;
 
-let letraCol = numeroALetra(colAciertos);
+/* FUNCION LETRA COLUMNA */
+
+function numeroALetra(num){
+
+let letra = "";
+
+while(num > 0){
+
+let mod = (num - 1) % 26;
+
+letra =
+String.fromCharCode(65 + mod)
++ letra;
+
+num =
+Math.floor((num - mod) / 26);
+
+}
+
+return letra;
+
+}
+
+let letraCol =
+numeroALetra(colAciertos);
 
 let rango =
 `${letraCol}${filaInicio}:${letraCol}${filaFin}`;
 
-/* APLICAR FORMATO */
+/* FORMATO CONDICIONAL */
 
 sheet.addConditionalFormatting({
+
 ref: rango,
+
 rules: [
 
 /* 🟢 VERDE - MAYOR */
 
 {
 type: 'expression',
+
 formulae: [
 `${letraCol}${filaInicio}=MAX(${rango})`
 ],
+
 style: {
+
 fill: {
 type:'pattern',
 pattern:'solid',
 bgColor:{argb:'FF00FF00'}
 }
+
 }
+
 },
 
-/* 🟡 AMARILLO - SEGUNDO */
+/* 🟡 AMARILLO - MAX-1 */
 
 {
-type: 'expression',
-formulae: [
-`${letraCol}${filaInicio}=LARGE(${rango},2)`
+type:'expression',
+
+formulae:[
+`${letraCol}${filaInicio}=MAX(${rango})-1`
 ],
-style: {
+
+style:{
+
 fill:{
 type:'pattern',
 pattern:'solid',
 bgColor:{argb:'FFFFFF00'}
 }
+
 }
+
 },
 
 /* 🟠 NARANJA - RESTO */
 
 {
 type:'expression',
+
 formulae:[
-`${letraCol}${filaInicio}<LARGE(${rango},2)`
+`${letraCol}${filaInicio}<MAX(${rango})-1`
 ],
+
 style:{
+
 fill:{
 type:'pattern',
 pattern:'solid',
 bgColor:{argb:'FFFFA500'}
 }
+
 }
+
 }
 
 ]
+
 });
+
+}catch(e){
+
+console.log("Error colores:",e);
+
+}
     
 /* DESCARGAR */
 
