@@ -861,6 +861,69 @@ ySplit:4
 ];
 
 /* ===========================
+COLORES AUTOMATICOS ACIERTOS
+=========================== */
+
+let colAciertos = partidos.length + 3;
+
+let filaInicio = 5;
+let filaFin = sheet.rowCount;
+
+/* VERDE - MAYOR */
+
+sheet.addConditionalFormatting({
+ref: `${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin}`,
+rules: [
+{
+type: 'expression',
+formulae: [
+`${numeroALetra(colAciertos)}${filaInicio}=MAX(${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin})`
+],
+style: {
+fill: {
+type: 'pattern',
+pattern:'solid',
+bgColor:{argb:'FF00FF00'}
+}
+}
+},
+
+/* AMARILLO - SEGUNDO */
+
+{
+type: 'expression',
+formulae: [
+`${numeroALetra(colAciertos)}${filaInicio}=LARGE(${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin},2)`
+],
+style: {
+fill: {
+type:'pattern',
+pattern:'solid',
+bgColor:{argb:'FFFFFF00'}
+}
+}
+},
+
+/* NARANJA - RESTO */
+
+{
+type:'expression',
+formulae:[
+`${numeroALetra(colAciertos)}${filaInicio}<LARGE(${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin},2)`
+],
+style:{
+fill:{
+type:'pattern',
+pattern:'solid',
+bgColor:{argb:'FFFFA500'}
+}
+}
+}
+
+]
+});
+    
+/* ===========================
 DESCARGAR
 =========================== */
 
