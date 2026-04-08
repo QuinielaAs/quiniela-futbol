@@ -844,19 +844,15 @@ FORMATO CONDICIONAL PICKS
 let filaInicio = 5;
 let filaFin = sheet.lastRow.number;
 
-/* COLUMNA C HASTA K (9 PARTIDOS) */
+/* COLUMNAS C A K */
 
 for(let col=3; col<=11; col++){
 
-let letra =
-numeroALetra(col);
-
-/* APLICAR FORMATO */
+let letra = numeroALetra(col);
 
 sheet.addConditionalFormatting({
 
-ref:
-`${letra}${filaInicio}:${letra}${filaFin}`,
+ref: `${letra}${filaInicio}:${letra}${filaFin}`,
 
 rules: [
 
@@ -864,15 +860,18 @@ rules: [
 type: 'expression',
 
 formulae: [
-`${letra}${filaInicio}=${letra}$4`
+`${letra}5=${letra}$4`
 ],
 
 style: {
 
 fill: {
-type:'pattern',
+
+type: 'pattern',
 pattern:'solid',
-fgColor:{argb:'FF92D050'}
+
+fgColor:{argb:'FF00FF00'}
+
 }
 
 }
@@ -884,19 +883,6 @@ fgColor:{argb:'FF92D050'}
 });
 
 }
-    
-/* AGREGAR FILA */
-
-sheet.addRow(fila);
-
-numero++;
-
-});
-
-}
-
-});
-
 
 /* ===========================
 CONGELAR FILAS
