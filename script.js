@@ -801,10 +801,9 @@ String.fromCharCode(
 );
 
 fila.push({
-
 formula:
-`COUNTIF(${letraInicio}${filaJugador}:${letraFin}${filaJugador},${letraInicio}$4:${letraFin}$4)`
-
+`COUNTIF(${letraInicio}${filaJugador}:${letraFin}${filaJugador},${letraInicio}$4:${letraFin}$4)`,
+result: 0
 });
 
 /* AGREGAR FILA */
