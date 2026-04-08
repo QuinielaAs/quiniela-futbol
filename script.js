@@ -849,6 +849,55 @@ numero++;
 
 });
 
+ /* ===========================
+ORDENAR POR ACIERTOS
+=========================== */
+
+let colAciertos = partidos.length + 3;
+
+let filaInicio = 5;
+let filaFin = sheet.rowCount;
+
+/* ORDENAR FILAS */
+
+let filas = [];
+
+/* GUARDAR FILAS */
+
+for(let i=filaInicio;i<=filaFin;i++){
+
+let fila = sheet.getRow(i);
+
+filas.push({
+row: fila.values,
+aciertos:
+fila.getCell(colAciertos).value?.result || 0
+});
+
+}
+
+/* ORDENAR MAYOR A MENOR */
+
+filas.sort((a,b)=>{
+
+return b.aciertos - a.aciertos;
+
+});
+
+/* REESCRIBIR FILAS ORDENADAS */
+
+let index = filaInicio;
+
+filas.forEach(f=>{
+
+let row = sheet.getRow(index);
+
+row.values = f.row;
+
+index++;
+
+});   
+
 /* ===========================
 CONGELAR FILAS
 =========================== */
