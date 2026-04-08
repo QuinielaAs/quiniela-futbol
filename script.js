@@ -849,8 +849,8 @@ numero++;
 
 });
 
- /* ===========================
-ORDENAR POR ACIERTOS
+/* ===========================
+CREAR TABLA EXCEL
 =========================== */
 
 let colAciertos = partidos.length + 3;
@@ -858,45 +858,45 @@ let colAciertos = partidos.length + 3;
 let filaInicio = 5;
 let filaFin = sheet.rowCount;
 
-/* ORDENAR FILAS */
+/* GENERAR NOMBRES COLUMNAS */
 
-let filas = [];
+let columnasTabla = [];
 
-/* GUARDAR FILAS */
+columnasTabla.push({name:"No"});
+columnasTabla.push({name:"Nombre"});
 
-for(let i=filaInicio;i<=filaFin;i++){
+for(let i=0;i<partidos.length;i++){
 
-let fila = sheet.getRow(i);
-
-filas.push({
-row: fila.values,
-aciertos:
-fila.getCell(colAciertos).value?.result || 0
+columnasTabla.push({
+name:`P${i+1}`
 });
 
 }
 
-/* ORDENAR MAYOR A MENOR */
-
-filas.sort((a,b)=>{
-
-return b.aciertos - a.aciertos;
-
+columnasTabla.push({
+name:"Aciertos"
 });
 
-/* REESCRIBIR FILAS ORDENADAS */
+/* CREAR TABLA */
 
-let index = filaInicio;
+sheet.addTable({
 
-filas.forEach(f=>{
+name:"TablaQuiniela",
 
-let row = sheet.getRow(index);
+ref:"A4",
 
-row.values = f.row;
+headerRow:true,
 
-index++;
+style:{
+theme:"TableStyleMedium2",
+showRowStripes:true
+},
 
-});   
+columns: columnasTabla,
+
+rows: []
+
+});
 
 /* ===========================
 CONGELAR FILAS
