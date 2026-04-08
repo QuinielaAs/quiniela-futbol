@@ -833,10 +833,9 @@ String.fromCharCode(
 
 fila.push({
 formula:
-`(C${filaJugador}=C4)+(D${filaJugador}=D4)+(E${filaJugador}=E4)+(F${filaJugador}=F4)+(G${filaJugador}=G4)+(H${filaJugador}=H4)+(I${filaJugador}=I4)+(J${filaJugador}=J4)+(K${filaJugador}=K4)`,
-result: 0
+`(C${filaJugador}=C$4)+(D${filaJugador}=D$4)+(E${filaJugador}=E$4)+(F${filaJugador}=F$4)+(G${filaJugador}=G$4)+(H${filaJugador}=H$4)+(I${filaJugador}=I$4)+(J${filaJugador}=J$4)+(K${filaJugador}=K$4)`,
+result:0
 });
-
 /* AGREGAR FILA */
 
 sheet.addRow(fila);
