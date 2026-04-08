@@ -540,387 +540,6 @@ console.log(error);
 
 }
 
-function generarExcelGeneral(){
-
-db.ref("jugadores")
-.once("value", snapshot=>{
-
-let jugadores =
-snapshot.val();
-
-if(!jugadores){
-
-alert("No hay jugadores registrados");
-return;
-
-}
-
-let partidos =
-JSON.parse(
-localStorage.getItem("partidos")
-) || [];
-
-let datos = [];
-
-/* RECORRER JUGADORES */
-
-Object.keys(jugadores)
-.forEach(key=>{
-
-let j = jugadores[key];
-
-/* SOLO PAGADOS */
-
-if(j.pagado && j.selecciones){
-
-/* GENERAR COMBINACIONES */
-
-let combinaciones =
-generarCombinaciones(
-j.selecciones
-);
-
-/* CREAR FILAS */
-
-combinaciones.forEach(c=>{
-
-let fila = {};
-
-fila["Nombre"] =
-j.nombre;
-
-fila["Combinacion"] =
-c.join("-");
-
-fila["Total Comb"] =
-j.combinaciones;
-
-fila["Total $"] =
-j.total;
-
-/* PARTIDOS */
-
-c.forEach((valor,i)=>{
-
-let p = partidos[i];
-
-if(p){
-
-fila[
-p.l+" vs "+p.v
-] = valor;
-
-}
-
-});
-
-datos.push(fila);
-
-});
-
-}
-
-});
-
-/* VALIDAR */
-
-if(datos.length == 0){
-
-alert("No hay jugadores PAGADOS");
-
-return;
-
-}
-
-/* CREAR EXCEL */
-
-let hoja =
-XLSX.utils.json_to_sheet(datos);
-
-let libro =
-XLSX.utils.book_new();
-
-XLSX.utils.book_append_sheet(
-libro,
-hoja,
-"Combinaciones"
-);
-
-/* SEMANA */
-
-let semana = 1;
-
-let input =
-document.getElementById("semana");
-
-if(input){
-
-semana = input.value || 1;
-
-}
-
-/* DESCARGAR */
-
-XLSX.writeFile(
-libro,
-"Quiniela_Combinaciones_Semana_"+semana+".xlsx"
-);
-
-});
-
-  }
-
-/* ===========================
-GENERAR COMBINACIONES SEGURAS
-=========================== */
-
-function generarCombinaciones(selecciones){
-
-/* NORMALIZAR ARRAYS */
-
-let listas = [];
-
-selecciones.forEach(s=>{
-
-if(s){
-
-if(Array.isArray(s)){
-
-listas.push(s);
-
-}else{
-
-listas.push(Object.values(s));
-
-}
-
-}
-
-});
-
-/* GENERAR PRODUCTO */
-
-let resultados = [[]];
-
-listas.forEach(lista=>{
-
-let nuevas = [];
-
-resultados.forEach(r=>{
-
-lista.forEach(opcion=>{
-
-nuevas.push([...r, opcion]);
-
-});
-
-});
-
-resultados = nuevas;
-
-});
-
-return resultados;
-
-}
-
-/* ===========================
-EXCEL PROFESIONAL SEGURO
-=========================== */
-
-async function generarExcelGeneral(){
-
-try{
-
-let snapshot =
-await db.ref("jugadores").once("value");
-
-let jugadores =
-snapshot.val();
-
-if(!jugadores){
-
-alert("No hay jugadores");
-return;
-
-}
-
-let partidos =
-JSON.parse(
-localStorage.getItem("partidos")
-) || [];
-
-/* CREAR LIBRO */
-
-let workbook =
-new ExcelJS.Workbook();
-
-let sheet =
-workbook.addWorksheet("Quiniela");
-
-  /* ===========================
-CONFIGURACION PARA PDF
-=========================== */
-
-sheet.pageSetup = {
-
-paperSize: 9, // A4
-
-orientation: 'landscape', // horizontal
-
-horizontalCentered: true,
-
-verticalCentered: true,
-
-fitToPage: true,
-
-fitToWidth: 1,
-
-fitToHeight: 1,
-
-margins: {
-left: 0.3,
-right: 0.3,
-top: 0.5,
-bottom: 0.5,
-header: 0.3,
-footer: 0.3
-}
-
-};
-
-/* ===========================
-COLUMNAS
-=========================== */
-
-let columnas = [];
-
-columnas.push({width:5});  // No
-columnas.push({width:20}); // Nombre
-
-for(let i=0;i<partidos.length;i++){
-
-columnas.push({width:5});
-
-}
-
-columnas.push({width:10}); // Aciertos
-
-sheet.columns = columnas;
-
-/* ===========================
-ENCABEZADO
-=========================== */
-
-sheet.addRow([]);
-sheet.addRow([]);
-sheet.addRow([]);
-
-/* NUMERO */
-
-sheet.mergeCells("A1:A3");
-sheet.getCell("A1").value = "No.";
-
-/* NOMBRE */
-
-sheet.mergeCells("B1:B3");
-sheet.getCell("B1").value = "Nombre";
-
-/* PARTIDOS */
-
-for(let i=0;i<partidos.length;i++){
-
-let col = i + 3;
-
-/* VS */
-
-sheet.getCell(2,col).value = "VS";
-
-}
-
-/* ACIERTOS */
-
-let colFinal =
-partidos.length + 3;
-
-sheet.mergeCells(
-1,colFinal,
-3,colFinal
-);
-
-sheet.getCell(1,colFinal)
-.value = "ACIERTOS";
-
-/* ===========================
-AGREGAR LOGOS
-=========================== */
-
-for(let i=0;i<partidos.length;i++){
-
-let col = i + 3;
-
-let p = partidos[i];
-
-try{
-
-/* LOCAL */
-
-let imgLocal =
-await fetch(p.logoL)
-.then(r=>r.blob())
-.then(b=>b.arrayBuffer());
-
-let idLocal =
-workbook.addImage({
-buffer: imgLocal,
-extension: 'png'
-});
-
-sheet.addImage(idLocal,{
-tl:{col:col-1,row:0},
-ext:{width:40,height:40}
-});
-
-/* VISITA */
-
-let imgVisita =
-await fetch(p.logoV)
-.then(r=>r.blob())
-.then(b=>b.arrayBuffer());
-
-let idVisita =
-workbook.addImage({
-buffer: imgVisita,
-extension: 'png'
-});
-
-sheet.addImage(idVisita,{
-tl:{col:col-1,row:2},
-ext:{width:40,height:40}
-});
-
-}catch(e){
-
-console.log("Error logo:",p.logoL);
-
-}
-
-}
-
-/* ===========================
-JUGADORES
-=========================== */
-
-let numero = 1;
-
-Object.keys(jugadores)
-.forEach(key=>{
-
-let j = jugadores[key];
-
-if(j.pagado && j.selecciones){
-
-let combinaciones =
 /* ===========================
 GENERAR COMBINACIONES SEGURAS
 =========================== */
@@ -972,7 +591,7 @@ return resultados;
 }
 
 /* ===========================
-EXCEL PROFESIONAL COMPLETO
+EXCEL PROFESIONAL MEJORADO
 =========================== */
 
 async function generarExcelGeneral(){
@@ -1008,40 +627,13 @@ let sheet =
 workbook.addWorksheet("Quiniela");
 
 /* ===========================
-CONFIGURACION PARA PDF
-=========================== */
-
-sheet.pageSetup = {
-
-paperSize: 9,
-orientation: 'landscape',
-
-horizontalCentered: true,
-verticalCentered: true,
-
-fitToPage: true,
-fitToWidth: 1,
-fitToHeight: 1,
-
-margins: {
-left: 0.3,
-right: 0.3,
-top: 0.5,
-bottom: 0.5,
-header: 0.3,
-footer: 0.3
-}
-
-};
-
-/* ===========================
 COLUMNAS
 =========================== */
 
 let columnas = [];
 
-columnas.push({width:5});   // No
-columnas.push({width:20});  // Nombre
+columnas.push({width:5});  
+columnas.push({width:20}); 
 
 for(let i=0;i<partidos.length;i++){
 
@@ -1049,29 +641,25 @@ columnas.push({width:5});
 
 }
 
-columnas.push({width:10});  // Aciertos
+columnas.push({width:10}); 
 
 sheet.columns = columnas;
 
 /* ===========================
-CREAR FILAS HASTA LA 4
+CREAR FILAS 1–4
 =========================== */
 
 sheet.addRow([]); // fila 1
 sheet.addRow([]); // fila 2
 sheet.addRow([]); // fila 3
-sheet.addRow([]); // fila 4 (RESULTADOS)
+sheet.addRow([]); // fila 4 RESULTADOS
 
 /* ===========================
 ENCABEZADOS
 =========================== */
 
-/* NUMERO */
-
 sheet.mergeCells("A1:A3");
 sheet.getCell("A1").value = "No.";
-
-/* NOMBRE */
 
 sheet.mergeCells("B1:B3");
 sheet.getCell("B1").value = "Nombre";
@@ -1081,8 +669,6 @@ sheet.getCell("B1").value = "Nombre";
 for(let i=0;i<partidos.length;i++){
 
 let col = i + 3;
-
-/* VS */
 
 sheet.getCell(2,col).value = "VS";
 
@@ -1118,7 +704,7 @@ sheet.getCell(
 }
 
 /* ===========================
-AGREGAR LOGOS
+LOGOS
 =========================== */
 
 for(let i=0;i<partidos.length;i++){
@@ -1128,8 +714,6 @@ let col = i + 3;
 let p = partidos[i];
 
 try{
-
-/* LOCAL */
 
 let imgLocal =
 await fetch(p.logoL)
@@ -1146,8 +730,6 @@ sheet.addImage(idLocal,{
 tl:{col:col-1,row:0},
 ext:{width:40,height:40}
 });
-
-/* VISITA */
 
 let imgVisita =
 await fetch(p.logoV)
@@ -1174,7 +756,7 @@ console.log("Error logo:",p.logoL);
 }
 
 /* ===========================
-JUGADORES DESDE FILA 5
+JUGADORES (DESDE FILA 5)
 =========================== */
 
 let numero = 1;
@@ -1206,10 +788,7 @@ fila.push(v);
 
 });
 
-/* ===========================
-FORMULA ACIERTOS
-CONTAR VS RESULTADOS FILA 4
-=========================== */
+/* FORMULA ACIERTOS */
 
 let filaJugador =
 sheet.rowCount + 1;
@@ -1241,7 +820,7 @@ numero++;
 });
 
 /* ===========================
-CONGELAR HASTA FILA 4
+CONGELAR FILAS
 =========================== */
 
 sheet.views = [
@@ -1291,4 +870,4 @@ alert("Error generando Excel");
 
 }
 
-    }
+}
