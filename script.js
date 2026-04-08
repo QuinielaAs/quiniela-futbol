@@ -860,8 +860,19 @@ ySplit:4
 }
 ];
 
+
+    
 /* ===========================
-COLORES AUTOMATICOS ACIERTOS
+DESCARGAR
+=========================== */
+
+let semana = 1;
+
+let input =
+document.getElement
+    
+/* ===========================
+COLORES CORREGIDOS
 =========================== */
 
 let colAciertos = partidos.length + 3;
@@ -869,34 +880,42 @@ let colAciertos = partidos.length + 3;
 let filaInicio = 5;
 let filaFin = sheet.rowCount;
 
-/* VERDE - MAYOR */
+let letraCol = numeroALetra(colAciertos);
+
+let rango =
+`${letraCol}${filaInicio}:${letraCol}${filaFin}`;
+
+/* APLICAR FORMATO */
 
 sheet.addConditionalFormatting({
-ref: `${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin}`,
+ref: rango,
 rules: [
+
+/* 🟢 VERDE - MAYOR */
+
 {
 type: 'expression',
 formulae: [
-`${numeroALetra(colAciertos)}${filaInicio}=MAX(${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin})`
+`${letraCol}${filaInicio}=MAX(${rango})`
 ],
 style: {
 fill: {
-type: 'pattern',
+type:'pattern',
 pattern:'solid',
 bgColor:{argb:'FF00FF00'}
 }
 }
 },
 
-/* AMARILLO - SEGUNDO */
+/* 🟡 AMARILLO - SEGUNDO */
 
 {
 type: 'expression',
 formulae: [
-`${numeroALetra(colAciertos)}${filaInicio}=LARGE(${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin},2)`
+`${letraCol}${filaInicio}=LARGE(${rango},2)`
 ],
 style: {
-fill: {
+fill:{
 type:'pattern',
 pattern:'solid',
 bgColor:{argb:'FFFFFF00'}
@@ -904,12 +923,12 @@ bgColor:{argb:'FFFFFF00'}
 }
 },
 
-/* NARANJA - RESTO */
+/* 🟠 NARANJA - RESTO */
 
 {
 type:'expression',
 formulae:[
-`${numeroALetra(colAciertos)}${filaInicio}<LARGE(${numeroALetra(colAciertos)}${filaInicio}:${numeroALetra(colAciertos)}${filaFin},2)`
+`${letraCol}${filaInicio}<LARGE(${rango},2)`
 ],
 style:{
 fill:{
@@ -921,16 +940,7 @@ bgColor:{argb:'FFFFA500'}
 }
 
 ]
-});
-    
-/* ===========================
-DESCARGAR
-=========================== */
-
-let semana = 1;
-
-let input =
-document.getElementById("semana");
+});ById("semana");
 
 if(input){
 
