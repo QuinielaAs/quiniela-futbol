@@ -964,3 +964,24 @@ alert("Error generando Excel");
 }
 
 }
+
+function numeroALetra(num){
+
+let letra = "";
+
+while(num > 0){
+
+let mod = (num - 1) % 26;
+
+letra =
+String.fromCharCode(65 + mod)
++ letra;
+
+num =
+Math.floor((num - mod) / 26);
+
+}
+
+return letra;
+
+}
