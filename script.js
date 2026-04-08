@@ -849,54 +849,6 @@ numero++;
 
 });
 
-/* ===========================
-CREAR TABLA EXCEL
-=========================== */
-
-let colAciertos = partidos.length + 3;
-
-let filaInicio = 5;
-let filaFin = sheet.rowCount;
-
-/* GENERAR NOMBRES COLUMNAS */
-
-let columnasTabla = [];
-
-columnasTabla.push({name:"No"});
-columnasTabla.push({name:"Nombre"});
-
-for(let i=0;i<partidos.length;i++){
-
-columnasTabla.push({
-name:`P${i+1}`
-});
-
-}
-
-columnasTabla.push({
-name:"Aciertos"
-});
-
-/* CREAR TABLA */
-
-sheet.addTable({
-
-name:"TablaQuiniela",
-
-ref:"A4",
-
-headerRow:true,
-
-style:{
-theme:"TableStyleMedium2",
-showRowStripes:true
-},
-
-columns: columnasTabla,
-
-rows: []
-
-});
 
 /* ===========================
 CONGELAR FILAS
