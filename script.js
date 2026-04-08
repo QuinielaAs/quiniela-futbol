@@ -802,7 +802,7 @@ String.fromCharCode(
 
 fila.push({
 formula:
-`COUNTIF(${letraInicio}${filaJugador}:${letraFin}${filaJugador},${letraInicio}$4:${letraFin}$4)`,
+`(C${filaJugador}=C4)+(D${filaJugador}=D4)+(E${filaJugador}=E4)+(F${filaJugador}=F4)+(G${filaJugador}=G4)+(H${filaJugador}=H4)+(I${filaJugador}=I4)+(J${filaJugador}=J4)+(K${filaJugador}=K4)`,
 result: 0
 });
 
