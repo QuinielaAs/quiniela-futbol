@@ -850,6 +850,8 @@ for(let col=3; col<=11; col++){
 
 let letra = numeroALetra(col);
 
+/* FORMATO CONDICIONAL */
+
 sheet.addConditionalFormatting({
 
 ref: `${letra}${filaInicio}:${letra}${filaFin}`,
@@ -860,7 +862,7 @@ rules: [
 type: 'expression',
 
 formulae: [
-`UPPER(${letra}5)=UPPER(${letra}$4)`
+`${letra}${filaInicio}=${letra}$4`
 ],
 
 style: {
@@ -884,7 +886,7 @@ argb: 'FF92D050'
 
 });
 
-}
+    }
     
     /* AGREGAR FILA */
 
