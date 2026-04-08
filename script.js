@@ -837,6 +837,18 @@ formula:
 result:0
 });
 
+    /* AGREGAR FILA */
+
+sheet.addRow(fila);
+
+numero++;
+
+});
+
+}
+
+});
+    
 /* ===========================
 CONGELAR FILAS
 =========================== */
