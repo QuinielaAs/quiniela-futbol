@@ -836,57 +836,6 @@ formula:
 `(C${filaJugador}=C$4)+(D${filaJugador}=D$4)+(E${filaJugador}=E$4)+(F${filaJugador}=F$4)+(G${filaJugador}=G$4)+(H${filaJugador}=H$4)+(I${filaJugador}=I$4)+(J${filaJugador}=J$4)+(K${filaJugador}=K$4)`,
 result:0
 });
-
-/* ===========================
-FORMATO CONDICIONAL PICKS
-=========================== */
-
-let filaInicio = 5;
-let filaFin = sheet.lastRow.number;
-
-/* COLUMNAS C A K */
-
-for(let col=3; col<=11; col++){
-
-let letra = numeroALetra(col);
-
-/* FORMATO CONDICIONAL */
-
-sheet.addConditionalFormatting({
-
-ref: `${letra}${filaInicio}:${letra}${filaFin}`,
-
-rules: [
-
-{
-type: 'expression',
-
-formulae: [
-`${letra}${filaInicio}=${letra}$4`
-],
-
-style: {
-
-fill: {
-
-type: 'pattern',
-pattern: 'solid',
-
-fgColor: {
-argb: 'FF92D050'
-}
-
-}
-
-}
-
-}
-
-]
-
-});
-
-    }
     
     /* AGREGAR FILA */
 
