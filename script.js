@@ -211,10 +211,6 @@ return;
 
 }
 
-/* AQUI SIGUE TU CODIGO NORMAL */
-
-}
-
 /* OBTENER PARTIDOS */
 
 let partidos =
