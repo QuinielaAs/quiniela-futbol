@@ -386,9 +386,10 @@ div.innerHTML += `
 
 <div>
 <b>${j.nombre}</b>
-"<br>📱 " + j.telefono;
 </div>
-
+<div>
+<b>${j.telefono}</b>
+</div>
 
 
 <div style="
