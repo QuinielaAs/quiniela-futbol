@@ -386,7 +386,10 @@ div.innerHTML += `
 
 <div>
 <b>${j.nombre}</b>
+"<br>📱 " + j.telefono;
 </div>
+
+
 
 <div style="
 font-size:13px;
