@@ -172,10 +172,46 @@ function enviar(){
 let nombre =
 document.getElementById("nombre").value;
 
+let telefono =
+document.getElementById("telefono").value;
+
+/* VALIDAR NOMBRE */
+
 if(!nombre){
 
 alert("Escribe tu nombre");
 return;
+
+}
+
+/* VALIDAR TELEFONO */
+
+if(!telefono){
+
+alert("Escribe tu número de teléfono");
+return;
+
+}
+
+/* VALIDAR QUE SOLO SEAN NUMEROS */
+
+if(!/^[0-9]+$/.test(telefono)){
+
+alert("El teléfono debe contener solo números");
+return;
+
+}
+
+/* VALIDAR 10 DIGITOS */
+
+if(telefono.length != 10){
+
+alert("El teléfono debe tener 10 dígitos");
+return;
+
+}
+
+/* AQUI SIGUE TU CODIGO NORMAL */
 
 }
 
