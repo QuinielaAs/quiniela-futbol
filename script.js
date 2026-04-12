@@ -172,12 +172,17 @@ function enviar(){
 let nombre =
 document.getElementById("nombre").value;
 
-    let telefono =
-document.getElementById("telefono").value;
-
 if(!nombre){
 
 alert("Escribe tu nombre");
+return;
+
+    let telefono =
+document.getElementById("telefono").value;
+
+if(!telefono){
+
+alert("Escribe tu telefono");
 return;
 
 }
