@@ -177,14 +177,6 @@ if(!nombre){
 alert("Escribe tu nombre");
 return;
 
-    let telefono =
-document.getElementById("telefono").value;
-
-if(!telefono){
-
-alert("Escribe tu telefono");
-return;
-
 }
 
 /* OBTENER PARTIDOS */
