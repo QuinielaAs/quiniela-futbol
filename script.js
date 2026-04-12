@@ -172,6 +172,9 @@ function enviar(){
 let nombre =
 document.getElementById("nombre").value;
 
+    let telefono =
+document.getElementById("telefono").value;
+
 if(!nombre){
 
 alert("Escribe tu nombre");
@@ -240,6 +243,7 @@ totalComb * precio;
 let jugador = {
 
 nombre: nombre,
+telefono: telefono,
 selecciones: selecciones,
 combinaciones: totalComb,
 total: totalPago,
